@@ -47,6 +47,26 @@ class Forth {
                             intList[size-2] = intList[size-2] / intList[size-1] //second-last / last
                             intList.removeLast() //remove last value
                         }
+                        "dup" -> {
+                            intList.add(intList.last())
+                        }
+                        "drop" -> {
+                            intList.removeLast()
+                        }
+                        "swap" -> {
+                            if(size == 1) {
+                                throw Exception("only one value on the stack")
+                            }
+                            val secondLast = intList[size-2]
+                            intList[size-2] = intList[size-1]
+                            intList[size-1] = secondLast
+                        }
+                        "over" -> {
+                            if(size == 1) {
+                                throw Exception("only one value on the stack")
+                            }
+                            intList.add(intList[size-2])
+                        }
                     }
                 }
             }
