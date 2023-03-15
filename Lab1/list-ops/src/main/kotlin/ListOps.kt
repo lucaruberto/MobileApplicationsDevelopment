@@ -11,9 +11,15 @@ fun <T> List<T>.customAppend(list: List<T>): List<T> {
 }
 
 fun List<Any>.customConcat(): List<Any> {
-    return this.flatMap { if(it is List<*>){
-            it.filterNotNull().customConcat()
-        }else listOf(it)
+//    return this.flatMap { if(it is List<*>){
+//            it.filterNotNull().customConcat()
+//        }else listOf(it)
+//    }
+    return this.customFoldLeft( emptyList() ) { concatenatedList, it ->
+        if(it is List<*>)
+            concatenatedList + (it as List<Any>).customConcat()
+        else
+            concatenatedList + it
     }
 }
 
