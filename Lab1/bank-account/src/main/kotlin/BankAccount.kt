@@ -12,7 +12,10 @@ class BankAccount   {
     
     @Synchronized
     fun adjustBalance(amount: Long){
-        this.balance += amount
+        if(this.open)
+            this.balance += amount
+        else
+            throw IllegalStateException()
     }
 
     fun close() {
