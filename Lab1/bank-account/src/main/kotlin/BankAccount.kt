@@ -1,4 +1,6 @@
 class BankAccount   {
+    
+    private var open: Boolean = true
     var balance:Long = 0
     get() {
         if(this.open)
@@ -7,11 +9,13 @@ class BankAccount   {
             throw IllegalStateException()
     }
 
-    private var open: Boolean = true
-
+    
     @Synchronized
     fun adjustBalance(amount: Long){
-        this.balance += amount
+        if(this.open)
+            this.balance += amount
+        else
+            throw IllegalStateException()
     }
 
     fun close() {
