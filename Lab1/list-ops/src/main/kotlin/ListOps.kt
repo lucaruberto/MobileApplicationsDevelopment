@@ -24,11 +24,7 @@ fun <T> List<T>.customFilter(predicate: (T) -> Boolean): List<T> {
 }
 
 val List<Any>.customSize: Int
-    get() {
-    var count = 0
-    this.forEach { _ -> count++}
-    return count
-}
+    get() = customFoldLeft(0) { count, _ -> count+1 }
 
 fun <T, U> List<T>.customMap(transform: (T) -> U): List<U> {
     val mappedList = mutableListOf<U>()
