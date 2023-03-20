@@ -1,20 +1,10 @@
 fun <T> List<T>.customAppend(list: List<T>): List<T> {
-    val appendedList = mutableListOf<T>()
-
-    for(item in this)
-        appendedList.add(item)
-    for(item in list)
-        appendedList.add(item)
-
-    return appendedList
-
+    if(list.isNotEmpty())
+        return this + list
+    return this
 }
 
 fun List<Any>.customConcat(): List<Any> {
-//    return this.flatMap { if(it is List<*>){
-//            it.filterNotNull().customConcat()
-//        }else listOf(it)
-//    }
     return this.customFoldLeft( emptyList() ) { concatenatedList, it ->
         if(it is List<*>)
             concatenatedList + (it as List<Any>).customConcat()
@@ -26,12 +16,11 @@ fun List<Any>.customConcat(): List<Any> {
 fun <T> List<T>.customFilter(predicate: (T) -> Boolean): List<T> {
     val filteredList = mutableListOf<T>()
 
-    for(item in this)
-        if(predicate(item))
-            filteredList.add(item)
-        else
-            continue
-    return filteredList
+    this.forEach{
+        if(predicate(it))
+            filteredList.add(it)
+    }
+     return filteredList
 }
 
 val List<Any>.customSize: Int
