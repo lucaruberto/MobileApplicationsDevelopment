@@ -1,7 +1,10 @@
 fun <T> List<T>.customAppend(list: List<T>): List<T> {
-    if(list.isNotEmpty())
-        return this + list
-    return this
+    val appendedList = mutableListOf<T>()
+
+    this.forEach { appendedList.add(it) }
+    list.forEach { appendedList.add(it) }
+
+    return appendedList
 }
 
 fun List<Any>.customConcat(): List<Any> {
