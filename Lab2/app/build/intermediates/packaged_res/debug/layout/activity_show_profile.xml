@@ -11,6 +11,8 @@
         android:id="@+id/wrapper"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:orientation="vertical"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
@@ -30,8 +32,8 @@
 
         <ScrollView
             android:id="@+id/scrollView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:contentDescription="@string/user_data"
             android:orientation="vertical">
@@ -42,19 +44,19 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/nickname"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/fullname"
-                    android:textSize="20sp" />
-
-                <TextView
                     android:id="@+id/fullName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/nickname"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/nickname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/fullname"
                     android:textSize="20sp" />
 
                 <Spinner

@@ -23,6 +23,8 @@ id sportsList
 id userPassword
 id wrapper
 layout activity_show_profile
+layout activity_show_profile_land
+menu menu
 mipmap ic_launcher
 mipmap ic_launcher_round
 string _00000000000000
