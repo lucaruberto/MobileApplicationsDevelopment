@@ -24,7 +24,7 @@
         <ImageView
             android:id="@+id/profileImage"
             android:layout_width="match_parent"
-            android:layout_height="193dp"
+            android:layout_height="247dp"
             android:layout_marginTop="4dp"
             android:contentDescription="@string/image_resources"
             android:foregroundGravity="center"
@@ -49,7 +49,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/nickname"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:minHeight="48dp"/>
 
                 <TextView
                     android:id="@+id/nickname"
@@ -57,64 +58,59 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/fullname"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:minHeight="48dp"/>
 
-                <Spinner
+                <TextView
                     android:id="@+id/gender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:entries="@array/spinnerItems"
                     android:gravity="center"
-                    android:minHeight="48dp"
-                    android:spinnerMode="dropdown" />
+                    android:text="@string/male"
+                    android:textSize="20sp"
+                    android:minHeight="48dp" />
 
-                <EditText
+                <TextView
                     android:id="@+id/birthDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:autofillHints="22/22/2222"
                     android:ems="10"
                     android:gravity="center"
-                    android:hint="22/22/2222"
-
-                    android:inputType="date"
                     android:minHeight="48dp"
-                    tools:text="22/22/2222" />
+                    android:textSize="20sp"
+                    android:text="@string/_22_22_2222" />
 
-                <EditText
+                <TextView
                     android:id="@+id/emailAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:autofillHints="example@domain.com"
                     android:ems="10"
                     android:gravity="center"
-                    android:hint="@string/example_domain_com"
-                    android:inputType="textEmailAddress"
-                    android:minHeight="48dp" />
+                    android:text="@string/example_domain_com"
+                    android:minHeight="48dp"
+                    android:textSize="20sp"/>
 
-                <EditText
+                <TextView
                     android:id="@+id/userPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:autofillHints="provaprovaprova"
                     android:ems="10"
                     android:gravity="center"
-                    android:inputType="textPassword"
                     android:minHeight="48dp"
-                    android:text="@string/provaprovaprova"
+                    android:textSize="20sp"
+                    android:text="@string/pwd"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
-                <EditText
+                <TextView
                     android:id="@+id/phoneNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:autofillHints="+00000000000000"
                     android:ems="10"
                     android:gravity="center"
-                    android:inputType="phone"
                     android:minHeight="48dp"
+                    android:textSize="20sp"
                     android:text="@string/_00000000000000" />
 
                 <TextView
@@ -123,15 +119,17 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/sports"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:minHeight="48dp"/>
 
                 <TextView
                     android:id="@+id/reputation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/textview"
-                    android:textSize="20sp" />
+                    android:text="@string/reputation"
+                    android:textSize="20sp"
+                    android:minHeight="48dp"/>
 
             </LinearLayout>
         </ScrollView>
