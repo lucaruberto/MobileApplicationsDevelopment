@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Lab2</string>
+    <string name="image_resources">\"user profile image\"</string>
+    <string name="user_data">user data</string>
+    <string name="fullname">fullName</string>
+    <string name="nickname">nickname</string>
+    <string name="example_domain_com">example@domain.com</string>
+    <string name="provaprovaprova">provaprovaprova</string>
+    <string name="_00000000000000">+00000000000000</string>
+    <string name="_22_22_2222">22/22/2222</string>
+    <string name="sports">Sports</string>
+    <string name="textview">TextView</string>
+    <string-array name="spinnerItems">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Not specified</item>
+    </string-array>
+</resources>
+
