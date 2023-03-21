@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.lab2activity'
+    namespace 'it.polito.mad.lab2'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.lab2activity"
+        applicationId "it.polito.mad.lab2"
         minSdk 24
         targetSdk 33
         versionCode 1

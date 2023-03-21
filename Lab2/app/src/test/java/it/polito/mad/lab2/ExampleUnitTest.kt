@@ -1,4 +1,4 @@
-package com.example.lab2activity
+package it.polito.mad.lab2
 
 import org.junit.Test
 
