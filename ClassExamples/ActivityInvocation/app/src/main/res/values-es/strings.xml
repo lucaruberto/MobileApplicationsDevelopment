@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="greeting">Hola, Android!</string>
+    <string name="button">Boton</string>
+</resources>

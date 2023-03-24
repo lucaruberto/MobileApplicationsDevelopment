@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">ActivityInvocation</string>
+    <string name="greeting">Hello, Android!</string>
+    <string name="button">Button</string>
+
+</resources>
