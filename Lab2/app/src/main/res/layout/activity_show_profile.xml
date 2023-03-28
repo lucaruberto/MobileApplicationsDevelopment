@@ -23,18 +23,20 @@
 
         <ImageView
             android:id="@+id/profileImage"
-            android:layout_width="match_parent"
-            android:layout_height="247dp"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
             android:layout_marginTop="4dp"
+            android:layout_weight="1"
             android:contentDescription="@string/image_resources"
-            android:foregroundGravity="center"
             tools:srcCompat="@tools:sample/avatars" />
 
         <ScrollView
             android:id="@+id/scrollView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
             android:layout_gravity="center"
+            android:layout_weight="2"
             android:contentDescription="@string/user_data"
             android:orientation="vertical">
 
@@ -48,18 +50,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:minHeight="48dp"
                     android:text="@string/nickname"
-                    android:textSize="20sp"
-                    android:minHeight="48dp"/>
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/nickname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:minHeight="48dp"
                     android:text="@string/fullname"
-                    android:textSize="20sp"
-                    android:minHeight="48dp"/>
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/gender"
@@ -67,9 +69,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
+                    android:minHeight="48dp"
                     android:text="@string/male"
-                    android:textSize="20sp"
-                    android:minHeight="48dp" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/birthDate"
@@ -78,8 +80,8 @@
                     android:ems="10"
                     android:gravity="center"
                     android:minHeight="48dp"
-                    android:textSize="20sp"
-                    android:text="@string/_22_22_2222" />
+                    android:text="@string/_22_22_2222"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/emailAddress"
@@ -87,9 +89,9 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:gravity="center"
-                    android:text="@string/example_domain_com"
                     android:minHeight="48dp"
-                    android:textSize="20sp"/>
+                    android:text="@string/example_domain_com"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/userPassword"
@@ -98,8 +100,8 @@
                     android:ems="10"
                     android:gravity="center"
                     android:minHeight="48dp"
-                    android:textSize="20sp"
                     android:text="@string/pwd"
+                    android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
@@ -110,26 +112,26 @@
                     android:ems="10"
                     android:gravity="center"
                     android:minHeight="48dp"
-                    android:textSize="20sp"
-                    android:text="@string/_00000000000000" />
+                    android:text="@string/_00000000000000"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/sportsList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:minHeight="48dp"
                     android:text="@string/sports"
-                    android:textSize="20sp"
-                    android:minHeight="48dp"/>
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/reputation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:minHeight="48dp"
                     android:text="@string/reputation"
-                    android:textSize="20sp"
-                    android:minHeight="48dp"/>
+                    android:textSize="20sp" />
 
             </LinearLayout>
         </ScrollView>
