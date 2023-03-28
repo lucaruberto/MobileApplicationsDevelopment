@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.33" />
+        app:layout_constraintGuide_begin="199dp" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -28,19 +28,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="134dp"
-        android:layout_height="36dp"
-        android:text="Nickname"
-        android:textSize="24sp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.513"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/guideline"
-        app:layout_constraintVertical_bias="0.891" />
-
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
@@ -48,7 +35,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView"
+        app:layout_constraintTop_toBottomOf="@id/guideline"
         app:layout_constraintVertical_bias="1.0">
 
         <LinearLayout
@@ -62,7 +49,17 @@
             android:textAlignment="center"
             android:visibility="visible">
 
-            <EditText
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Nickname"
+                android:textAlignment="center"
+                android:textSize="32dp" />
+
+            <TextView
                 android:id="@+id/FullName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -74,9 +71,10 @@
                 android:inputType="textEmailAddress"
                 android:minHeight="48dp"
                 android:text="Full Name"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textSize="24sp"/>
 
-            <EditText
+            <TextView
                 android:id="@+id/Mail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -88,9 +86,10 @@
                 android:inputType="textEmailAddress"
                 android:minHeight="48dp"
                 android:text="emailprova@gmail.com"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textSize="24sp"/>
 
-            <EditText
+            <TextView
                 android:id="@+id/Birth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -102,9 +101,10 @@
                 android:inputType="textEmailAddress"
                 android:minHeight="48dp"
                 android:text="DD/MM/YYYY"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textSize="24sp"/>
 
-            <EditText
+            <TextView
                 android:id="@+id/Sex"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -116,9 +116,10 @@
                 android:inputType="textEmailAddress"
                 android:minHeight="48dp"
                 android:text="Male/Female"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textSize="24sp"/>
 
-            <EditText
+            <TextView
                 android:id="@+id/City"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -130,9 +131,10 @@
                 android:inputType="textEmailAddress"
                 android:minHeight="48dp"
                 android:text="Turin"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textSize="24sp"/>
 
-            <EditText
+            <TextView
                 android:id="@+id/Sports"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -144,7 +146,8 @@
                 android:inputType="textEmailAddress"
                 android:minHeight="48dp"
                 android:text="SportsList"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textSize="24sp"/>
 
             <TableRow
                 android:layout_width="match_parent"
