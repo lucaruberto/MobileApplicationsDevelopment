@@ -1,7 +1,9 @@
 package it.polito.mad.lab2
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 
 class ShowProfileActivity : AppCompatActivity() {
@@ -11,8 +13,17 @@ class ShowProfileActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu, menu)
+        menuInflater.inflate(R.menu.edit_menu, menu)
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.editIcon){
+            val i = Intent(this, EditProfileActivity::class.java)
+            startActivity(i)
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
 

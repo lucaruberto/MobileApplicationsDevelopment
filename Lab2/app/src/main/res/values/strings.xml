@@ -2,16 +2,28 @@
     <string name="app_name">Lab2</string>
     <string name="image_resources">user profile image</string>
     <string name="user_data">user data</string>
-    <string name="fullname">fullName</string>
-    <string name="nickname">nickname</string>
-    <string name="_00000000000000">+00000000000000</string>
+    <string name="fullname">Andrea Torredimare</string>
+    <string name="nickname">aTorre</string>
+    <string name="phone_number">+393313559230</string>
     <string name="sports">Sports</string>
     <string name="edit_profile">Edit Profile</string>
-    <string name="_22_22_2222">22/22/2222</string>
-    <string name="example_domain_com">example@domain.com</string>
-    <string name="pwd">**********</string>
+    <string name="birth_date">22/22/2222</string>
+    <string name="email_address">andrea@torre.it</string>
     <string name="reputation">Reputation</string>
+    <string name="pwd">password</string>
     <string name="male">Male</string>
+
+    <string name="insert_your_name">Insert your name…</string>
+    <string name="insert_your_nickname">Insert your nickname…</string>
+    <string name="insert_your_birth_date">Insert your birth date…</string>
+    <string name="insert_your_email_address">Insert your email address…</string>
+    <string name="insert_your_password">Insert your password…</string>
+    <string name="insert_your_phone_number">Insert your phone number…</string>
+    <string name="sports_list">Sports list…</string>
+    <string name="user_reputation">User reputation…</string>
+    <string name="camera_button">open_image_menu</string>
+    <string name="done">Done</string>
+
     <string-array name="spinnerItems">
         <item>Male</item>
         <item>Female</item>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3700BCD4"
+    android:background="#371ABFD5"
     tools:context=".EditProfileActivity">
 
     <LinearLayout
@@ -29,7 +29,18 @@
             android:layout_marginTop="4dp"
             android:layout_weight="1"
             android:contentDescription="@string/image_resources"
-            tools:srcCompat="@tools:sample/avatars" />
+            app:srcCompat="@drawable/profile_generic"
+            tools:srcCompat="@drawable/profile_generic" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/camera_button"
+            android:foregroundTint="#00000000"
+            app:srcCompat="@android:drawable/ic_menu_camera" />
 
         <ScrollView
             android:id="@+id/scrollView"
@@ -41,97 +52,137 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/user_data"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:orientation="vertical">
 
-                <TextView
+                <EditText
                     android:id="@+id/fullName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:autofillHints="name"
+                    android:background="@android:color/transparent"
                     android:gravity="center"
-                    android:minHeight="48dp"
-                    android:text="@string/nickname"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/nickname"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:inputType="text"
+                    android:labelFor="@id/fullName"
                     android:minHeight="48dp"
                     android:text="@string/fullname"
                     android:textSize="20sp" />
 
-                <TextView
-                    android:id="@+id/gender"
+                <EditText
+                    android:id="@+id/nickname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:autofillHints="username"
+                    android:background="@android:color/transparent"
                     android:gravity="center"
+                    android:hint="@string/insert_your_nickname"
+                    android:inputType="text"
                     android:minHeight="48dp"
-                    android:text="@string/male"
+                    android:text="@string/nickname"
                     android:textSize="20sp" />
 
-                <TextView
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="gender"
+                    android:entries="@array/spinnerItems"
+                    android:textAlignment="center" />
+
+                <EditText
                     android:id="@+id/birthDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:autofillHints="date"
+                    android:background="@android:color/transparent"
                     android:ems="10"
                     android:gravity="center"
+                    android:hint="@string/insert_your_birth_date"
+                    android:inputType="date"
                     android:minHeight="48dp"
-                    android:text="@string/_22_22_2222"
+                    android:text="@string/birth_date"
                     android:textSize="20sp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/emailAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:autofillHints="emailAddress"
+                    android:background="@android:color/transparent"
                     android:ems="10"
                     android:gravity="center"
+                    android:hint="@string/insert_your_email_address"
+                    android:inputType="textEmailAddress"
                     android:minHeight="48dp"
-                    android:text="@string/example_domain_com"
+                    android:text="@string/email_address"
                     android:textSize="20sp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/userPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:autofillHints="password"
+                    android:background="@android:color/transparent"
                     android:ems="10"
                     android:gravity="center"
+                    android:hint="@string/insert_your_password"
+                    android:inputType="textVisiblePassword"
                     android:minHeight="48dp"
                     android:text="@string/pwd"
                     android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
-                <TextView
+                <EditText
                     android:id="@+id/phoneNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:autofillHints="phone"
+                    android:background="@android:color/transparent"
                     android:ems="10"
                     android:gravity="center"
+                    android:hint="@string/insert_your_phone_number"
+                    android:inputType="phone"
                     android:minHeight="48dp"
-                    android:text="@string/_00000000000000"
+                    android:text="@string/phone_number"
                     android:textSize="20sp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/sportsList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:autofillHints="list"
+                    android:background="@android:color/transparent"
                     android:gravity="center"
+                    android:hint="@string/sports_list"
+                    android:inputType="text"
                     android:minHeight="48dp"
                     android:text="@string/sports"
                     android:textSize="20sp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/reputation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:autofillHints="reputation"
+                    android:background="@android:color/transparent"
                     android:gravity="center"
+                    android:hint="@string/user_reputation"
+                    android:inputType="text"
                     android:minHeight="48dp"
                     android:text="@string/reputation"
                     android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/done"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginBottom="32dp"
+                    android:text="@string/done" />
 
             </LinearLayout>
         </ScrollView>
