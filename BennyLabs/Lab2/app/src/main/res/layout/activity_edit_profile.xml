@@ -63,7 +63,7 @@
                 android:inputType="textPersonName"
                 android:drawableStart="@drawable/baseline_person_24"
                 android:hint="Nickname"
-                android:text="@string/nickname"
+                android:text=""
                 android:textSize="24dp" />
 
             <EditText

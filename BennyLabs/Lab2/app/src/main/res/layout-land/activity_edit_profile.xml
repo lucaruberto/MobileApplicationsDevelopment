@@ -51,7 +51,7 @@
             android:visibility="visible">
 
             <EditText
-                android:id="@+id/NickName"
+                android:id="@+id/EditNickname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center|center_vertical"
@@ -67,7 +67,7 @@
                 android:textSize="24dp"/>
 
             <EditText
-                android:id="@+id/FullName"
+                android:id="@+id/EditFullName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|center_vertical"
@@ -86,7 +86,7 @@
                 />
 
             <EditText
-                android:id="@+id/Mail"
+                android:id="@+id/EditMail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|center_vertical"
@@ -104,7 +104,7 @@
                 android:layout_marginTop="16dp"/>
 
             <EditText
-                android:id="@+id/Birth"
+                android:id="@+id/EditBirth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|center_vertical"
@@ -123,7 +123,7 @@
                 />
 
             <EditText
-                android:id="@+id/Sex"
+                android:id="@+id/EditSex"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|center_vertical"
@@ -141,7 +141,7 @@
                 android:layout_marginTop="16dp"/>
 
             <EditText
-                android:id="@+id/City"
+                android:id="@+id/EditCity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|center_vertical"
@@ -159,7 +159,7 @@
                 android:layout_marginTop="16dp"/>
 
             <EditText
-                android:id="@+id/Sport"
+                android:id="@+id/EditSportslist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|center_vertical"

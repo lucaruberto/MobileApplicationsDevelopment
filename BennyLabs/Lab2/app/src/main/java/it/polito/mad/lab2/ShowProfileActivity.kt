@@ -29,7 +29,6 @@ class ShowProfileActivity : AppCompatActivity() {
                 Toast.makeText(this, "Edit Mode!", Toast.LENGTH_SHORT).show();
                 val nextpage=Intent(this,EditProfileActivity::class.java);
                 startActivity(nextpage);
-                finish();
                 return  true;
             }
             else -> return  super.onOptionsItemSelected(item);
