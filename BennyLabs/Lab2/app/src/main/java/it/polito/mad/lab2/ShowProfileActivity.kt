@@ -17,7 +17,6 @@ class ShowProfileActivity : AppCompatActivity() {
 
     }
 
-    @Override
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.homemenu,menu);
         return true;
@@ -28,8 +27,8 @@ class ShowProfileActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.pencil -> {
                 Toast.makeText(this, "Edit Mode!", Toast.LENGTH_SHORT).show();
-                val next_page=Intent(this,EditProfileActivity::class.java);
-                startActivity(next_page);
+                val nextpage=Intent(this,EditProfileActivity::class.java);
+                startActivity(nextpage);
                 finish();
                 return  true;
             }

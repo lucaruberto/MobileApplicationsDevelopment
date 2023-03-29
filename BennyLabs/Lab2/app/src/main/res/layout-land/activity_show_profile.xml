@@ -56,9 +56,13 @@
                 android:layout_height="wrap_content"
                 android:gravity="center|center_vertical"
                 android:minHeight="48dp"
-                android:text="Nickname"
+                android:text="@string/nickname"
                 android:textAlignment="center"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_person_24"
+                android:layout_marginTop="16dp"
+                />
 
             <TextView
                 android:id="@+id/FullName"
@@ -71,8 +75,11 @@
                 android:gravity="center|center_vertical"
                 android:inputType="textEmailAddress"
                 android:minHeight="48dp"
-                android:text="Full Name"
-                android:textAlignment="center" />
+                android:text="@string/fullname"
+                android:textAlignment="center"
+                android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_person_24"
+                android:layout_marginTop="16dp"/>
 
             <TextView
                 android:id="@+id/Mail"
@@ -85,8 +92,11 @@
                 android:gravity="center|center_vertical"
                 android:inputType="textEmailAddress"
                 android:minHeight="48dp"
-                android:text="emailprova@gmail.com"
-                android:textAlignment="center" />
+                android:text="@string/mail"
+                android:textAlignment="center"
+                android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_email_24"
+                android:layout_marginTop="16dp"/>
 
             <TextView
                 android:id="@+id/Birth"
@@ -99,8 +109,11 @@
                 android:gravity="center|center_vertical"
                 android:inputType="textEmailAddress"
                 android:minHeight="48dp"
-                android:text="DD/MM/YYYY"
-                android:textAlignment="center" />
+                android:text="@string/birth"
+                android:textAlignment="center"
+                android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_calendar_month_24"
+                android:layout_marginTop="16dp"/>
 
             <TextView
                 android:id="@+id/Sex"
@@ -113,8 +126,11 @@
                 android:gravity="center|center_vertical"
                 android:inputType="textEmailAddress"
                 android:minHeight="48dp"
-                android:text="Male/Female"
-                android:textAlignment="center" />
+                android:text="@string/sex"
+                android:textAlignment="center"
+                android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_man_4_24"
+                android:layout_marginTop="16dp"/>
 
             <TextView
                 android:id="@+id/City"
@@ -125,10 +141,13 @@
                 android:ems="10"
                 android:foregroundGravity="center"
                 android:gravity="center|center_vertical"
-                android:inputType="textEmailAddress"
+                android:inputType="textAutoCorrect"
                 android:minHeight="48dp"
-                android:text="Turin"
-                android:textAlignment="center" />
+                android:text="@string/city"
+                android:textAlignment="center"
+                android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_location_city_24"
+                android:layout_marginTop="16dp"/>
 
             <TextView
                 android:id="@+id/Sport"
@@ -142,27 +161,18 @@
                 android:inputType="textEmailAddress"
                 android:minHeight="48dp"
                 android:text="SportsList"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_sports_martial_arts_24"
+                android:layout_marginTop="16dp"/>
 
-            <TextView
-                android:id="@+id/prova"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|center_vertical"
-                android:layout_weight="1"
-                android:ems="10"
-                android:foregroundGravity="center"
-                android:gravity="center|center_vertical"
-                android:inputType="textEmailAddress"
-                android:minHeight="48dp"
-                android:text="provalista"
-                android:textAlignment="center" />
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center">
+                android:gravity="center"
+                android:layout_marginTop="16dp">
 
                 <TextView
                     android:id="@+id/Reputation"
