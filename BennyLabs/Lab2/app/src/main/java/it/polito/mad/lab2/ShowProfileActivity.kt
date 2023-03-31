@@ -1,18 +1,23 @@
 package it.polito.mad.lab2
 
+import android.Manifest
 import android.app.Activity
-import android.content.ClipData.Item
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+
 
 class ShowProfileActivity : AppCompatActivity() {
 
@@ -23,6 +28,10 @@ class ShowProfileActivity : AppCompatActivity() {
     lateinit var sex : TextView;
     lateinit var city : TextView;
     lateinit var lists : TextView;
+    lateinit var sharedPref : SharedPreferences;
+    private lateinit var photo : ImageView;
+    var image_uri: Uri? = null
+
 
     private val startForResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -35,8 +44,28 @@ class ShowProfileActivity : AppCompatActivity() {
             sex.text = result.data?.getStringExtra("sex");
             city.text = result.data?.getStringExtra("city");
             lists.text = result.data?.getStringExtra("lists");
+            image_uri=Uri.parse(result.data?.getStringExtra("profilepic"));
+            val mappa = MediaStore.Images.Media.getBitmap(this.contentResolver,Uri.parse(result.data?.getStringExtra("profilepic")));
+            photo.setImageBitmap(mappa);
+
+
+            //saving preferences
+            val editor= sharedPref.edit();
+            editor.apply{
+                putString("nickname",nickname.text.toString());
+                putString("fullname",fullname.text.toString());
+                putString("email",email.text.toString());
+                putString("birth",birth.text.toString());
+                putString("sex",sex.text.toString());
+                putString("city",city.text.toString());
+                putString("lists",lists.text.toString());
+                apply();
+            }
+
         }
     }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +77,32 @@ class ShowProfileActivity : AppCompatActivity() {
         sex=findViewById(R.id.Sex);
         city=findViewById(R.id.City);
         lists=findViewById(R.id.Sport);
+        photo=findViewById(R.id.ProfileImage)
+        sharedPref = getSharedPreferences("preferences_file", MODE_PRIVATE);
 
+        nickname.text= sharedPref.getString("nickname","");
+        fullname.text = sharedPref.getString("fullname","");
+        email.text = sharedPref.getString("email","");
+        birth.text = sharedPref.getString("birth","");
+        sex.text = sharedPref.getString("sex","");
+        city.text = sharedPref.getString("city","");
+        lists.text = sharedPref.getString("lists","");
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(
+
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+                == PackageManager.PERMISSION_DENIED
+            ) {
+                val permission = arrayOf<String>(
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+                requestPermissions(permission, 112)
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -109,6 +163,10 @@ class ShowProfileActivity : AppCompatActivity() {
         outState.putString("sex",sex.text.toString());
         outState.putString("city",city.text.toString());
         outState.putString("lists",lists.text.toString());
+
+        if(image_uri != null)
+            outState.putString("profilepic",image_uri.toString());
+
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -120,6 +178,15 @@ class ShowProfileActivity : AppCompatActivity() {
         sex.text=savedInstanceState.getString("sex");
         city.text=savedInstanceState.getString("city");
         lists.text=savedInstanceState.getString("lists");
+
+       if( savedInstanceState.getString("profilepic") != null) {
+            image_uri = Uri.parse(savedInstanceState.getString("profilepic"));
+            val mappa = MediaStore.Images.Media.getBitmap(
+                this.contentResolver,
+                Uri.parse(savedInstanceState.getString("profilepic"))
+            );
+            photo.setImageBitmap(mappa);
+        }
     }
 
 }

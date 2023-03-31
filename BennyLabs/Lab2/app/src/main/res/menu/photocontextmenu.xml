@@ -5,11 +5,9 @@
     <item
         android:id="@+id/Gallery"
         android:title="Select an image from the phone gallery"
-        app:showAsAction="always"
-        />
+        app:actionViewClass="android.widget.ImageButton" />
     <item
         android:id="@+id/Picture"
         android:title="Use the camera to take a picture"
-        app:showAsAction="always"
-        />
+        app:actionViewClass="android.widget.ImageButton" />
 </menu>
