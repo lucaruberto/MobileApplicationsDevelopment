@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/Gallery"
+        android:title="Select an image from the phone gallery"
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/Picture"
+        android:title="Use the camera to take a picture"
+        app:showAsAction="always"
+        />
+</menu>

@@ -16,4 +16,9 @@
     <string name="sex">Male</string>
     <string name="city">Turin</string>
     <string name="sportlists">Football,Baseball,Basketball</string>
+    <string name="user_profile_image">user profile image</string>
+    <string name="reputation">Reputation</string>
+    <string name="star">star</string>
+    <string name="sportslist">SportsList</string>
+    <string name="change_profile_image">change profile image</string>
 </resources>
