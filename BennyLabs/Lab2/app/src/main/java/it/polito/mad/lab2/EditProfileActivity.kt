@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
 import android.graphics.Matrix
 import android.net.Uri
 import android.os.Build
@@ -44,7 +45,7 @@ class EditProfileActivity : AppCompatActivity() {
 
     private var galleryActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult(), ActivityResultCallback {
-            if (it.getResultCode() === RESULT_OK) {
+            if (it.resultCode == RESULT_OK) {
                 image_uri = it.data?.data
                 val inputImage = uriToBitmap(image_uri!!)
                 val rotated = rotateBitmap(inputImage!!)
@@ -57,7 +58,7 @@ class EditProfileActivity : AppCompatActivity() {
     //TODO capture the image using camera and display it
     private var cameraActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult(), ActivityResultCallback {
-            if (it.resultCode === RESULT_OK) {
+            if (it.resultCode == RESULT_OK) {
                 val inputImage = uriToBitmap(image_uri!!)
                 val rotated = rotateBitmap(inputImage!!)
                 imageView.setImageBitmap(rotated)
@@ -129,20 +130,16 @@ class EditProfileActivity : AppCompatActivity() {
             }
 
             R.id.Picture ->{
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (checkSelfPermission(android.Manifest.permission.CAMERA) ==
-                        PackageManager.PERMISSION_DENIED ||
-                        checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        == PackageManager.PERMISSION_DENIED
-                    ) {
-                        val permission = arrayOf<String>(
-                            android.Manifest.permission.CAMERA,
-                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        )
-                        requestPermissions(permission, 112)
-                    } else {
-                        openCamera()
-                    }
+                if (checkSelfPermission(android.Manifest.permission.CAMERA) ==
+                    PackageManager.PERMISSION_DENIED ||
+                    checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_DENIED
+                ) {
+                    val permission = arrayOf<String>(
+                        android.Manifest.permission.CAMERA,
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                    requestPermissions(permission, 112)
                 } else {
                     openCamera()
                 }
@@ -200,7 +197,6 @@ class EditProfileActivity : AppCompatActivity() {
             }
             else -> return  super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -228,10 +224,19 @@ class EditProfileActivity : AppCompatActivity() {
 
         if(savedInstanceState.getString("profilepic") != null) {
             image_uri = Uri.parse(savedInstanceState.getString("profilepic"));
-            val mappa = MediaStore.Images.Media.getBitmap(
-                this.contentResolver,
-                Uri.parse(savedInstanceState.getString("profilepic"))
-            );
+            var mappa: Bitmap? = null
+
+            try {
+                mappa = if (Build.VERSION.SDK_INT < 28) {
+                    MediaStore.Images.Media.getBitmap(this.contentResolver, image_uri)
+                } else {
+                    val source: ImageDecoder.Source =
+                        ImageDecoder.createSource(contentResolver, image_uri!!)
+                    ImageDecoder.decodeBitmap(source)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
             imageView.setImageBitmap(mappa);
         }
     }
@@ -250,7 +255,7 @@ class EditProfileActivity : AppCompatActivity() {
         return null
     }
 
-    @SuppressLint("Range")
+    @SuppressLint("Range", "Recycle")
     fun rotateBitmap(input: Bitmap): Bitmap? {
         val orientationColumn =
             arrayOf(MediaStore.Images.Media.ORIENTATION)

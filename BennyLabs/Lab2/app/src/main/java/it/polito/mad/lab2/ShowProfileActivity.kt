@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -44,10 +46,25 @@ class ShowProfileActivity : AppCompatActivity() {
             sex.text = result.data?.getStringExtra("sex");
             city.text = result.data?.getStringExtra("city");
             lists.text = result.data?.getStringExtra("lists");
-            image_uri=Uri.parse(result.data?.getStringExtra("profilepic"));
-            val mappa = MediaStore.Images.Media.getBitmap(this.contentResolver,Uri.parse(result.data?.getStringExtra("profilepic")));
-            photo.setImageBitmap(mappa);
-
+            if(result.data?.getStringExtra("profilepic")!=null) {
+                image_uri = Uri.parse(result.data?.getStringExtra("profilepic"));
+                var mappa: Bitmap? = null
+                try {
+                    mappa = if (Build.VERSION.SDK_INT < 28) {
+                        MediaStore.Images.Media.getBitmap(
+                            this.contentResolver,
+                            Uri.parse(result.data?.getStringExtra("profilepic"))
+                        )
+                    } else {
+                        val source: ImageDecoder.Source =
+                            ImageDecoder.createSource(this.contentResolver, image_uri!!)
+                        ImageDecoder.decodeBitmap(source)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+                photo.setImageBitmap(mappa);
+            }
 
             //saving preferences
             val editor= sharedPref.edit();
@@ -151,7 +168,6 @@ class ShowProfileActivity : AppCompatActivity() {
             }
             else -> return  super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -178,13 +194,21 @@ class ShowProfileActivity : AppCompatActivity() {
         sex.text=savedInstanceState.getString("sex");
         city.text=savedInstanceState.getString("city");
         lists.text=savedInstanceState.getString("lists");
-
+        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
        if( savedInstanceState.getString("profilepic") != null) {
-            image_uri = Uri.parse(savedInstanceState.getString("profilepic"));
-            val mappa = MediaStore.Images.Media.getBitmap(
-                this.contentResolver,
-                Uri.parse(savedInstanceState.getString("profilepic"))
-            );
+            image_uri = Uri.parse(savedInstanceState.getString("profilepic"))
+           var mappa: Bitmap? = null
+           try {
+               mappa = if (Build.VERSION.SDK_INT < 28) {
+                   MediaStore.Images.Media.getBitmap(contentResolver, image_uri)
+               } else {
+                   val source: ImageDecoder.Source =
+                       ImageDecoder.createSource(contentResolver, image_uri!!)
+                   ImageDecoder.decodeBitmap(source)
+               }
+           } catch (e: Exception) {
+               e.printStackTrace()
+           }
             photo.setImageBitmap(mappa);
         }
     }

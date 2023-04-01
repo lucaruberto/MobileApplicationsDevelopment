@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    android:background="#4CAF50"
-    android:backgroundTint="#77BD25"
+    android:background="#E8F5E9"
+    android:backgroundTint="#A5D6A7"
     android:paddingTop="16dp"
     android:paddingBottom="16dp"
     tools:context=".ShowProfileActivity">
@@ -18,7 +18,7 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.33" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -28,16 +28,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="1">
+        >
 
         <ImageView
             android:id="@+id/ProfileImage"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:layout_gravity="center"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_weight="1"
             android:contentDescription="@string/user_profile_image"
             app:srcCompat="@drawable/person"
             tools:srcCompat="@drawable/person" />
@@ -46,12 +47,21 @@
             android:id="@+id/EditImage"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_alignStart="@+id/ProfileImage"
+            android:layout_alignEnd="@+id/ProfileImage"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
             android:layout_gravity="center"
+            android:layout_marginStart="165dp"
+            android:layout_marginTop="118dp"
+            android:layout_marginEnd="166dp"
+            android:layout_marginBottom="6dp"
+            android:background="@android:color/transparent"
             android:contentDescription="@string/change_profile_image"
             android:minHeight="48dp"
             android:src="@android:drawable/ic_menu_camera"
             tools:srcCompat="@android:drawable/ic_menu_camera" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -73,6 +83,7 @@
             android:foregroundGravity="center"
             android:gravity="center_horizontal"
             android:orientation="vertical"
+            android:layout_marginTop="16dp"
             android:textAlignment="center"
             android:visibility="visible">
 
@@ -80,7 +91,6 @@
                 android:id="@+id/EditNickname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:autofillHints="Insert nickname..."
                 android:background="@drawable/custom_input"
                 android:drawableStart="@drawable/baseline_person_24"
