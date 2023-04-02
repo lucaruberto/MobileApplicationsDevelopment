@@ -19,53 +19,53 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import java.io.ByteArrayOutputStream
 import java.io.FileDescriptor
 import java.io.IOException
 
 
 class EditProfileActivity : AppCompatActivity() {
-    lateinit var nickname : TextView;
-    lateinit var fullname : TextView;
-    lateinit var email    : TextView;
-    lateinit var birth : TextView;
-    lateinit var sex : TextView;
-    lateinit var city : TextView;
-    lateinit var lists : TextView;
-    private lateinit var profilepicture : ImageButton ;
-    lateinit var imageView: ImageView;
-    var mappa : Bitmap? = null;
+    lateinit var nickname: TextView
+    lateinit var fullname: TextView
+    lateinit var email: TextView
+    lateinit var birth: TextView
+    lateinit var sex: TextView
+    lateinit var city: TextView
+    lateinit var lists: TextView
+    private lateinit var profilepicture: ImageButton
+    lateinit var imageView: ImageView
+    var mappa: Bitmap? = null
     var image_uri: Uri? = null
 
 
-
-    private var galleryActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult(), ActivityResultCallback {
+    private var galleryActivityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
             if (it.resultCode == RESULT_OK) {
                 image_uri = it.data?.data
+                contentResolver.takePersistableUriPermission(image_uri!!, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
                 val inputImage = uriToBitmap(image_uri!!)
                 val rotated = rotateBitmap(inputImage!!)
                 imageView.setImageBitmap(rotated)
-                mappa=rotated;
+                mappa = rotated
             }
         }
-    )
 
     //TODO capture the image using camera and display it
-    private var cameraActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult(), ActivityResultCallback {
+    private var cameraActivityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
             if (it.resultCode == RESULT_OK) {
                 val inputImage = uriToBitmap(image_uri!!)
                 val rotated = rotateBitmap(inputImage!!)
                 imageView.setImageBitmap(rotated)
-                mappa=rotated;
+                mappa = rotated
             }
         }
-    )
 
     //TODO opens camera so that user can capture image
     private fun openCamera() {
@@ -81,55 +81,52 @@ class EditProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
-        nickname=findViewById<EditText>(R.id.EditNickname)
-        fullname=findViewById(R.id.EditFullName);
-        email=findViewById(R.id.EditMail);
-        birth=findViewById(R.id.EditBirth);
-        sex=findViewById(R.id.EditSex);
-        city=findViewById(R.id.EditCity);
-        lists=findViewById(R.id.EditSportslist);
-        profilepicture=findViewById(R.id.EditImage); //Image Button
-        imageView=findViewById(R.id.ProfileImage)  //Image VIEW
+        nickname = findViewById<EditText>(R.id.EditNickname)
+        fullname = findViewById(R.id.EditFullName)
+        email = findViewById(R.id.EditMail)
+        birth = findViewById(R.id.EditBirth)
+        sex = findViewById(R.id.EditSex)
+        city = findViewById(R.id.EditCity)
+        lists = findViewById(R.id.EditSportslist)
+        profilepicture = findViewById(R.id.EditImage) //Image Button
+        imageView = findViewById(R.id.ProfileImage) //Image VIEW
 
 
-        nickname.text = this.intent?.getStringExtra("nickname");
-        fullname.text = this.intent?.getStringExtra("fullname");
-        email.text = this.intent?.getStringExtra("email");
-        birth.text = this.intent?.getStringExtra("birth");
-        sex.text = this.intent?.getStringExtra("sex");
-        city.text = this.intent?.getStringExtra("city");
-        lists.text = this.intent?.getStringExtra("lists");
+        nickname.text = this.intent?.getStringExtra("nickname")
+        fullname.text = this.intent?.getStringExtra("fullname")
+        email.text = this.intent?.getStringExtra("email")
+        birth.text = this.intent?.getStringExtra("birth")
+        sex.text = this.intent?.getStringExtra("sex")
+        city.text = this.intent?.getStringExtra("city")
+        lists.text = this.intent?.getStringExtra("lists")
 
-        registerForContextMenu(profilepicture);
-
-
-
-
+        registerForContextMenu(profilepicture)
     }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.homeditmenu,menu);
-        return true;
+        menuInflater.inflate(R.menu.homeditmenu, menu)
+        return true
 
     }
 
-    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-
-        menuInflater.inflate(R.menu.photocontextmenu,menu);
-
-        }
-
-
+    override fun onCreateContextMenu(
+        menu: ContextMenu?,
+        v: View?,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
+        menuInflater.inflate(R.menu.photocontextmenu, menu)
+    }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        when (item.itemId)
-        {
-            R.id.Gallery-> {
-                val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                galleryActivityResultLauncher.launch(galleryIntent);
-                return true;
+        when (item.itemId) {
+            R.id.Gallery -> {
+                val galleryIntent =
+                    Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                galleryActivityResultLauncher.launch(galleryIntent)
+                return true
             }
 
-            R.id.Picture ->{
+            R.id.Picture -> {
                 if (checkSelfPermission(android.Manifest.permission.CAMERA) ==
                     PackageManager.PERMISSION_DENIED ||
                     checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -144,8 +141,7 @@ class EditProfileActivity : AppCompatActivity() {
                     openCamera()
                 }
 
-                return true;
-
+                return true
             }
         }
 
@@ -155,77 +151,68 @@ class EditProfileActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.check -> {
-                val i = Intent(this,ShowProfileActivity::class.java);
-                Toast.makeText(this, "Profile Mode!", Toast.LENGTH_SHORT).show();
-                if(nickname.text.toString()!= "")
-                {
-                    i.putExtra("nickname",nickname.text.toString());
+                val i = Intent(this, ShowProfileActivity::class.java)
+                Toast.makeText(this, "Profile Mode!", Toast.LENGTH_SHORT).show()
+                if (nickname.text.toString() != "") {
+                    i.putExtra("nickname", nickname.text.toString())
                 }
-                if(fullname.text.toString()!= "")
-                {
-                    i.putExtra("fullname",fullname.text.toString());
+                if (fullname.text.toString() != "") {
+                    i.putExtra("fullname", fullname.text.toString())
                 }
-                if(email.text.toString()!= "")
-                {
-                    i.putExtra("email",email.text.toString());
+                if (email.text.toString() != "") {
+                    i.putExtra("email", email.text.toString())
                 }
-                if(birth.text.toString()!= "")
-                {
-                    i.putExtra("birth",birth.text.toString());
+                if (birth.text.toString() != "") {
+                    i.putExtra("birth", birth.text.toString())
                 }
-                if(sex.text.toString()!= "")
-                {
-                    i.putExtra("sex",sex.text.toString());
+                if (sex.text.toString() != "") {
+                    i.putExtra("sex", sex.text.toString())
                 }
-                if(city.text.toString()!= "")
-                {
-                    i.putExtra("city",city.text.toString());
+                if (city.text.toString() != "") {
+                    i.putExtra("city", city.text.toString())
                 }
-                if(lists.text.toString()!= "")
-                {
-                    i.putExtra("lists",lists.text.toString());
+                if (lists.text.toString() != "") {
+                    i.putExtra("lists", lists.text.toString())
                 }
-                if(image_uri != null)
-                {
-
-                    i.putExtra("profilepic",image_uri.toString());
+                if (image_uri != null) {
+                    i.putExtra("profilepic", image_uri.toString())
                 }
 
-                setResult(RESULT_OK,i);
-                finish();
-                return  true;
+                setResult(RESULT_OK, i)
+                finish()
+                return true
             }
-            else -> return  super.onOptionsItemSelected(item);
+            else -> return super.onOptionsItemSelected(item)
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+
+        outState.putString("nickname", nickname.text.toString())
+        outState.putString("fullname", fullname.text.toString())
+        outState.putString("email", email.text.toString())
+        outState.putString("birth", birth.text.toString())
+        outState.putString("sex", sex.text.toString())
+        outState.putString("city", city.text.toString())
+        outState.putString("lists", lists.text.toString())
+        if (image_uri != null)
+            outState.putString("profilepic", image_uri!!.toString())
         super.onSaveInstanceState(outState)
-        outState.putString("nickname",nickname.text.toString());
-        outState.putString("fullname",fullname.text.toString());
-        outState.putString("email",email.text.toString());
-        outState.putString("birth",birth.text.toString());
-        outState.putString("sex",sex.text.toString());
-        outState.putString("city",city.text.toString());
-        outState.putString("lists",lists.text.toString());
-        if(image_uri!= null)
-            outState.putString("profilepic",image_uri.toString());
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        nickname.text=savedInstanceState.getString("nickname");
-        fullname.text=savedInstanceState.getString("fullname");
-        email.text=savedInstanceState.getString("email");
-        birth.text=savedInstanceState.getString("birth");
-        sex.text=savedInstanceState.getString("sex");
-        city.text=savedInstanceState.getString("city");
-        lists.text=savedInstanceState.getString("lists");
+        nickname.text = savedInstanceState.getString("nickname")
+        fullname.text = savedInstanceState.getString("fullname")
+        email.text = savedInstanceState.getString("email")
+        birth.text = savedInstanceState.getString("birth")
+        sex.text = savedInstanceState.getString("sex")
+        city.text = savedInstanceState.getString("city")
+        lists.text = savedInstanceState.getString("lists")
 
-        if(savedInstanceState.getString("profilepic") != null) {
-            image_uri = Uri.parse(savedInstanceState.getString("profilepic"));
+        if (savedInstanceState.getString("profilepic") != null) {
+            image_uri = Uri.parse(savedInstanceState.getString("profilepic"))
             var mappa: Bitmap? = null
-
             try {
                 mappa = if (Build.VERSION.SDK_INT < 28) {
                     MediaStore.Images.Media.getBitmap(this.contentResolver, image_uri)
@@ -237,7 +224,7 @@ class EditProfileActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            imageView.setImageBitmap(mappa);
+            imageView.setImageBitmap(mappa)
         }
     }
 

@@ -12,5 +12,8 @@
 /captures
 .externalNativeBuild
 .cxx
-./DS_Store
+.idea
+.idea/
+./idea
+./idea/
 local.properties

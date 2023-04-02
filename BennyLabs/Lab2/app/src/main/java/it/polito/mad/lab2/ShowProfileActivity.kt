@@ -23,15 +23,15 @@ import androidx.appcompat.app.AppCompatActivity
 
 class ShowProfileActivity : AppCompatActivity() {
 
-    lateinit var nickname : TextView;
-    lateinit var fullname : TextView;
-    lateinit var email    : TextView;
-    lateinit var birth : TextView;
-    lateinit var sex : TextView;
-    lateinit var city : TextView;
-    lateinit var lists : TextView;
-    lateinit var sharedPref : SharedPreferences;
-    private lateinit var photo : ImageView;
+    lateinit var nickname : TextView
+    lateinit var fullname : TextView
+    lateinit var email    : TextView
+    lateinit var birth : TextView
+    lateinit var sex : TextView
+    lateinit var city : TextView
+    lateinit var lists : TextView
+    lateinit var sharedPref : SharedPreferences
+    private lateinit var photo : ImageView
     var image_uri: Uri? = null
 
 
@@ -39,15 +39,15 @@ class ShowProfileActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
-            nickname.text = result.data?.getStringExtra("nickname");
-            fullname.text = result.data?.getStringExtra("fullname");
-            email.text = result.data?.getStringExtra("email");
-            birth.text = result.data?.getStringExtra("birth");
-            sex.text = result.data?.getStringExtra("sex");
-            city.text = result.data?.getStringExtra("city");
-            lists.text = result.data?.getStringExtra("lists");
+            nickname.text = result.data?.getStringExtra("nickname")
+            fullname.text = result.data?.getStringExtra("fullname")
+            email.text = result.data?.getStringExtra("email")
+            birth.text = result.data?.getStringExtra("birth")
+            sex.text = result.data?.getStringExtra("sex")
+            city.text = result.data?.getStringExtra("city")
+            lists.text = result.data?.getStringExtra("lists")
             if(result.data?.getStringExtra("profilepic")!=null) {
-                image_uri = Uri.parse(result.data?.getStringExtra("profilepic"));
+                image_uri = Uri.parse(result.data?.getStringExtra("profilepic"))
                 var mappa: Bitmap? = null
                 try {
                     mappa = if (Build.VERSION.SDK_INT < 28) {
@@ -63,20 +63,20 @@ class ShowProfileActivity : AppCompatActivity() {
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-                photo.setImageBitmap(mappa);
+                photo.setImageBitmap(mappa)
             }
 
             //saving preferences
-            val editor= sharedPref.edit();
+            val editor= sharedPref.edit()
             editor.apply{
-                putString("nickname",nickname.text.toString());
-                putString("fullname",fullname.text.toString());
-                putString("email",email.text.toString());
-                putString("birth",birth.text.toString());
-                putString("sex",sex.text.toString());
-                putString("city",city.text.toString());
-                putString("lists",lists.text.toString());
-                apply();
+                putString("nickname",nickname.text.toString())
+                putString("fullname",fullname.text.toString())
+                putString("email",email.text.toString())
+                putString("birth",birth.text.toString())
+                putString("sex",sex.text.toString())
+                putString("city",city.text.toString())
+                putString("lists",lists.text.toString())
+                apply()
             }
 
         }
@@ -88,113 +88,110 @@ class ShowProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_profile)
         nickname=findViewById(R.id.NickName)
-        fullname=findViewById(R.id.FullName);
-        email=findViewById(R.id.Mail);
-        birth=findViewById(R.id.Birth);
-        sex=findViewById(R.id.Sex);
-        city=findViewById(R.id.City);
-        lists=findViewById(R.id.Sport);
+        fullname=findViewById(R.id.FullName)
+        email=findViewById(R.id.Mail)
+        birth=findViewById(R.id.Birth)
+        sex=findViewById(R.id.Sex)
+        city=findViewById(R.id.City)
+        lists=findViewById(R.id.Sport)
         photo=findViewById(R.id.ProfileImage)
-        sharedPref = getSharedPreferences("preferences_file", MODE_PRIVATE);
+        sharedPref = getSharedPreferences("preferences_file", MODE_PRIVATE)
 
-        nickname.text= sharedPref.getString("nickname","");
-        fullname.text = sharedPref.getString("fullname","");
-        email.text = sharedPref.getString("email","");
-        birth.text = sharedPref.getString("birth","");
-        sex.text = sharedPref.getString("sex","");
-        city.text = sharedPref.getString("city","");
-        lists.text = sharedPref.getString("lists","");
+        nickname.text= sharedPref.getString("nickname","")
+        fullname.text = sharedPref.getString("fullname","")
+        email.text = sharedPref.getString("email","")
+        birth.text = sharedPref.getString("birth","")
+        sex.text = sharedPref.getString("sex","")
+        city.text = sharedPref.getString("city","")
+        lists.text = sharedPref.getString("lists","")
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(
+        if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(
 
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-                == PackageManager.PERMISSION_DENIED
-            ) {
-                val permission = arrayOf<String>(
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-                requestPermissions(permission, 112)
-            }
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            == PackageManager.PERMISSION_DENIED
+        ) {
+            val permission = arrayOf<String>(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            requestPermissions(permission, 112)
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.homemenu,menu);
-        return true;
+        menuInflater.inflate(R.menu.homemenu,menu)
+        return true
 
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.pencil -> {
-                Toast.makeText(this, "Edit Mode!", Toast.LENGTH_SHORT).show();
-                val nextpage=Intent(this,EditProfileActivity::class.java);
+                Toast.makeText(this, "Edit Mode!", Toast.LENGTH_SHORT).show()
+                val nextpage=Intent(this,EditProfileActivity::class.java)
                 if(nickname.text.toString()!= "")
                 {
-                    nextpage.putExtra("nickname",nickname.text.toString());
+                    nextpage.putExtra("nickname",nickname.text.toString())
                 }
                 if(fullname.text.toString()!= "")
                 {
-                    nextpage.putExtra("fullname",fullname.text.toString());
+                    nextpage.putExtra("fullname",fullname.text.toString())
                 }
                 if(email.text.toString()!= "")
                 {
-                    nextpage.putExtra("email",email.text.toString());
+                    nextpage.putExtra("email",email.text.toString())
                 }
                 if(birth.text.toString()!= "")
                 {
-                    nextpage.putExtra("birth",birth.text.toString());
+                    nextpage.putExtra("birth",birth.text.toString())
                 }
                 if(sex.text.toString()!= "")
                 {
-                    nextpage.putExtra("sex",sex.text.toString());
+                    nextpage.putExtra("sex",sex.text.toString())
                 }
                 if(city.text.toString()!= "")
                 {
-                    nextpage.putExtra("city",city.text.toString());
+                    nextpage.putExtra("city",city.text.toString())
                 }
                 if(lists.text.toString()!= "")
                 {
-                    nextpage.putExtra("lists",lists.text.toString());
+                    nextpage.putExtra("lists",lists.text.toString())
                 }
 
 
-                startForResult.launch(nextpage);
-                return  true;
+                startForResult.launch(nextpage)
+                return  true
             }
-            else -> return  super.onOptionsItemSelected(item);
+            else -> return  super.onOptionsItemSelected(item)
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("nickname",nickname.text.toString());
-        outState.putString("fullname",fullname.text.toString());
-        outState.putString("email",email.text.toString());
-        outState.putString("birth",birth.text.toString());
-        outState.putString("sex",sex.text.toString());
-        outState.putString("city",city.text.toString());
-        outState.putString("lists",lists.text.toString());
+        outState.putString("nickname",nickname.text.toString())
+        outState.putString("fullname",fullname.text.toString())
+        outState.putString("email",email.text.toString())
+        outState.putString("birth",birth.text.toString())
+        outState.putString("sex",sex.text.toString())
+        outState.putString("city",city.text.toString())
+        outState.putString("lists",lists.text.toString())
 
         if(image_uri != null)
-            outState.putString("profilepic",image_uri.toString());
+            outState.putString("profilepic",image_uri.toString())
 
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        nickname.text=savedInstanceState.getString("nickname");
-        fullname.text=savedInstanceState.getString("fullname");
-        email.text=savedInstanceState.getString("email");
-        birth.text=savedInstanceState.getString("birth");
-        sex.text=savedInstanceState.getString("sex");
-        city.text=savedInstanceState.getString("city");
-        lists.text=savedInstanceState.getString("lists");
-        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        nickname.text=savedInstanceState.getString("nickname")
+        fullname.text=savedInstanceState.getString("fullname")
+        email.text=savedInstanceState.getString("email")
+        birth.text=savedInstanceState.getString("birth")
+        sex.text=savedInstanceState.getString("sex")
+        city.text=savedInstanceState.getString("city")
+        lists.text=savedInstanceState.getString("lists")
        if( savedInstanceState.getString("profilepic") != null) {
             image_uri = Uri.parse(savedInstanceState.getString("profilepic"))
            var mappa: Bitmap? = null
@@ -203,13 +200,13 @@ class ShowProfileActivity : AppCompatActivity() {
                    MediaStore.Images.Media.getBitmap(contentResolver, image_uri)
                } else {
                    val source: ImageDecoder.Source =
-                       ImageDecoder.createSource(contentResolver, image_uri!!)
+                       ImageDecoder.createSource(contentResolver,image_uri!!)
                    ImageDecoder.decodeBitmap(source)
                }
            } catch (e: Exception) {
                e.printStackTrace()
            }
-            photo.setImageBitmap(mappa);
+            photo.setImageBitmap(mappa)
         }
     }
 
