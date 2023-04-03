@@ -72,6 +72,12 @@ class EditProfileActivity : AppCompatActivity() {
                 val rotated = rotateBitmap(inputImage!!)
                 imageView.setImageBitmap(rotated)
                 mappa = rotated
+                val stream = ByteArrayOutputStream()
+                inputImage.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                val imageData = stream.toByteArray()
+                val fos = openFileOutput("profile.jpg", Context.MODE_PRIVATE)
+                fos.write(imageData)
+                fos.close()
             }
         }
 
