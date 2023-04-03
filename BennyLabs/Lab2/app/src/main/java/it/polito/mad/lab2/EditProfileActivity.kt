@@ -24,6 +24,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.FileDescriptor
 import java.io.IOException
 
@@ -105,7 +106,14 @@ class EditProfileActivity : AppCompatActivity() {
         sex.text = this.intent?.getStringExtra("sex")
         city.text = this.intent?.getStringExtra("city")
         lists.text = this.intent?.getStringExtra("lists")
-
+        val file = File(filesDir, "profile.jpg")
+        if (file.exists()) {
+            val fis = openFileInput("profile.jpg")
+            val imageData = fis.readBytes()
+            fis.close()
+            val bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
+            imageView.setImageBitmap(bitmap)
+        }
         registerForContextMenu(profilepicture)
     }
 
@@ -207,9 +215,9 @@ class EditProfileActivity : AppCompatActivity() {
 
         if (savedInstanceState.getString("profilepic") != null) {
             imageUri = Uri.parse(savedInstanceState.getString("profilepic"))
-            var mappa: Bitmap? = null
+            var map: Bitmap? = null
             try {
-                mappa = if (Build.VERSION.SDK_INT < 28) {
+                map = if (Build.VERSION.SDK_INT < 28) {
                     MediaStore.Images.Media.getBitmap(this.contentResolver, imageUri)
                 } else {
                     val source: ImageDecoder.Source =
@@ -219,7 +227,7 @@ class EditProfileActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            imageView.setImageBitmap(mappa)
+            imageView.setImageBitmap(map)
         }
     }
 

@@ -129,7 +129,6 @@ class ShowProfileActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.homemenu,menu)
         return true
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -184,7 +183,7 @@ class ShowProfileActivity : AppCompatActivity() {
         sex.text=savedInstanceState.getString("sex")
         city.text=savedInstanceState.getString("city")
         lists.text=savedInstanceState.getString("lists")
-       if( savedInstanceState.getString("profilepic") != null) {
+        if( savedInstanceState.getString("profilepic") != null) {
             imageUri = Uri.parse(savedInstanceState.getString("profilepic"))
            var mappa: Bitmap? = null
            try {
