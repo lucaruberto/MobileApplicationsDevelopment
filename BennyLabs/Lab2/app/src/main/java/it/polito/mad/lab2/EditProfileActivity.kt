@@ -39,7 +39,7 @@ class EditProfileActivity : AppCompatActivity() {
     lateinit var lists: TextView
     private lateinit var profilepicture: ImageButton
     lateinit var imageView: ImageView
-    var mappa: Bitmap? = null
+    var map: Bitmap? = null
     var imageUri: Uri? = null
 
 
@@ -53,13 +53,12 @@ class EditProfileActivity : AppCompatActivity() {
                 val inputImage = uriToBitmap(imageUri!!)
                 val rotated = rotateBitmap(inputImage!!)
                 imageView.setImageBitmap(rotated)
-                mappa = rotated
+                map = rotated
                 val stream = ByteArrayOutputStream()
                 inputImage.compress(Bitmap.CompressFormat.PNG, 100, stream)
                 val imageData = stream.toByteArray()
-                val fos = openFileOutput("profile.jpg", Context.MODE_PRIVATE)
-                fos.write(imageData)
-                fos.close()
+                openFileOutput("profile.jpg", Context.MODE_PRIVATE)
+                    .use { fos-> fos.write(imageData); fos.close()}
             }
         }
 
@@ -71,13 +70,12 @@ class EditProfileActivity : AppCompatActivity() {
                 val inputImage = uriToBitmap(imageUri!!)
                 val rotated = rotateBitmap(inputImage!!)
                 imageView.setImageBitmap(rotated)
-                mappa = rotated
+                map = rotated
                 val stream = ByteArrayOutputStream()
                 inputImage.compress(Bitmap.CompressFormat.PNG, 100, stream)
                 val imageData = stream.toByteArray()
-                val fos = openFileOutput("profile.jpg", Context.MODE_PRIVATE)
-                fos.write(imageData)
-                fos.close()
+                openFileOutput("profile.jpg", Context.MODE_PRIVATE)
+                    .use { fos-> fos.write(imageData); fos.close() }
             }
         }
 
