@@ -34,7 +34,7 @@ class ShowProfileActivity : AppCompatActivity() {
     private lateinit var lists: TextView
     private lateinit var sharedPref: SharedPreferences
     private lateinit var photo: ImageView
-    private var image_uri: Uri? = null
+    private var imageUri: Uri? = null
 
 
     private val startForResult = registerForActivityResult(
@@ -49,16 +49,16 @@ class ShowProfileActivity : AppCompatActivity() {
             city.text = result.data?.getStringExtra("city")
             lists.text = result.data?.getStringExtra("lists")
             if (result.data?.getStringExtra("profilepic") != null) {
-                image_uri = Uri.parse(result.data?.getStringExtra("profilepic"))
+                imageUri = Uri.parse(result.data?.getStringExtra("profilepic"))
                 var mappa: Bitmap? = null
                 try {
                     mappa = if (Build.VERSION.SDK_INT < 28) {
                         MediaStore.Images.Media.getBitmap(
-                            contentResolver, image_uri
+                            contentResolver, imageUri
                         )
                     } else {
                         val source: ImageDecoder.Source =
-                            ImageDecoder.createSource(contentResolver, image_uri!!)
+                            ImageDecoder.createSource(contentResolver, imageUri!!)
                         ImageDecoder.decodeBitmap(source)
                     }
                 } catch (e: Exception) {
@@ -105,13 +105,10 @@ class ShowProfileActivity : AppCompatActivity() {
         city.text = sharedPref.getString("city", "")
         lists.text = sharedPref.getString("lists", "")
 
-        if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(
-
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-            == PackageManager.PERMISSION_DENIED
+        if ( checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
+            checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
         ) {
-            val permission = arrayOf<String>(
+            val permission = arrayOf(
                 Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
@@ -140,35 +137,21 @@ class ShowProfileActivity : AppCompatActivity() {
             R.id.pencil -> {
                 Toast.makeText(this, "Edit Mode!", Toast.LENGTH_SHORT).show()
                 val nextpage=Intent(this,EditProfileActivity::class.java)
-                if(nickname.text.toString()!= "")
-                {
-                    nextpage.putExtra("nickname",nickname.text.toString())
-                }
-                if(fullname.text.toString()!= "")
-                {
-                    nextpage.putExtra("fullname",fullname.text.toString())
-                }
-                if(email.text.toString()!= "")
-                {
-                    nextpage.putExtra("email",email.text.toString())
-                }
-                if(birth.text.toString()!= "")
-                {
-                    nextpage.putExtra("birth",birth.text.toString())
-                }
-                if(sex.text.toString()!= "")
-                {
-                    nextpage.putExtra("sex",sex.text.toString())
-                }
-                if(city.text.toString()!= "")
-                {
-                    nextpage.putExtra("city",city.text.toString())
-                }
-                if(lists.text.toString()!= "")
-                {
-                    nextpage.putExtra("lists",lists.text.toString())
-                }
 
+                if(nickname.text.toString()!= "")
+                    nextpage.putExtra("nickname",nickname.text.toString())
+                if(fullname.text.toString()!= "")
+                    nextpage.putExtra("fullname",fullname.text.toString())
+                if(email.text.toString()!= "")
+                    nextpage.putExtra("email",email.text.toString())
+                if(birth.text.toString()!= "")
+                    nextpage.putExtra("birth",birth.text.toString())
+                if(sex.text.toString()!= "")
+                    nextpage.putExtra("sex",sex.text.toString())
+                if(city.text.toString()!= "")
+                    nextpage.putExtra("city",city.text.toString())
+                if(lists.text.toString()!= "")
+                    nextpage.putExtra("lists",lists.text.toString())
 
                 startForResult.launch(nextpage)
                 return  true
@@ -187,8 +170,8 @@ class ShowProfileActivity : AppCompatActivity() {
         outState.putString("city",city.text.toString())
         outState.putString("lists",lists.text.toString())
 
-        if(image_uri != null)
-            outState.putString("profilepic",image_uri.toString())
+        if(imageUri != null)
+            outState.putString("profilepic",imageUri.toString())
 
     }
 
@@ -202,14 +185,14 @@ class ShowProfileActivity : AppCompatActivity() {
         city.text=savedInstanceState.getString("city")
         lists.text=savedInstanceState.getString("lists")
        if( savedInstanceState.getString("profilepic") != null) {
-            image_uri = Uri.parse(savedInstanceState.getString("profilepic"))
+            imageUri = Uri.parse(savedInstanceState.getString("profilepic"))
            var mappa: Bitmap? = null
            try {
                mappa = if (Build.VERSION.SDK_INT < 28) {
-                   MediaStore.Images.Media.getBitmap(contentResolver, image_uri)
+                   MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
                } else {
                    val source: ImageDecoder.Source =
-                       ImageDecoder.createSource(contentResolver,image_uri!!)
+                       ImageDecoder.createSource(contentResolver,imageUri!!)
                    ImageDecoder.decodeBitmap(source)
                }
            } catch (e: Exception) {

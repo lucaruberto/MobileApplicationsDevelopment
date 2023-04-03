@@ -24,10 +24,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.io.FileDescriptor
 import java.io.IOException
-import java.nio.file.Files.createDirectory
 
 
 class EditProfileActivity : AppCompatActivity() {
@@ -41,17 +39,17 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var profilepicture: ImageButton
     lateinit var imageView: ImageView
     var mappa: Bitmap? = null
-    var image_uri: Uri? = null
+    var imageUri: Uri? = null
 
 
     private var galleryActivityResultLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
-        ) { it ->
+        ) {
             if (it.resultCode == RESULT_OK) {
-                image_uri = it.data?.data
-                contentResolver.takePersistableUriPermission(image_uri!!, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                val inputImage = uriToBitmap(image_uri!!)
+                imageUri = it.data?.data
+                contentResolver.takePersistableUriPermission(imageUri!!, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                val inputImage = uriToBitmap(imageUri!!)
                 val rotated = rotateBitmap(inputImage!!)
                 imageView.setImageBitmap(rotated)
                 mappa = rotated
@@ -61,32 +59,28 @@ class EditProfileActivity : AppCompatActivity() {
                 val fos = openFileOutput("profile.jpg", Context.MODE_PRIVATE)
                 fos.write(imageData)
                 fos.close()
-
-
             }
         }
 
-    //TODO capture the image using camera and display it
     private var cameraActivityResultLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) {
             if (it.resultCode == RESULT_OK) {
-                val inputImage = uriToBitmap(image_uri!!)
+                val inputImage = uriToBitmap(imageUri!!)
                 val rotated = rotateBitmap(inputImage!!)
                 imageView.setImageBitmap(rotated)
                 mappa = rotated
             }
         }
 
-    //TODO opens camera so that user can capture image
     private fun openCamera() {
         val values = ContentValues()
         values.put(MediaStore.Images.Media.TITLE, "New Picture")
         values.put(MediaStore.Images.Media.DESCRIPTION, "From the Camera")
-        image_uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri)
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
         cameraActivityResultLauncher.launch(cameraIntent)
     }
 
@@ -139,12 +133,9 @@ class EditProfileActivity : AppCompatActivity() {
             }
 
             R.id.Picture -> {
-                if (checkSelfPermission(android.Manifest.permission.CAMERA) ==
-                    PackageManager.PERMISSION_DENIED ||
-                    checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_DENIED
-                ) {
-                    val permission = arrayOf<String>(
+                if (checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
+                    checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                    val permission = arrayOf(
                         android.Manifest.permission.CAMERA,
                         android.Manifest.permission.WRITE_EXTERNAL_STORAGE
                     )
@@ -152,11 +143,9 @@ class EditProfileActivity : AppCompatActivity() {
                 } else {
                     openCamera()
                 }
-
                 return true
             }
         }
-
         return super.onContextItemSelected(item)
     }
 
@@ -165,30 +154,23 @@ class EditProfileActivity : AppCompatActivity() {
             R.id.check -> {
                 val i = Intent(this, ShowProfileActivity::class.java)
                 Toast.makeText(this, "Profile Mode!", Toast.LENGTH_SHORT).show()
-                if (nickname.text.toString() != "") {
+
+                if (nickname.text.toString() != "")
                     i.putExtra("nickname", nickname.text.toString())
-                }
-                if (fullname.text.toString() != "") {
+                if (fullname.text.toString() != "")
                     i.putExtra("fullname", fullname.text.toString())
-                }
-                if (email.text.toString() != "") {
+                if (email.text.toString() != "")
                     i.putExtra("email", email.text.toString())
-                }
-                if (birth.text.toString() != "") {
+                if (birth.text.toString() != "")
                     i.putExtra("birth", birth.text.toString())
-                }
-                if (sex.text.toString() != "") {
+                if (sex.text.toString() != "")
                     i.putExtra("sex", sex.text.toString())
-                }
-                if (city.text.toString() != "") {
+                if (city.text.toString() != "")
                     i.putExtra("city", city.text.toString())
-                }
-                if (lists.text.toString() != "") {
+                if (lists.text.toString() != "")
                     i.putExtra("lists", lists.text.toString())
-                }
-                if (image_uri != null) {
-                    i.putExtra("profilepic", image_uri.toString())
-                }
+                if (imageUri != null)
+                    i.putExtra("profilepic", imageUri.toString())
 
                 setResult(RESULT_OK, i)
                 finish()
@@ -208,8 +190,8 @@ class EditProfileActivity : AppCompatActivity() {
         outState.putString("city", city.text.toString())
         outState.putString("lists", lists.text.toString())
 
-        if (image_uri != null)
-            outState.putString("profilepic", image_uri!!.toString())
+        if (imageUri != null)
+            outState.putString("profilepic", imageUri!!.toString())
         super.onSaveInstanceState(outState)
     }
 
@@ -224,14 +206,14 @@ class EditProfileActivity : AppCompatActivity() {
         lists.text = savedInstanceState.getString("lists")
 
         if (savedInstanceState.getString("profilepic") != null) {
-            image_uri = Uri.parse(savedInstanceState.getString("profilepic"))
+            imageUri = Uri.parse(savedInstanceState.getString("profilepic"))
             var mappa: Bitmap? = null
             try {
                 mappa = if (Build.VERSION.SDK_INT < 28) {
-                    MediaStore.Images.Media.getBitmap(this.contentResolver, image_uri)
+                    MediaStore.Images.Media.getBitmap(this.contentResolver, imageUri)
                 } else {
                     val source: ImageDecoder.Source =
-                        ImageDecoder.createSource(contentResolver, image_uri!!)
+                        ImageDecoder.createSource(contentResolver, imageUri!!)
                     ImageDecoder.decodeBitmap(source)
                 }
             } catch (e: Exception) {
@@ -259,7 +241,7 @@ class EditProfileActivity : AppCompatActivity() {
     fun rotateBitmap(input: Bitmap): Bitmap? {
         val orientationColumn =
             arrayOf(MediaStore.Images.Media.ORIENTATION)
-        val cur: Cursor? = contentResolver.query(image_uri!!, orientationColumn, null, null, null)
+        val cur: Cursor? = contentResolver.query(imageUri!!, orientationColumn, null, null, null)
         var orientation = -1
         if (cur != null && cur.moveToFirst()) {
             orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]))

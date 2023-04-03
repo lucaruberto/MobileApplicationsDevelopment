@@ -9,16 +9,15 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="nickname">NickNack</string>
-    <string name="fullname">Nick E Nack</string>
-    <string name="mail">supermail@mail.it</string>
-    <string name="birth">10/08/1999</string>
-    <string name="sex">Male</string>
-    <string name="city">Turin</string>
-    <string name="sportlists">Football,Baseball,Basketball</string>
+    <string name="nickname">Nickname</string>
+    <string name="fullname">Full name</string>
+    <string name="email">Email</string>
+    <string name="birthdate">Your birthdate</string>
+    <string name="gender">Gender</string>
+    <string name="city">City</string>
     <string name="user_profile_image">user profile image</string>
     <string name="reputation">Reputation</string>
     <string name="star">star</string>
-    <string name="sportslist">SportsList</string>
+    <string name="sportslist">Your sports</string>
     <string name="change_profile_image">change profile image</string>
 </resources>
