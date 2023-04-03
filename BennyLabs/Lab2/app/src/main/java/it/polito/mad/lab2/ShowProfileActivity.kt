@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -19,20 +20,21 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import java.io.File
 
 
 class ShowProfileActivity : AppCompatActivity() {
 
-    lateinit var nickname : TextView
-    lateinit var fullname : TextView
-    lateinit var email    : TextView
-    lateinit var birth : TextView
-    lateinit var sex : TextView
-    lateinit var city : TextView
-    lateinit var lists : TextView
-    lateinit var sharedPref : SharedPreferences
-    private lateinit var photo : ImageView
-    var image_uri: Uri? = null
+    private lateinit var nickname: TextView
+    private lateinit var fullname: TextView
+    private lateinit var email: TextView
+    private lateinit var birth: TextView
+    private lateinit var sex: TextView
+    private lateinit var city: TextView
+    private lateinit var lists: TextView
+    private lateinit var sharedPref: SharedPreferences
+    private lateinit var photo: ImageView
+    private var image_uri: Uri? = null
 
 
     private val startForResult = registerForActivityResult(
@@ -46,18 +48,17 @@ class ShowProfileActivity : AppCompatActivity() {
             sex.text = result.data?.getStringExtra("sex")
             city.text = result.data?.getStringExtra("city")
             lists.text = result.data?.getStringExtra("lists")
-            if(result.data?.getStringExtra("profilepic")!=null) {
+            if (result.data?.getStringExtra("profilepic") != null) {
                 image_uri = Uri.parse(result.data?.getStringExtra("profilepic"))
                 var mappa: Bitmap? = null
                 try {
                     mappa = if (Build.VERSION.SDK_INT < 28) {
                         MediaStore.Images.Media.getBitmap(
-                            this.contentResolver,
-                            Uri.parse(result.data?.getStringExtra("profilepic"))
+                            contentResolver, image_uri
                         )
                     } else {
                         val source: ImageDecoder.Source =
-                            ImageDecoder.createSource(this.contentResolver, image_uri!!)
+                            ImageDecoder.createSource(contentResolver, image_uri!!)
                         ImageDecoder.decodeBitmap(source)
                     }
                 } catch (e: Exception) {
@@ -67,15 +68,15 @@ class ShowProfileActivity : AppCompatActivity() {
             }
 
             //saving preferences
-            val editor= sharedPref.edit()
-            editor.apply{
-                putString("nickname",nickname.text.toString())
-                putString("fullname",fullname.text.toString())
-                putString("email",email.text.toString())
-                putString("birth",birth.text.toString())
-                putString("sex",sex.text.toString())
-                putString("city",city.text.toString())
-                putString("lists",lists.text.toString())
+            val editor = sharedPref.edit()
+            editor.apply {
+                putString("nickname", nickname.text.toString())
+                putString("fullname", fullname.text.toString())
+                putString("email", email.text.toString())
+                putString("birth", birth.text.toString())
+                putString("sex", sex.text.toString())
+                putString("city", city.text.toString())
+                putString("lists", lists.text.toString())
                 apply()
             }
 
@@ -83,28 +84,26 @@ class ShowProfileActivity : AppCompatActivity() {
     }
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_profile)
-        nickname=findViewById(R.id.NickName)
-        fullname=findViewById(R.id.FullName)
-        email=findViewById(R.id.Mail)
-        birth=findViewById(R.id.Birth)
-        sex=findViewById(R.id.Sex)
-        city=findViewById(R.id.City)
-        lists=findViewById(R.id.Sport)
-        photo=findViewById(R.id.ProfileImage)
+        nickname = findViewById(R.id.NickName)
+        fullname = findViewById(R.id.FullName)
+        email = findViewById(R.id.Mail)
+        birth = findViewById(R.id.Birth)
+        sex = findViewById(R.id.Sex)
+        city = findViewById(R.id.City)
+        lists = findViewById(R.id.Sport)
+        photo = findViewById(R.id.ProfileImage)
         sharedPref = getSharedPreferences("preferences_file", MODE_PRIVATE)
 
-        nickname.text= sharedPref.getString("nickname","")
-        fullname.text = sharedPref.getString("fullname","")
-        email.text = sharedPref.getString("email","")
-        birth.text = sharedPref.getString("birth","")
-        sex.text = sharedPref.getString("sex","")
-        city.text = sharedPref.getString("city","")
-        lists.text = sharedPref.getString("lists","")
-
+        nickname.text = sharedPref.getString("nickname", "")
+        fullname.text = sharedPref.getString("fullname", "")
+        email.text = sharedPref.getString("email", "")
+        birth.text = sharedPref.getString("birth", "")
+        sex.text = sharedPref.getString("sex", "")
+        city.text = sharedPref.getString("city", "")
+        lists.text = sharedPref.getString("lists", "")
 
         if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(
 
@@ -118,6 +117,16 @@ class ShowProfileActivity : AppCompatActivity() {
             )
             requestPermissions(permission, 112)
         }
+
+        val file = File(filesDir, "profile.jpg")
+        if (file.exists()) {
+            val fis = openFileInput("profile.jpg")
+            val imageData = fis.readBytes()
+            fis.close()
+            val bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
+            photo.setImageBitmap(bitmap)
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

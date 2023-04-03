@@ -2,6 +2,7 @@ package it.polito.mad.lab2
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
@@ -22,8 +23,11 @@ import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.FileDescriptor
 import java.io.IOException
+import java.nio.file.Files.createDirectory
 
 
 class EditProfileActivity : AppCompatActivity() {
@@ -43,7 +47,7 @@ class EditProfileActivity : AppCompatActivity() {
     private var galleryActivityResultLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
-        ) {
+        ) { it ->
             if (it.resultCode == RESULT_OK) {
                 image_uri = it.data?.data
                 contentResolver.takePersistableUriPermission(image_uri!!, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
@@ -51,6 +55,14 @@ class EditProfileActivity : AppCompatActivity() {
                 val rotated = rotateBitmap(inputImage!!)
                 imageView.setImageBitmap(rotated)
                 mappa = rotated
+                val stream = ByteArrayOutputStream()
+                inputImage.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                val imageData = stream.toByteArray()
+                val fos = openFileOutput("profile.jpg", Context.MODE_PRIVATE)
+                fos.write(imageData)
+                fos.close()
+
+
             }
         }
 
@@ -195,6 +207,7 @@ class EditProfileActivity : AppCompatActivity() {
         outState.putString("sex", sex.text.toString())
         outState.putString("city", city.text.toString())
         outState.putString("lists", lists.text.toString())
+
         if (image_uri != null)
             outState.putString("profilepic", image_uri!!.toString())
         super.onSaveInstanceState(outState)
