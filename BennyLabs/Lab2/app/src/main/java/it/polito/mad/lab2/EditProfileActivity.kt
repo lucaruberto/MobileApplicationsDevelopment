@@ -69,11 +69,11 @@ class EditProfileActivity : AppCompatActivity() {
         ) {
             if (it.resultCode == RESULT_OK) {
                 val inputImage = uriToBitmap(imageUri!!)
+                val stream = ByteArrayOutputStream()
+                inputImage?.compress(Bitmap.CompressFormat.PNG, 100, stream)
                 val rotated = rotateBitmap(inputImage!!)
                 imageView.setImageBitmap(rotated)
                 mappa = rotated
-                val stream = ByteArrayOutputStream()
-                inputImage.compress(Bitmap.CompressFormat.PNG, 100, stream)
                 val imageData = stream.toByteArray()
                 val fos = openFileOutput("profile.jpg", Context.MODE_PRIVATE)
                 fos.write(imageData)
