@@ -4,174 +4,239 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:background="#A5D6A7"
     android:backgroundTint="#C8E6C9"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp"
     tools:context=".ShowProfileActivity">
 
-    <ImageView
-        android:id="@+id/ProfileImage"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.33" />
+
+    <RelativeLayout
+        android:id="@+id/imageWrapper"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline3"
-        app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline5"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="1"
-        app:srcCompat="@drawable/person"
-        tools:srcCompat="@drawable/person"
-        android:contentDescription="@string/user_profile_image" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ProfileImage"
+            android:layout_width="186dp"
+            android:layout_height="203dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="63dp"
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="33dp"
+            android:contentDescription="@string/user_profile_image"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.393"
+            app:srcCompat="@drawable/person"
+            tools:srcCompat="@drawable/person" />
+
+        <ImageButton
+            android:id="@+id/EditImage"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignStart="@+id/ProfileImage"
+            android:layout_alignTop="@+id/ProfileImage"
+            android:layout_alignEnd="@+id/ProfileImage"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="66dp"
+            android:layout_marginTop="151dp"
+            android:layout_marginEnd="66dp"
+            android:background="@android:color/transparent"
+            android:layout_marginBottom="67dp"
+            android:contentDescription="@string/change_profile_image"
+            android:src="@android:drawable/ic_menu_camera"
+            tools:srcCompat="@android:drawable/ic_menu_camera" />
+    </RelativeLayout>
 
     <ScrollView
         android:id="@+id/scrollView2"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline3"
-        app:layout_constraintVertical_bias="1.0"
-        android:layout_marginTop="16dp"
-        app:layout_constraintVertical_weight="2">
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="2"
+        app:layout_constraintStart_toEndOf="@+id/guideline5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:foregroundGravity="center"
             android:gravity="center_horizontal"
             android:orientation="vertical"
             android:textAlignment="center"
             android:visibility="visible">
 
-            <TextView
-                android:id="@+id/NickName"
+            <EditText
+                android:id="@+id/EditNickname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginTop="16dp"
+                android:autofillHints="Insert nickname..."
                 android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_person_24"
+                android:gravity="center|center_vertical"
+                android:hint="@string/nickname"
+                android:inputType="textPersonName"
                 android:minHeight="48dp"
+                android:paddingBottom="8dp"
                 android:text=""
                 android:textAlignment="center"
-                android:gravity="center|center_vertical"
-                android:textSize="28sp"
-                app:drawableStartCompat="@drawable/baseline_person_24" />
+                android:textSize="24sp" />
 
-            <TextView
-                android:id="@+id/FullName"
+            <EditText
+                android:id="@+id/EditFullName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|center_vertical"
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
+                android:autofillHints="Insert full name..."
                 android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_person_24"
                 android:ems="10"
                 android:foregroundGravity="center"
                 android:gravity="center|center_vertical"
+                android:hint="@string/fullname"
+                android:inputType="textPersonName"
                 android:minHeight="48dp"
                 android:text=""
                 android:textAlignment="center"
-                android:textSize="24sp"
-                app:drawableStartCompat="@drawable/baseline_person_24" />
+                android:textSize="24sp" />
 
-            <TextView
-                android:id="@+id/Mail"
+            <EditText
+                android:id="@+id/EditMail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|center_vertical"
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
+                android:autofillHints="Insert email address..."
                 android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_email_24"
                 android:ems="10"
                 android:foregroundGravity="center"
                 android:gravity="center|center_vertical"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
                 android:minHeight="48dp"
                 android:text=""
                 android:textAlignment="center"
-                android:textSize="24sp"
-                app:drawableStartCompat="@drawable/baseline_email_24" />
+                android:textSize="24sp" />
 
-            <TextView
-                android:id="@+id/Birth"
+            <EditText
+                android:id="@+id/EditBirth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|center_vertical"
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
+                android:autofillHints="Insert birth date..."
                 android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_calendar_month_24"
                 android:ems="10"
                 android:foregroundGravity="center"
                 android:gravity="center|center_vertical"
+                android:hint="@string/birthdate"
+                android:inputType="date"
                 android:minHeight="48dp"
                 android:text=""
                 android:textAlignment="center"
-                android:textSize="24sp"
-                app:drawableStartCompat="@drawable/baseline_calendar_month_24" />
+                android:textSize="24sp" />
 
-            <TextView
-                android:id="@+id/Sex"
+            <EditText
+                android:id="@+id/EditSex"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|center_vertical"
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
+                android:autofillHints="Insert your gender..."
                 android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_man_4_24"
                 android:ems="10"
                 android:foregroundGravity="center"
                 android:gravity="center|center_vertical"
+                android:hint="@string/gender"
+                android:inputType="text"
                 android:minHeight="48dp"
                 android:text=""
                 android:textAlignment="center"
-                android:textSize="24sp"
-                app:drawableStartCompat="@drawable/baseline_man_4_24" />
+                android:textSize="24sp" />
 
-            <TextView
-                android:id="@+id/City"
+            <EditText
+                android:id="@+id/EditCity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|center_vertical"
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
+                android:autofillHints="Insert your city..."
                 android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_location_city_24"
                 android:ems="10"
                 android:foregroundGravity="center"
                 android:gravity="center|center_vertical"
+                android:hint="@string/city"
+                android:inputType="text"
                 android:minHeight="48dp"
                 android:text=""
                 android:textAlignment="center"
-                android:textSize="24sp"
-                app:drawableStartCompat="@drawable/baseline_location_city_24" />
+                android:textSize="24sp" />
 
-            <TextView
-                android:id="@+id/Sport"
+            <EditText
+                android:id="@+id/EditSportslist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|center_vertical"
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
+                android:autofillHints="Insert the sports you play..."
                 android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_sports_martial_arts_24"
                 android:ems="10"
                 android:foregroundGravity="center"
                 android:gravity="center|center_vertical"
+                android:hint="@string/sportslist"
+                android:inputType="text"
                 android:minHeight="48dp"
                 android:text=""
                 android:textAlignment="center"
-                android:textSize="24sp"
-                app:drawableStartCompat="@drawable/baseline_sports_martial_arts_24" />
+                android:textSize="24sp" />
+
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 android:layout_weight="1"
                 android:gravity="center">
 
@@ -222,12 +287,5 @@
 
         </LinearLayout>
     </ScrollView>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.33" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
