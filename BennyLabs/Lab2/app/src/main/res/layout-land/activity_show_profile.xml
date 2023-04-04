@@ -38,6 +38,7 @@
                 android:layout_height="240dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:foregroundGravity="top|center_horizontal"
                 android:contentDescription="@string/user_profile_image"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
