@@ -45,7 +45,7 @@ class EditProfileActivity : AppCompatActivity() {
     private fun getResizedBitmap(bm: Bitmap?): Bitmap? {
         val scaleToUse = 20 // this will be our percentage
 
-        val sizeY: Int = (bm?.height?.times(scaleToUse) ?: return null) / 100
+        val sizeY = (bm?.height?.times(scaleToUse) ?: return null) / 100
         val sizeX = bm.width * sizeY / bm.height
 
         return Bitmap.createScaledBitmap(bm, sizeX, sizeY, false)

@@ -95,6 +95,7 @@
                 android:background="@drawable/custom_input"
                 android:drawableStart="@drawable/baseline_person_24"
                 android:gravity="center|center_vertical"
+                android:foregroundGravity="center"
                 android:hint="@string/nickname"
                 android:inputType="textPersonName"
                 android:minHeight="48dp"
