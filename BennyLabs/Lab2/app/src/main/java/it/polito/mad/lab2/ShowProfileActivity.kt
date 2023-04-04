@@ -50,9 +50,9 @@ class ShowProfileActivity : AppCompatActivity() {
             lists.text = result.data?.getStringExtra("lists")
             if (result.data?.getStringExtra("profilepic") != null) {
                 imageUri = Uri.parse(result.data?.getStringExtra("profilepic"))
-                var mappa: Bitmap? = null
+                var map: Bitmap? = null
                 try {
-                    mappa = if (Build.VERSION.SDK_INT < 28) {
+                    map = if (Build.VERSION.SDK_INT < 28) {
                         MediaStore.Images.Media.getBitmap(
                             contentResolver, imageUri
                         )
@@ -64,7 +64,7 @@ class ShowProfileActivity : AppCompatActivity() {
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-                photo.setImageBitmap(mappa)
+                photo.setImageBitmap(map)
             }
 
             //saving preferences

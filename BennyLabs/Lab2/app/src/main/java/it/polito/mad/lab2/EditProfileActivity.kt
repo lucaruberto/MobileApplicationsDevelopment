@@ -30,18 +30,26 @@ import java.io.IOException
 
 
 class EditProfileActivity : AppCompatActivity() {
-    lateinit var nickname: TextView
-    lateinit var fullname: TextView
-    lateinit var email: TextView
-    lateinit var birth: TextView
-    lateinit var sex: TextView
-    lateinit var city: TextView
-    lateinit var lists: TextView
+    private lateinit var nickname: TextView
+    private lateinit var fullname: TextView
+    private lateinit var email: TextView
+    private lateinit var birth: TextView
+    private lateinit var sex: TextView
+    private lateinit var city: TextView
+    private lateinit var lists: TextView
     private lateinit var profilepicture: ImageButton
-    lateinit var imageView: ImageView
-    var map: Bitmap? = null
-    var imageUri: Uri? = null
+    private lateinit var imageView: ImageView
+    private var map: Bitmap? = null
+    private var imageUri: Uri? = null
 
+    private fun getResizedBitmap(bm: Bitmap?): Bitmap? {
+        val scaleToUse = 20 // this will be our percentage
+
+        val sizeY: Int = (bm?.height?.times(scaleToUse) ?: return null) / 100
+        val sizeX = bm.width * sizeY / bm.height
+
+        return Bitmap.createScaledBitmap(bm, sizeX, sizeY, false)
+    }
 
     private var galleryActivityResultLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(
@@ -50,15 +58,15 @@ class EditProfileActivity : AppCompatActivity() {
             if (it.resultCode == RESULT_OK) {
                 imageUri = it.data?.data
                 contentResolver.takePersistableUriPermission(imageUri!!, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                val inputImage = uriToBitmap(imageUri!!)
+                val inputImage = getResizedBitmap(uriToBitmap(imageUri!!))
+                val stream = ByteArrayOutputStream()
                 val rotated = rotateBitmap(inputImage!!)
+                inputImage.compress(Bitmap.CompressFormat.PNG, 100, stream)
                 imageView.setImageBitmap(rotated)
                 map = rotated
-                val stream = ByteArrayOutputStream()
-                inputImage.compress(Bitmap.CompressFormat.PNG, 100, stream)
                 val imageData = stream.toByteArray()
                 openFileOutput("profile.jpg", Context.MODE_PRIVATE)
-                    .use { fos-> fos.write(imageData); fos.close()}
+                    .use { fos-> fos.write(imageData); fos.close() }
             }
         }
 
@@ -67,12 +75,12 @@ class EditProfileActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult()
         ) {
             if (it.resultCode == RESULT_OK) {
-                val inputImage = uriToBitmap(imageUri!!)
+                val inputImage = getResizedBitmap(uriToBitmap(imageUri!!))
+                val stream = ByteArrayOutputStream()
                 val rotated = rotateBitmap(inputImage!!)
+                inputImage.compress(Bitmap.CompressFormat.PNG, 100, stream)
                 imageView.setImageBitmap(rotated)
                 map = rotated
-                val stream = ByteArrayOutputStream()
-                inputImage.compress(Bitmap.CompressFormat.PNG, 100, stream)
                 val imageData = stream.toByteArray()
                 openFileOutput("profile.jpg", Context.MODE_PRIVATE)
                     .use { fos-> fos.write(imageData); fos.close() }

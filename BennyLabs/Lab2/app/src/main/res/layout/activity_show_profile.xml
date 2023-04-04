@@ -62,6 +62,7 @@
                 android:minHeight="48dp"
                 android:text=""
                 android:textAlignment="center"
+                android:gravity="center|center_vertical"
                 android:textSize="28sp"
                 app:drawableStartCompat="@drawable/baseline_person_24" />
 

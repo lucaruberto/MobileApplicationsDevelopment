@@ -20,4 +20,6 @@
     <string name="star">star</string>
     <string name="sportslist">Your sports</string>
     <string name="change_profile_image">change profile image</string>
+    <string name="image_from__gallery">Select from gallery</string>
+    <string name="image_from_camera">Take a new picture</string>
 </resources>
