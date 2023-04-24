@@ -2,13 +2,18 @@ package it.polito.mad.lab2
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import it.polito.mad.lab2.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
         val navController = (
                 supportFragmentManager
@@ -22,6 +27,7 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.showProfileNavGraph)
                 }
                 R.id.navbar_menu_item_reservation -> {
+
                     navController.navigate(R.id.showReservationsNavGraph)
                 }
                 R.id.navbar_menu_item_playground -> {

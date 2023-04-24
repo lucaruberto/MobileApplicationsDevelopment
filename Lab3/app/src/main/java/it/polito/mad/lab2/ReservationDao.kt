@@ -22,4 +22,5 @@ interface ReservationDao {
 
     @Delete
     fun delete(reservation: Reservation)
+
 }
