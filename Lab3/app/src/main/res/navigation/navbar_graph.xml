@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navbar_graph"
+    app:startDestination="@id/showProfileNavGraph">
+    <fragment
+        android:id="@+id/showProfileNavGraph"
+        android:name="it.polito.mad.lab2.ShowProfile"
+        android:label="ShowProfile" />
+    <fragment
+        android:id="@+id/searchPlaygroundNavGraph"
+        android:name="it.polito.mad.lab2.SearchPlayground"
+        android:label="SearchPlayground" />
+    <fragment
+        android:id="@+id/showReservationsNavGraph"
+        android:name="it.polito.mad.lab2.ShowReservations"
+        android:label="fragment_show_reservations"
+        tools:layout="@layout/fragment_show_reservations" />
+    <fragment
+        android:id="@+id/editProfileNavGraph"
+        android:name="it.polito.mad.lab2.EditProfile"
+        android:label="EditProfile" />
+</navigation>

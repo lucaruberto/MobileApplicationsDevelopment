@@ -130,7 +130,7 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.homeditmenu, menu)
+        menuInflater.inflate(R.menu.edit_profile_menu, menu)
         return true
 
     }

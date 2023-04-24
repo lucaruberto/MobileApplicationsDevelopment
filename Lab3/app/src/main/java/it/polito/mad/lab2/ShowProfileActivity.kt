@@ -87,6 +87,7 @@ class ShowProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_profile)
+
         nickname = findViewById(R.id.NickName)
         fullname = findViewById(R.id.FullName)
         email = findViewById(R.id.Mail)
@@ -127,7 +128,7 @@ class ShowProfileActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.homemenu,menu)
+        menuInflater.inflate(R.menu.show_profile_menu,menu)
         return true
     }
 
