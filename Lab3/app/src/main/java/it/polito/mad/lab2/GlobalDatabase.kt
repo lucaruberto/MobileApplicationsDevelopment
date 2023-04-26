@@ -6,20 +6,22 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(entities = [Reservation::class,Sports::class], version = 1)
-abstract class ReservationDatabase: RoomDatabase() {
+abstract class GlobalDatabase: RoomDatabase() {
     abstract  fun reservationDao(): ReservationDao
     abstract fun sportsDao():SportsDao
     companion object {
         @Volatile
-        private var INSTANCE: ReservationDatabase? = null
+        private var INSTANCE: it.polito.mad.lab2.GlobalDatabase? = null
 
-        fun getDatabase(context: Context): ReservationDatabase =
+        fun getDatabase(context: Context): it.polito.mad.lab2.GlobalDatabase =
             (INSTANCE ?:
             synchronized(this) {
                 val i = INSTANCE ?: Room.databaseBuilder(
                     context.applicationContext,
-                    ReservationDatabase::class.java,
-                    "reservation_database").createFromAsset("db/reservation.db").build()
+                    GlobalDatabase::class.java,
+                    "reservation_database").
+                createFromAsset("db/reservation.db").
+                build()
                 INSTANCE = i
                 INSTANCE
             })!!

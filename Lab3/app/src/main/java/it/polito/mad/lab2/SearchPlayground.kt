@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.fragment.app.Fragment
-import it.polito.mad.lab2.databinding.FragmentShowReservationsBinding
+import kotlin.math.log
 
 class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
 
@@ -14,9 +14,21 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
 
 
         var  dropmenu : AutoCompleteTextView = view.findViewById(R.id.dropdown_sports)
-    //  val  db = ReservationDatabase.getDatabase(view.context);
-        val lista= listOf( "uno","due","tre")
-        val arrayAdapter = ArrayAdapter(view.context,R.layout.list_item,lista);
-        dropmenu.setAdapter(arrayAdapter)
+        val  db = GlobalDatabase.getDatabase(this.requireContext());
+        val valore = db.sportsDao().getAll().value
+
+        if(valore!= null)
+        {
+            var lista= listOf("alfa","beta","gamma")
+            val arrayAdapter = ArrayAdapter(view.context,R.layout.list_item,lista);
+            dropmenu.setAdapter(arrayAdapter)
+        }
+        else
+        {
+            var lista= listOf("uno","due","tre")
+            val arrayAdapter = ArrayAdapter(view.context,R.layout.list_item,lista);
+            dropmenu.setAdapter(arrayAdapter)
+        }
+
     }
 }
