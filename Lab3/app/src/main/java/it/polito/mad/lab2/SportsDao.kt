@@ -5,8 +5,8 @@ import androidx.room.*
 
 @Dao
 interface SportsDao {
-    @Query("SELECT * FROM sports")
-    fun getAll() : LiveData<List<Sports>>
+    @Query("SELECT discipline FROM sports")
+    fun getAll() : LiveData<List<String>>
 
     @Insert
     fun save(sport: Sports)
