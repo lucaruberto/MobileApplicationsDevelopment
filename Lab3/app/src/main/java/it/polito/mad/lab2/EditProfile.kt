@@ -20,7 +20,7 @@ class EditProfile: Fragment(R.layout.fragment_edit_profile) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.check -> {
-                val navHost = (requireParentFragment().parentFragmentManager.findFragmentById(R.id.fragmentContainerView)) as NavHostFragment
+                val navHost = (requireParentFragment().parentFragmentManager.findFragmentById(R.id.mainFragmentContainerView)) as NavHostFragment
                 navHost.navController.navigate(R.id.showProfileNavGraph)
                 true
             }

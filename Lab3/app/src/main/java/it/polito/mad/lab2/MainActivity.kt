@@ -2,10 +2,8 @@ package it.polito.mad.lab2
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ArrayAdapter
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import it.polito.mad.lab2.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,7 +16,7 @@ class MainActivity : AppCompatActivity() {
 
         val navController = (
                 supportFragmentManager
-                    .findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+                    .findFragmentById(R.id.mainFragmentContainerView) as NavHostFragment
                 ).navController
         val bottomNavbar = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         
