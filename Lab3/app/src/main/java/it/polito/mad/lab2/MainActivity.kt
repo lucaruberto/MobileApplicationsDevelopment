@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import it.polito.mad.lab2.db.GlobalDatabase
 
 class MainActivity : AppCompatActivity() {
 

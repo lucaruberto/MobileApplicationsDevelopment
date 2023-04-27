@@ -4,15 +4,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.CalendarView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.stacktips.view.CalendarListener
 import com.stacktips.view.CustomCalendarView
+import it.polito.mad.lab2.db.GlobalDatabase
 import java.util.Calendar
 import java.util.Locale
-import kotlin.math.log
 
 class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
 
