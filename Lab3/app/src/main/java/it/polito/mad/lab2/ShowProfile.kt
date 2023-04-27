@@ -25,7 +25,7 @@ class ShowProfile: Fragment(R.layout.fragment_show_profile) {
                         .findFragmentById(R.id.fragmentContainerView)) as NavHostFragment
                     ).navController
                     .navigate(R.id.editProfileNavGraph)*/
-                val navHost = (parentFragmentManager.findFragmentById(R.id.fragmentContainerView)) as NavHostFragment
+                val navHost = (requireParentFragment().parentFragmentManager.findFragmentById(R.id.fragmentContainerView)) as NavHostFragment
                 navHost.navController.navigate(R.id.editProfileNavGraph)
                 true
             }
