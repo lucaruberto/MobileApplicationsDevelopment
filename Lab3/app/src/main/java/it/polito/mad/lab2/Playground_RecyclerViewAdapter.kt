@@ -1,5 +1,6 @@
 package it.polito.mad.lab2
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
@@ -16,12 +17,11 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
-class Playground_RecyclerViewAdapter(val data : List<ReservationModel>,val dropmenu : String, val dropmenufields: String) : RecyclerView.Adapter <Playground_RecyclerViewAdapter.MyViewHolder>(){
+class Playground_RecyclerViewAdapter(val data : List<ReservationModel>, val date: String ,val dropmenu : String, val dropmenufields: String) : RecyclerView.Adapter <Playground_RecyclerViewAdapter.MyViewHolder>(){
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
-    ): Playground_RecyclerViewAdapter.MyViewHolder {
+        viewType: Int): Playground_RecyclerViewAdapter.MyViewHolder {
     val v= LayoutInflater.from(parent.context).inflate(R.layout.cardview_reservation,parent,false)
         return MyViewHolder(v)
     }
@@ -30,7 +30,7 @@ class Playground_RecyclerViewAdapter(val data : List<ReservationModel>,val dropm
         holder: Playground_RecyclerViewAdapter.MyViewHolder,
         position: Int) {
         val rs= data[position];
-        holder.bind(rs, holder, dropmenu, dropmenufields);
+        holder.bind(rs, holder, date,  dropmenu, dropmenufields);
     }
 
     override fun getItemCount(): Int {
@@ -41,7 +41,7 @@ class Playground_RecyclerViewAdapter(val data : List<ReservationModel>,val dropm
         val StarHour: TextView = v.findViewById(R.id.Orainizio)
         val FinishHour: TextView = v.findViewById(R.id.Orafine)
         val CardView : CardView = v.findViewById(R.id.cardview)
-        fun bind(rs: ReservationModel, holder: MyViewHolder, dropmenu: String, dropmenufields: String) {
+        fun bind(rs: ReservationModel, holder: MyViewHolder, date: String, dropmenu: String, dropmenufields: String) {
             StarHour.text = rs.StartHour.toString();
             FinishHour.text = rs.FinishHour.toString();
             if (rs.StartHour == 8) {
@@ -51,11 +51,12 @@ class Playground_RecyclerViewAdapter(val data : List<ReservationModel>,val dropm
             }
             CardView.setOnClickListener {
                 val message = "Are You sure?"
-                showCustomDialogBox(holder.CardView.context, message, dropmenu, dropmenufields)
+                showCustomDialogBox(holder.CardView.context, message, date, dropmenu, dropmenufields)
             }
         }
 
-        private fun showCustomDialogBox(context: Context, message: String?, dropmenu: String, dropmenufields: String) {
+        @SuppressLint("ResourceAsColor")
+        private fun showCustomDialogBox(context: Context, message: String?, date: String, dropmenu: String, dropmenufields: String) {
             val dialog = Dialog(context)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setCancelable(false)
@@ -67,8 +68,12 @@ class Playground_RecyclerViewAdapter(val data : List<ReservationModel>,val dropm
             val btnNo : Button = dialog.findViewById(R.id.btnNo)
             val sport : TextView = dialog.findViewById(R.id.sportSelected)
             val playerCourt : TextView = dialog.findViewById(R.id.playerCourtSelected)
+            val dateS : TextView = dialog.findViewById(R.id.dateSelected)
             tvMessage.text = message
             sport.text = dropmenu
+            dateS.text = date
+            println(sport.text)
+            sport.setTextColor(R.color.black)
             playerCourt.text = dropmenufields
 
             btnYes.setOnClickListener {

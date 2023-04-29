@@ -1,5 +1,6 @@
 package it.polito.mad.lab2
 
+import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -8,12 +9,16 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputLayout
 import com.stacktips.view.CalendarListener
 import com.stacktips.view.CustomCalendarView
 import it.polito.mad.lab2.db.GlobalDatabase
+import it.polito.mad.lab2.db.Reservation
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -31,19 +36,26 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
         var selectedplayground:String=""
         val recycle : RecyclerView = view.findViewById(R.id.playground_recycle_view);
         recycle.visibility=View.GONE
-        var currentCalendar: Calendar = Calendar.getInstance(Locale.getDefault())
         val db = GlobalDatabase.getDatabase(this.requireContext());
-        val rs : List<ReservationModel> = listOf(ReservationModel(8,9), ReservationModel(9,10));
+
+
 
         db.fasciaorariaDao().getAllFasciaOraria().observe(viewLifecycleOwner, Observer {
             lista->
-                    val adapter= Playground_RecyclerViewAdapter(lista.map { x->it.polito.mad.lab2.ReservationModel(x.oraInizio,x.oraFine) }, selectedsport, selectedplayground)
+
                     calendarView.setCalendarListener(object : CalendarListener {
                     val selectedValue = dropmenu.text.toString()
                     override fun onDateSelected(date: Date?) {
+                        val df = SimpleDateFormat("dd-MM-yyyy")
                         recycle.visibility=View.VISIBLE
+                        val adapter= Playground_RecyclerViewAdapter(lista.map { x->it.polito.mad.lab2.ReservationModel(x.oraInizio,x.oraFine) }, df.format(date).toString(), dropmenu.text.toString(), dropmenufields.text.toString())
                         recycle.adapter=adapter
                         recycle.layoutManager= LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+
+                    //DB INSERTION RESERVATION
+                        lifecycleScope.launch(Dispatchers.IO){
+                            db.reservationDao().save(Reservation(0,date!!,date.time.toString(), dropmenu.text.toString(),14,15, dropmenufields.text.toString()))
+                        }
                     }
                     override fun onMonthChanged(date: Date?) {
 
@@ -51,9 +63,9 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
             })
         })
 
+
         val sportslist = db.sportsDao().getAll().observe(viewLifecycleOwner, Observer { sports ->
             dropmenu.setAdapter(ArrayAdapter(view.context, R.layout.list_item, sports))
-
             dropmenu.onItemClickListener = object : AdapterView.OnItemSelectedListener,
                 OnItemClickListener {
                 override fun equals(other: Any?): Boolean {
@@ -118,4 +130,6 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
         })
 
     }
+
 }
+

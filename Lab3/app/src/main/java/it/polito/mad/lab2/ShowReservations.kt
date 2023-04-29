@@ -77,8 +77,13 @@ class ShowReservations : Fragment(R.layout.fragment_show_reservations) {
                 db.reservationDao().save(
                     Reservation(
                         date = Calendar.getInstance(Locale.getDefault()).time,
+                        time = "18:00",
                         discipline = "FootBall",
-                        time = "18:00"
+
+                        oraInizio = 18,
+                        oraFine = 19,
+                        playgroundName = "Ruffini"
+
                     )
                 )
                 liveDates = db.reservationDao().loadAllDate()

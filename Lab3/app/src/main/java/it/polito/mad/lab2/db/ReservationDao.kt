@@ -19,7 +19,7 @@ interface ReservationDao {
     @Query("SELECT date FROM reservations")
     fun loadAllDate(): LiveData<List<Date>>
 
-    @Insert()
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun save(reservation: Reservation)
 
     @Update

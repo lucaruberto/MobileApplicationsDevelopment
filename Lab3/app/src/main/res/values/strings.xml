@@ -30,4 +30,7 @@
     <string name="add_reservation_button">Add reservation</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="playercourt">PlayerCourt</string>
+    <string name="date">Date</string>
+    <string name="message">Message</string>
 </resources>
