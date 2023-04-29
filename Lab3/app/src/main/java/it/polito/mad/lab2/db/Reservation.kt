@@ -18,13 +18,20 @@ data class Reservation(
     @ColumnInfo(name = "date")
     val date: Date,
 
-    //AGGIUNGERE PLAYGROUND
-
-
-    //DUE CAMPI
     @ColumnInfo(name = "time")
     val time: String,
 
+
     @ColumnInfo(name = "discipline")
-    val discipline: String
+    val discipline: String,
+
+    @ColumnInfo(name = "oraInizio")
+    val oraInizio: Int,
+
+    @ColumnInfo(name="oraFine")
+    val oraFine : Int,
+
+    @ColumnInfo(name="playgroundName")
+    val playgroundName : String
+
 )

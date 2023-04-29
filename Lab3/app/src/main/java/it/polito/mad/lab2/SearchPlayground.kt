@@ -8,13 +8,16 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputLayout
 import com.stacktips.view.CalendarListener
 import com.stacktips.view.CustomCalendarView
-import it.polito.mad.lab2.db.FasciaOraria
 import it.polito.mad.lab2.db.GlobalDatabase
+import it.polito.mad.lab2.db.Reservation
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -33,9 +36,9 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
 
         val recycle : RecyclerView = view.findViewById(R.id.playground_recycle_view);
         recycle.visibility=View.GONE
-        var currentCalendar: Calendar = Calendar.getInstance(Locale.getDefault())
         val db = GlobalDatabase.getDatabase(this.requireContext());
-        val rs : List<ReservationModel> = listOf(ReservationModel(8,9), ReservationModel(9,10));
+
+
 
         db.fasciaorariaDao().getAllFasciaOraria().observe(viewLifecycleOwner, Observer {
             lista->
@@ -46,11 +49,17 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
                         recycle.visibility=View.VISIBLE
                         recycle.adapter=adapter
                         recycle.layoutManager= LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+                    //DB INSERTION RESERVATION
+                        lifecycleScope.launch(Dispatchers.IO){
+                            db.reservationDao().save(Reservation(0,date!!,date.time.toString(),dropmenu.text.toString(),14,15,dropmenufields.text.toString()))
+                        }
+
                     }
                     override fun onMonthChanged(date: Date?) {
                     }
             })
         })
+
 
 
 
@@ -133,4 +142,6 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
 
 
     }
+
 }
+
