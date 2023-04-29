@@ -7,12 +7,12 @@ import java.util.*
 class Converters {
 
     @TypeConverter
-    fun fromTimestamp(value: Long?): Calendar? {
-        return value?.let { Calendar.getInstance().apply { timeInMillis = it } }
+    fun fromTimestamp(value: Long?): Date? {
+        return value?.let { Date(value) }
     }
 
     @TypeConverter
-    fun dateToTimestamp(calendar: Calendar?): Long? {
-        return calendar?.timeInMillis
+    fun dateToTimestamp(date: Date?): Long? {
+        return date?.time
     }
 }

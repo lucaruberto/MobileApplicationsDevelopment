@@ -50,7 +50,6 @@
             tools:ignore="TouchTargetSizeCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
-
     <com.stacktips.view.CustomCalendarView
         android:id="@+id/playground_calendar_view"
         android:layout_width="match_parent"
@@ -71,7 +70,6 @@
         app:selectedDayBackgroundColor="@color/blue"
         app:titleLayoutBackgroundColor="@color/white"
         app:weekLayoutBackgroundColor="@color/white">
-
     </com.stacktips.view.CustomCalendarView>
 
     <androidx.recyclerview.widget.RecyclerView

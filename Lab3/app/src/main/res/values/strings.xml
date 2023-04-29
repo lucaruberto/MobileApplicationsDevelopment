@@ -26,4 +26,6 @@
     <string name="bottom_nav_bar_profile">Profile</string>
     <string name="bottom_nav_bar_reservations">Show Reservations</string>
     <string name="bottom_nav_bar_search_playground">Search Playground</string>
+
+    <string name="add_reservation_button">Add reservation</string>
 </resources>

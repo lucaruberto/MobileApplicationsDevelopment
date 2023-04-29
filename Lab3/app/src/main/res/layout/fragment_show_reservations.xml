@@ -4,27 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:contentDescription="@string/add_reservation_button"
     tools:context=".ShowReservations">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/calendarViewShowReservationsFragmentContainerView"
-        android:name="it.polito.mad.lab2.CalendarView"
-        android:layout_width="0dp"
+    <com.stacktips.view.CustomCalendarView
+        android:id="@+id/reservations_calendar_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/off_white"
+        app:calendarBackgroundColor="@color/off_white"
+        app:calendarTitleTextColor="@color/black"
+        app:currentDayOfMonthColor="@color/blue"
+        app:dayOfMonthTextColor="@color/black"
+        app:dayOfWeekTextColor="@color/black"
+        app:disabledDayBackgroundColor="@color/off_white"
+        app:disabledDayTextColor="@color/grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout="@layout/fragment_calendar_view" />
+        app:selectedDayBackgroundColor="@color/blue"
+        app:titleLayoutBackgroundColor="@color/white"
+        app:weekLayoutBackgroundColor="@color/white" />
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/reservationsListFragmentContainerView"
-        android:name="it.polito.mad.lab2.ReservationsList"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/calendarViewShowReservationsFragmentContainerView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/reservations_recycle_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout="@layout/fragment_reservations_list" />
+        app:layout_constraintTop_toBottomOf="@id/reservations_calendar_view" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addReservationButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:contentDescription="@string/add_reservation_button"
+        android:paddingStart="0dp"
+        android:paddingTop="0dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="16dp"
+        android:src="@android:drawable/ic_menu_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

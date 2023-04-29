@@ -1,20 +1,92 @@
 package it.polito.mad.lab2
 
+import android.R.string
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.stacktips.view.CalendarListener
+import com.stacktips.view.CustomCalendarView
+import com.stacktips.view.DayDecorator
+import com.stacktips.view.DayView
 import it.polito.mad.lab2.db.GlobalDatabase
+import it.polito.mad.lab2.db.Reservation
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+
 
 class ShowReservations : Fragment(R.layout.fragment_show_reservations) {
-
-    private lateinit var db: GlobalDatabase;
+    private lateinit var db: GlobalDatabase
+    private lateinit var liveDates: LiveData<List<Date>>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-       // val calendarView: CalendarView=view.findViewById(R.id.reservations_calendar_view)
-        //db=ReservationDatabase.getDatabase(view.context)
 
+        val calendarView = requireView().findViewById<CustomCalendarView>(R.id.reservations_calendar_view)
 
+        calendarView.setCalendarListener(object : CalendarListener {
+            override fun onDateSelected(date: Date?) {
+                /*val t = Thread {
+                    val day_details = db.reservationDao().loadAllByDate(date = date!!)
+                    print(day_details)
+                }
+                t.start()
+                Toast.makeText(requireContext(), "Pressed", Toast.LENGTH_SHORT).show()*/
+            }
+            override fun onMonthChanged(date: Date?) {
 
+            }
+        })
 
+        //Initialize calendar with date
+        val currentCalendar: Calendar = Calendar.getInstance(Locale.getDefault())
+
+        db = GlobalDatabase.getDatabase(this.requireContext())
+
+        liveDates = db.reservationDao().loadAllDate()
+
+        liveDates.observe(viewLifecycleOwner) {
+            class HasReservationDecorator : DayDecorator {
+                override fun decorate(dayView: DayView) {
+                    //if(liveDates.value?.contains(dayView.date) == true){
+                    if(it.map { SimpleDateFormat("dd-MM-yyyy").format(it) }.contains(SimpleDateFormat("dd-MM-yyyy").format(dayView.date))){
+                    //if(true){
+                        dayView.setBackgroundColor(
+                            ContextCompat.getColor(requireContext(), R.color.red))
+                    }
+                }
+            }
+            val decorators: MutableList<DayDecorator> = ArrayList()
+            decorators.add(HasReservationDecorator())
+            calendarView.decorators = decorators
+
+            calendarView.refreshCalendar(currentCalendar)
+        }
+
+        val addBtn = requireView().findViewById<FloatingActionButton>(R.id.addReservationButton)
+        addBtn.setOnClickListener{
+            val db = GlobalDatabase.getDatabase(this.requireContext())
+
+            val t = Thread {
+                db.reservationDao().save(
+                    Reservation(
+                        date = Calendar.getInstance(Locale.getDefault()).time,
+                        discipline = "FootBall",
+                        time = "18:00"
+                    )
+                )
+                liveDates = db.reservationDao().loadAllDate()
+            }
+            t.start()
+            Toast.makeText(requireContext(), "Saved", Toast.LENGTH_SHORT).show()
+        }
     }
+
+
 }

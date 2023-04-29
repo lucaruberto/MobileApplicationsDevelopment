@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.util.Calendar
+import java.util.Date
 
 @Entity(tableName = "reservations")
 data class Reservation(
@@ -15,7 +16,7 @@ data class Reservation(
     val id: Int = 0,
 
     @ColumnInfo(name = "date")
-    val date: Calendar,
+    val date: Date,
 
     //AGGIUNGERE PLAYGROUND
 
