@@ -1,8 +1,6 @@
 package it.polito.mad.lab2
 
-import android.widget.TextView
-
-class ReservationModel ( StartHour:String,  FinishHour:String ){
+class ReservationModel(StartHour: Int, FinishHour: Int){
 
     var StartHour = StartHour
     get() = field

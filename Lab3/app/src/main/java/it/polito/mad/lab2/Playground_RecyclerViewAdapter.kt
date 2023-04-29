@@ -36,9 +36,9 @@ class Playground_RecyclerViewAdapter(val data : List<ReservationModel>) : Recycl
         val FinishHour: TextView = v.findViewById(R.id.Orafine)
         val CardView : CardView = v.findViewById(R.id.cardview)
         fun bind(rs: ReservationModel, holder: MyViewHolder){
-            StarHour.text=rs.StartHour;
-            FinishHour.text=rs.FinishHour;
-            if(rs.StartHour=="8") {
+            StarHour.text=rs.StartHour.toString();
+            FinishHour.text=rs.FinishHour.toString();
+            if(rs.StartHour==8) {
                 holder.CardView.setCardBackgroundColor(
                     ContextCompat.getColor(holder.CardView.context, R.color.purple_200)
                 )
