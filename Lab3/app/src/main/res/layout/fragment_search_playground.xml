@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:hint="Playgrounds"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/playground_calendar_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,13 +45,10 @@
             android:id="@+id/dropdown_playgrounds"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:inputType="none"
             tools:ignore="TouchTargetSizeCheck" />
     </com.google.android.material.textfield.TextInputLayout>
-
-
-
-
 
 
     <com.stacktips.view.CustomCalendarView
@@ -59,6 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/off_white"
+        android:visibility="gone"
         app:calendarBackgroundColor="@color/off_white"
         app:calendarTitleTextColor="@color/black"
         app:currentDayOfMonthColor="@color/blue"
@@ -66,13 +64,13 @@
         app:dayOfWeekTextColor="@color/black"
         app:disabledDayBackgroundColor="@color/off_white"
         app:disabledDayTextColor="@color/grey"
-        app:selectedDayBackgroundColor="@color/blue"
-        app:titleLayoutBackgroundColor="@color/white"
-        app:weekLayoutBackgroundColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/playground_recycle_view"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dropdown_sports_parent"
-        app:layout_constraintBottom_toTopOf="@id/playground_recycle_view">
+        app:selectedDayBackgroundColor="@color/blue"
+        app:titleLayoutBackgroundColor="@color/white"
+        app:weekLayoutBackgroundColor="@color/white">
 
     </com.stacktips.view.CustomCalendarView>
 

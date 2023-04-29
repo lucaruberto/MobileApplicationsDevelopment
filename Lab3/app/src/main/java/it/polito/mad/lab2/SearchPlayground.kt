@@ -28,12 +28,20 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
         var dropmenu: AutoCompleteTextView = view.findViewById(R.id.dropdown_sports)
         var dropmenufields : AutoCompleteTextView = view.findViewById(R.id.dropdown_playgrounds)
         var playgroundText : TextInputLayout = view.findViewById(R.id.dropdown_playgrounds_parent)
+        val calendarView = view.findViewById<CustomCalendarView>(R.id.playground_calendar_view)
+        var currentCalendar: Calendar = Calendar.getInstance(Locale.getDefault())
+        val rs : List<ReservationModel> = listOf(ReservationModel("8","9"), ReservationModel("9","10"));
         val db = GlobalDatabase.getDatabase(this.requireContext());
+        val recycle : RecyclerView = view.findViewById(R.id.playground_recycle_view);
+        recycle.visibility=View.GONE
+        val adapter = Playground_RecyclerViewAdapter(rs);
+
 
         val sportslist = db.sportsDao().getAll().observe(viewLifecycleOwner, Observer { sports ->
             dropmenu.setAdapter(ArrayAdapter(view.context, R.layout.list_item, sports));
 
             var selectedsport:String=""
+            var selectedplayground:String=""
 
             dropmenu.onItemClickListener = object : AdapterView.OnItemSelectedListener,
                 OnItemClickListener {
@@ -47,10 +55,41 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
                         Observer {
                                 fields ->
                             dropmenufields.setAdapter(ArrayAdapter(view.context,R.layout.list_item,fields))
+
+                            dropmenufields.onItemClickListener= object  :AdapterView.OnItemSelectedListener,
+                            OnItemClickListener{
+                                override fun onItemSelected(
+                                    p0: AdapterView<*>?,
+                                    p1: View?,
+                                    p2: Int,
+                                    p3: Long
+                                ) {
+
+                                }
+
+                                override fun onNothingSelected(p0: AdapterView<*>?) {
+                                    TODO("Not yet implemented")
+                                }
+
+                                override fun onItemClick(
+                                    p0: AdapterView<*>?,
+                                    p1: View?,
+                                    p2: Int,
+                                    p3: Long
+                                ) {
+                                    recycle.visibility=View.GONE
+                                    selectedplayground=fields.get(p2);
+                                    calendarView.visibility=View.VISIBLE
+                                }
+
+                            }
+
                         })
-                    dropmenufields.clearListSelection()
-                    dropmenufields.clearComposingText()
                     dropmenufields.setText("")
+                    playgroundText.visibility=View.VISIBLE;
+                    dropmenufields.visibility=View.VISIBLE;
+                    calendarView.visibility=View.GONE
+                    recycle.visibility=View.GONE;
 
                 }
 
@@ -73,18 +112,12 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
 
 
 
-        val calendarView = view.findViewById<CustomCalendarView>(R.id.playground_calendar_view)
-        var currentCalendar: Calendar = Calendar.getInstance(Locale.getDefault())
         calendarView.firstDayOfWeek = Calendar.MONDAY
-
-        val rs : List<ReservationModel> = listOf(ReservationModel("8","9"), ReservationModel("9","10"));
 
         calendarView.setCalendarListener(object : CalendarListener {
             val selectedValue = dropmenu.text.toString()
             override fun onDateSelected(date: Date?) {
-                Toast.makeText(requireContext(), date.toString() , Toast.LENGTH_SHORT).show()
-                val recycle : RecyclerView = view.findViewById(R.id.playground_recycle_view);
-                val adapter = Playground_RecyclerViewAdapter(rs);
+                recycle.visibility=View.VISIBLE
                 recycle.adapter=adapter
                 recycle.layoutManager= LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
             }
