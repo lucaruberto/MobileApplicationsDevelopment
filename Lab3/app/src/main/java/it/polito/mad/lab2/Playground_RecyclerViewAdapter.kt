@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
 class Playground_RecyclerViewAdapter(val data : List<ReservationModel>) : RecyclerView.Adapter <Playground_RecyclerViewAdapter.MyViewHolder>(){
@@ -20,10 +22,9 @@ class Playground_RecyclerViewAdapter(val data : List<ReservationModel>) : Recycl
 
     override fun onBindViewHolder(
         holder: Playground_RecyclerViewAdapter.MyViewHolder,
-        position: Int
-    ) {
-    val rs= data[position];
-        holder.bind(rs);
+        position: Int) {
+        val rs= data[position];
+        holder.bind(rs, holder);
     }
 
     override fun getItemCount(): Int {
@@ -31,12 +32,17 @@ class Playground_RecyclerViewAdapter(val data : List<ReservationModel>) : Recycl
         }
 
     class  MyViewHolder(v: View) : RecyclerView.ViewHolder(v){
-
-        val StarHour: TextView = v.findViewById(R.id.Orainizio);
-        val FinishHour: TextView = v.findViewById(R.id.Orafine);
-        fun bind(rs: ReservationModel){
+        val StarHour: TextView = v.findViewById(R.id.Orainizio)
+        val FinishHour: TextView = v.findViewById(R.id.Orafine)
+        val CardView : CardView = v.findViewById(R.id.cardview)
+        fun bind(rs: ReservationModel, holder: MyViewHolder){
             StarHour.text=rs.StartHour;
             FinishHour.text=rs.FinishHour;
+            if(rs.StartHour=="8") {
+                holder.CardView.setCardBackgroundColor(
+                    ContextCompat.getColor(holder.CardView.context, R.color.purple_200)
+                )
+            }
         }
     }
 }

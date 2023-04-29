@@ -17,6 +17,10 @@ data class Reservation(
     @ColumnInfo(name = "date")
     val date: Calendar,
 
+    //AGGIUNGERE PLAYGROUND
+
+
+    //DUE CAMPI
     @ColumnInfo(name = "time")
     val time: String,
 

@@ -9,6 +9,9 @@ data class PlayGrounds(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 
-    @ColumnInfo(name = "discipline")
-    val discipline: String
+    @ColumnInfo(name = "sportname")
+    val sportname: String,
+
+    @ColumnInfo(name="playgroundName")
+    val playgroundName : String
     )
