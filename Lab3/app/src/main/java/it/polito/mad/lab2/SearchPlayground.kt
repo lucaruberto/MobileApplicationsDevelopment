@@ -13,11 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputLayout
 import com.stacktips.view.CalendarListener
 import com.stacktips.view.CustomCalendarView
-import it.polito.mad.lab2.db.FasciaOraria
 import it.polito.mad.lab2.db.GlobalDatabase
 import java.util.*
-
-
 
 
 class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
@@ -30,7 +27,8 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
         var playgroundText : TextInputLayout = view.findViewById(R.id.dropdown_playgrounds_parent)
         val calendarView = view.findViewById<CustomCalendarView>(R.id.playground_calendar_view)
         calendarView.firstDayOfWeek = Calendar.MONDAY
-
+        var selectedsport:String=""
+        var selectedplayground:String=""
         val recycle : RecyclerView = view.findViewById(R.id.playground_recycle_view);
         recycle.visibility=View.GONE
         var currentCalendar: Calendar = Calendar.getInstance(Locale.getDefault())
@@ -39,7 +37,7 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
 
         db.fasciaorariaDao().getAllFasciaOraria().observe(viewLifecycleOwner, Observer {
             lista->
-                    val adapter= Playground_RecyclerViewAdapter(lista.map { x->it.polito.mad.lab2.ReservationModel(x.oraInizio,x.oraFine) })
+                    val adapter= Playground_RecyclerViewAdapter(lista.map { x->it.polito.mad.lab2.ReservationModel(x.oraInizio,x.oraFine) }, selectedsport, selectedplayground)
                     calendarView.setCalendarListener(object : CalendarListener {
                     val selectedValue = dropmenu.text.toString()
                     override fun onDateSelected(date: Date?) {
@@ -48,17 +46,13 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
                         recycle.layoutManager= LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
                     }
                     override fun onMonthChanged(date: Date?) {
+
                     }
             })
         })
 
-
-
         val sportslist = db.sportsDao().getAll().observe(viewLifecycleOwner, Observer { sports ->
-            dropmenu.setAdapter(ArrayAdapter(view.context, R.layout.list_item, sports));
-
-            var selectedsport:String=""
-            var selectedplayground:String=""
+            dropmenu.setAdapter(ArrayAdapter(view.context, R.layout.list_item, sports))
 
             dropmenu.onItemClickListener = object : AdapterView.OnItemSelectedListener,
                 OnItemClickListener {
@@ -67,12 +61,11 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
                 }
 
                 override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long){
-                    selectedsport=sports.get(p2)
+                    selectedsport= sports[p2]
                     val fieldslist = db.playgroundsDao().getPlayGroundsbySportName(selectedsport).observe(viewLifecycleOwner,
                         Observer {
                                 fields ->
                             dropmenufields.setAdapter(ArrayAdapter(view.context,R.layout.list_item,fields))
-
                             dropmenufields.onItemClickListener= object  :AdapterView.OnItemSelectedListener,
                             OnItemClickListener{
                                 override fun onItemSelected(
@@ -123,14 +116,6 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
 
 
         })
-
-
-
-
-
-
-
-
 
     }
 }
