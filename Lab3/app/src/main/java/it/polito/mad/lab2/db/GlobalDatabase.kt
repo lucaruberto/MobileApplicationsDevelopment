@@ -1,11 +1,10 @@
 package it.polito.mad.lab2.db
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room.*
 
 @Database(entities = [Reservation::class, Sports::class], version = 1)
+@TypeConverters(Converters::class)
 abstract class GlobalDatabase: RoomDatabase() {
     abstract  fun reservationDao(): ReservationDao
     abstract fun sportsDao(): SportsDao
@@ -21,6 +20,7 @@ abstract class GlobalDatabase: RoomDatabase() {
                     GlobalDatabase::class.java,
                     "reservation_database").
                 createFromAsset("db/reservation.db").
+                    fallbackToDestructiveMigration().
                 build()
                 INSTANCE = i
                 INSTANCE

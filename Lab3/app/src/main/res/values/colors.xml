@@ -12,4 +12,6 @@
     <color name="blue">#FF00008B</color>
     <color name="off_white">#FFF5F5F5</color>
     <color name="red">#FFFF0000</color>
+    <color name="blueBlack">#111F28</color>
+    <color name="tanAccent">#E3CDB3</color>
 </resources>
