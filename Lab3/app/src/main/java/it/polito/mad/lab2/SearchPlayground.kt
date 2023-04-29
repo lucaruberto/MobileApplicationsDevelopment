@@ -29,13 +29,29 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
         var dropmenufields : AutoCompleteTextView = view.findViewById(R.id.dropdown_playgrounds)
         var playgroundText : TextInputLayout = view.findViewById(R.id.dropdown_playgrounds_parent)
         val calendarView = view.findViewById<CustomCalendarView>(R.id.playground_calendar_view)
+        calendarView.firstDayOfWeek = Calendar.MONDAY
+
+        val recycle : RecyclerView = view.findViewById(R.id.playground_recycle_view);
+        recycle.visibility=View.GONE
         var currentCalendar: Calendar = Calendar.getInstance(Locale.getDefault())
         val db = GlobalDatabase.getDatabase(this.requireContext());
         val rs : List<ReservationModel> = listOf(ReservationModel(8,9), ReservationModel(9,10));
 
-        val recycle : RecyclerView = view.findViewById(R.id.playground_recycle_view);
-        recycle.visibility=View.GONE
-        val adapter = rs.let { Playground_RecyclerViewAdapter(it) };
+        db.fasciaorariaDao().getAllFasciaOraria().observe(viewLifecycleOwner, Observer {
+            lista->
+                    val adapter= Playground_RecyclerViewAdapter(lista.map { x->it.polito.mad.lab2.ReservationModel(x.oraInizio,x.oraFine) })
+                    calendarView.setCalendarListener(object : CalendarListener {
+                    val selectedValue = dropmenu.text.toString()
+                    override fun onDateSelected(date: Date?) {
+                        recycle.visibility=View.VISIBLE
+                        recycle.adapter=adapter
+                        recycle.layoutManager= LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+                    }
+                    override fun onMonthChanged(date: Date?) {
+                    }
+            })
+        })
+
 
 
         val sportslist = db.sportsDao().getAll().observe(viewLifecycleOwner, Observer { sports ->
@@ -113,18 +129,6 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
 
 
 
-        calendarView.firstDayOfWeek = Calendar.MONDAY
-
-        calendarView.setCalendarListener(object : CalendarListener {
-            val selectedValue = dropmenu.text.toString()
-            override fun onDateSelected(date: Date?) {
-                recycle.visibility=View.VISIBLE
-                recycle.adapter=adapter
-                recycle.layoutManager= LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
-            }
-            override fun onMonthChanged(date: Date?) {
-            }
-        })
 
 
 
