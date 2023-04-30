@@ -62,7 +62,7 @@ class Reservation_RecyclerViewAdapter(val data : List<ShowReservationModel>, val
             val dialog = Dialog(context)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setCancelable(false)
-            dialog.setContentView(R.layout.reservation_popup)
+            dialog.setContentView(R.layout.reservation_delete_popup)
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             val db = GlobalDatabase.getDatabase(context)
 

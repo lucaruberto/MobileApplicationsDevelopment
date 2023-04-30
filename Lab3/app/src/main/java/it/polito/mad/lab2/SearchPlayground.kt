@@ -11,18 +11,12 @@ import android.widget.AutoCompleteTextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputLayout
 import com.stacktips.view.CalendarListener
 import com.stacktips.view.CustomCalendarView
 import it.polito.mad.lab2.db.GlobalDatabase
-import it.polito.mad.lab2.db.Reservation
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -42,8 +36,6 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
         recycle.visibility=View.GONE
         val db = GlobalDatabase.getDatabase(this.requireContext());
 
-
-
         db.fasciaorariaDao().getAllFasciaOraria().observe(viewLifecycleOwner, Observer {
             lista->
 
@@ -59,7 +51,7 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
                         recycle.adapter=adapter
                         recycle.layoutManager= LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
 
-                        
+
                  /*   //DB INSERTION RESERVATION
                         lifecycleScope.launch(Dispatchers.IO){
                             db.reservationDao().save(Reservation(0,date,date.time.toString(), dropmenu.text.toString(),14,15, dropmenufields.text.toString()))
