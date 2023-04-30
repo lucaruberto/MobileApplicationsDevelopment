@@ -9,64 +9,94 @@
         android:id="@+id/cardview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+
+        app:cardBackgroundColor="@color/purple_200"
         app:cardCornerRadius="20dp"
         app:cardElevation="8dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:cardBackgroundColor="@color/blueBlack"
-
+        android:layout_marginTop="16dp"
+        android:padding="16dp"
         >
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            >
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start:"
+                android:textAlignment="gravity"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/semicolon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
                 android:id="@+id/Orainizio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="18:00"
-                android:textSize="36sp"
+                android:textAlignment="gravity"
+                android:textColor="@color/white"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@color/tanAccent"
-                android:textAlignment="center"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/Orafine"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/semicolon"
+                app:layout_constraintStart_toStartOf="@id/textView"
+                app:layout_constraintTop_toTopOf="parent"/>
+
             <TextView
                 android:id="@+id/semicolon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-"
-                android:textAlignment="center"
-                android:textSize="36sp"
+                android:textAlignment="gravity"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@color/tanAccent"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toEndOf="@id/Orainizio"
                 app:layout_constraintEnd_toStartOf="@id/Orafine"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
             <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="End:"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textAlignment="gravity"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toEndOf="@id/semicolon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
                 android:id="@+id/Orafine"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
+                android:textAlignment="gravity"
                 android:text="19:00"
-                android:textSize="36sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@color/tanAccent"
-                app:layout_constraintStart_toEndOf="@id/semicolon"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toEndOf="@id/textView2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

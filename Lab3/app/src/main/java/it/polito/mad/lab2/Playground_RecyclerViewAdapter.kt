@@ -60,6 +60,7 @@ class Playground_RecyclerViewAdapter(val data : List<ShowReservationModel>, val 
         fun bind(rs: ShowReservationModel, holder: MyViewHolder, date: Date?, dropmenu: String, dropmenufields: String,vm: SearchPlaygroundViewModel) {
             StarHour.text = rs.StartHour.toString();
             FinishHour.text = rs.FinishHour.toString();
+
             CardView.setOnClickListener {
                 val message = "Are You sure?"
                 showCustomDialogBox(holder.CardView.context, message, date!!, dropmenu, dropmenufields, rs.StartHour.toString(), rs.FinishHour.toString(),vm)

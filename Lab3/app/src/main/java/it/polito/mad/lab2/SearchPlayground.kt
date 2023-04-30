@@ -11,6 +11,8 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputLayout
@@ -28,12 +30,14 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
         var fieldsdropdownmenu : AutoCompleteTextView = view.findViewById(R.id.dropdown_playgrounds)
         var playgroundText : TextInputLayout = view.findViewById(R.id.dropdown_playgrounds_parent)
         val calendarView = view.findViewById<CustomCalendarView>(R.id.playground_calendar_view)
+
         val recycle : RecyclerView = view.findViewById(R.id.playground_recycle_view)
         val vm : SearchPlaygroundViewModel = ViewModelProvider(this)[SearchPlaygroundViewModel::class.java]
         var selectedsport: String
 
 
         recycle.visibility=View.GONE
+
 
 
         vm.getFasceOrari().observe(viewLifecycleOwner) { hoursfasce ->
@@ -50,7 +54,7 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
                     )
                     recycle.adapter = adapter
                     recycle.layoutManager =
-                        LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                         GridLayoutManager(context, 2)
                 }
 
                 override fun onMonthChanged(date: Date?) {
