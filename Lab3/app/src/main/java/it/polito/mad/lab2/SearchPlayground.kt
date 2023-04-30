@@ -1,12 +1,14 @@
 package it.polito.mad.lab2
 
 import android.icu.text.SimpleDateFormat
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -19,6 +21,8 @@ import it.polito.mad.lab2.db.GlobalDatabase
 import it.polito.mad.lab2.db.Reservation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -45,17 +49,20 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
 
                     calendarView.setCalendarListener(object : CalendarListener {
                     val selectedValue = dropmenu.text.toString()
+                    @RequiresApi(Build.VERSION_CODES.O)
                     override fun onDateSelected(date: Date?) {
+                        val sdf = SimpleDateFormat("dd/MM/yyyy")
+                        val selectedDate:String=sdf.format(date);
 
                         recycle.visibility=View.VISIBLE
-                        val adapter= Playground_RecyclerViewAdapter(lista.map { x->it.polito.mad.lab2.ReservationModel(x.oraInizio,x.oraFine) }, date!!, dropmenu.text.toString(), dropmenufields.text.toString())
+                        val adapter= Playground_RecyclerViewAdapter(lista.map { x->it.polito.mad.lab2.ShowReservationModel(dropmenu.text.toString(),dropmenufields.text.toString(),date,x.oraInizio,x.oraFine) }, date!!, dropmenu.text.toString(), dropmenufields.text.toString())
                         recycle.adapter=adapter
                         recycle.layoutManager= LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
 
                     //DB INSERTION RESERVATION
-                        /*lifecycleScope.launch(Dispatchers.IO){
+                        lifecycleScope.launch(Dispatchers.IO){
                             db.reservationDao().save(Reservation(0,date,date.time.toString(), dropmenu.text.toString(),14,15, dropmenufields.text.toString()))
-                        }*/
+                        }
                     }
                     override fun onMonthChanged(date: Date?) {
 

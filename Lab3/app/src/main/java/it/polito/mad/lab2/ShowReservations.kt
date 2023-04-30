@@ -7,6 +7,8 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.stacktips.view.CalendarListener
 import com.stacktips.view.CustomCalendarView
@@ -27,27 +29,31 @@ class ShowReservations : Fragment(R.layout.fragment_show_reservations) {
     private lateinit var liveDates: LiveData<List<Date>>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        db= GlobalDatabase.getDatabase(this.requireContext())
         val calendarView = requireView().findViewById<CustomCalendarView>(R.id.reservations_calendar_view)
+        val recycle : RecyclerView = view.findViewById(R.id.reservations_recycle_view);
+        recycle.visibility=View.GONE
 
         calendarView.setCalendarListener(object : CalendarListener {
-            override fun onDateSelected(date: Date?) {
-                /*val t = Thread {
-                    val day_details = db.reservationDao().loadAllByDate(date = date!!)
-                    print(day_details)
-                }
-                t.start()
-                Toast.makeText(requireContext(), "Pressed", Toast.LENGTH_SHORT).show()*/
-            }
-            override fun onMonthChanged(date: Date?) {
+               override fun onDateSelected(date: Date?) {
+                   db.reservationDao().loadAllByDate(date!!).observe(viewLifecycleOwner){ x->
+                       recycle.visibility = View.VISIBLE
+                       val adapter= Reservation_RecyclerViewAdapter(x.map { y -> it.polito.mad.lab2.ShowReservationModel(y.discipline,y.playgroundName,y.date,y.oraInizio,y.oraFine) },date)
+                       recycle.adapter=adapter
+                       recycle.layoutManager=LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false);
 
-            }
-        })
+                   }
+
+               }
+
+               override fun onMonthChanged(date: Date?) {
+
+               }
+           })
+
 
         //Initialize calendar with date
         val currentCalendar: Calendar = Calendar.getInstance(Locale.getDefault())
-
-        db = GlobalDatabase.getDatabase(this.requireContext())
 
         liveDates = db.reservationDao().loadAllDate()
 

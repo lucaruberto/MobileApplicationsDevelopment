@@ -21,7 +21,7 @@ import it.polito.mad.lab2.db.GlobalDatabase
 import it.polito.mad.lab2.db.Reservation
 import java.util.Date
 
-class Playground_RecyclerViewAdapter(val data : List<ReservationModel>, val date: Date? ,val dropmenu : String, val dropmenufields: String) : RecyclerView.Adapter <Playground_RecyclerViewAdapter.MyViewHolder>(){
+class Playground_RecyclerViewAdapter(val data : List<ShowReservationModel>, val date: Date? ,val dropmenu : String, val dropmenufields: String) : RecyclerView.Adapter <Playground_RecyclerViewAdapter.MyViewHolder>(){
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -45,9 +45,10 @@ class Playground_RecyclerViewAdapter(val data : List<ReservationModel>, val date
         val StarHour: TextView = v.findViewById(R.id.Orainizio)
         val FinishHour: TextView = v.findViewById(R.id.Orafine)
         val CardView : CardView = v.findViewById(R.id.cardview)
-        fun bind(rs: ReservationModel, holder: MyViewHolder, date: Date?, dropmenu: String, dropmenufields: String) {
+        fun bind(rs: ShowReservationModel, holder: MyViewHolder, date: Date?, dropmenu: String, dropmenufields: String) {
             StarHour.text = rs.StartHour.toString();
             FinishHour.text = rs.FinishHour.toString();
+            //TODO Sistemare logica
             if (rs.StartHour == 8) {
                 holder.CardView.setCardBackgroundColor(
                     ContextCompat.getColor(holder.CardView.context, R.color.purple_200)
