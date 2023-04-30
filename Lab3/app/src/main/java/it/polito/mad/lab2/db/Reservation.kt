@@ -10,8 +10,6 @@ import java.util.Date
 @Entity(tableName = "reservations")
 data class Reservation(
 
-
-
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 

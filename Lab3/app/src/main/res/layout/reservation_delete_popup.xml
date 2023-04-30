@@ -16,16 +16,16 @@
         android:padding="20dp">
 
         <TextView
-            android:id="@+id/sportSelected"
+            android:id="@+id/sportSelectedDelete"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:text="Sport"
+            android:text="@string/sport"
             android:gravity="center"
             android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <TextView
-            android:id="@+id/playerCourtSelected"
+            android:id="@+id/playerCourtSelectedDelete"
             android:textSize="18sp"
             android:textStyle="bold"
             android:text="@string/playercourt"
@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <TextView
-            android:id="@+id/dateSelected"
+            android:id="@+id/dateSelectedDelete"
             android:textSize="18sp"
             android:textStyle="bold"
             android:text="@string/date"
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <TextView
-            android:id="@+id/tvMessage"
+            android:id="@+id/tvMessageDelete"
             android:text="@string/message"
             android:gravity="center"
             android:textColor="@color/black"
@@ -64,7 +64,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/start"
+                android:id="@+id/startdelete"
                 android:text="@string/start"
                 android:gravity="center"
                 android:textColor="@color/black"
@@ -82,7 +82,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/end"
+                android:id="@+id/enddelete"
                 android:layout_marginStart="8dp"
                 android:text="@string/start"
                 android:gravity="center"
@@ -100,7 +100,7 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:id="@+id/btnYes"
+                android:id="@+id/btnYesDelete"
                 android:textSize="14sp"
                 android:textAllCaps="false"
                 android:text="@string/yes"
@@ -109,7 +109,7 @@
                 android:layout_height="wrap_content"
                 style="?android:attr/buttonBarButtonStyle" />
             <Button
-                android:id="@+id/btnNo"
+                android:id="@+id/btnNoDelete"
                 android:textSize="14sp"
                 android:textAllCaps="false"
                 android:text="@string/no"
@@ -118,6 +118,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="?android:attr/buttonBarButtonStyle" />
+
         </LinearLayout>
     </LinearLayout>
 

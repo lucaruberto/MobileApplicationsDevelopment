@@ -39,7 +39,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/Orafine"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintTop_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent"/>
             <TextView
                 android:id="@+id/semicolon"
                 android:layout_width="wrap_content"
@@ -52,7 +52,7 @@
                 app:layout_constraintStart_toEndOf="@id/Orainizio"
                 app:layout_constraintEnd_toStartOf="@id/Orafine"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintTop_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
             <TextView
                 android:id="@+id/Orafine"
@@ -66,7 +66,7 @@
                 app:layout_constraintStart_toEndOf="@id/semicolon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintTop_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

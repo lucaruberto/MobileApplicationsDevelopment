@@ -68,7 +68,7 @@ class ShowReservations : Fragment(R.layout.fragment_show_reservations) {
 
             calendarView.refreshCalendar(currentCalendar)
         }
-
+        /*
         val addBtn = requireView().findViewById<FloatingActionButton>(R.id.addReservationButton)
         addBtn.setOnClickListener{
             val db = GlobalDatabase.getDatabase(this.requireContext())
@@ -89,8 +89,8 @@ class ShowReservations : Fragment(R.layout.fragment_show_reservations) {
                 liveDates = db.reservationDao().loadAllDate()
             }
             t.start()
-            Toast.makeText(requireContext(), "Saved", Toast.LENGTH_SHORT).show()
-        }
+            Toast.makeText(requireContext(), "Saved", Toast.LENGTH_SHORT).show() */
+
     }
 
 

@@ -26,7 +26,7 @@ class Playground_RecyclerViewAdapter(val data : List<ReservationModel>, val date
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int): Playground_RecyclerViewAdapter.MyViewHolder {
-    val v= LayoutInflater.from(parent.context).inflate(R.layout.cardview_reservation,parent,false)
+        val v= LayoutInflater.from(parent.context).inflate(R.layout.cardview_reservation,parent,false)
         return MyViewHolder(v)
     }
 
