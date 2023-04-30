@@ -36,6 +36,7 @@ class ShowReservations : Fragment(R.layout.fragment_show_reservations) {
 
         calendarView.setCalendarListener(object : CalendarListener {
                override fun onDateSelected(date: Date?) {
+                   
                    db.reservationDao().loadAllByDate(date!!).observe(viewLifecycleOwner){ x->
                        recycle.visibility = View.VISIBLE
                        val adapter= Reservation_RecyclerViewAdapter(x.map { y -> it.polito.mad.lab2.ShowReservationModel(y.discipline,y.playgroundName,y.date,y.oraInizio,y.oraFine) },date)

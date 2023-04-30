@@ -1,6 +1,7 @@
 package it.polito.mad.lab2.db
 
 import androidx.room.TypeConverter
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -13,6 +14,10 @@ class Converters {
 
     @TypeConverter
     fun dateToTimestamp(date: Date?): Long? {
-        return date?.time
+
+        val x=SimpleDateFormat("dd-MM-yyyy");
+        val y= x.format(date);
+        val data: Date=x.parse(y)
+        return data.time;
     }
 }
