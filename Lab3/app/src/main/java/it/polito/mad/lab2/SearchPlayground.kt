@@ -59,12 +59,14 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
                         recycle.adapter=adapter
                         recycle.layoutManager= LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
 
-                    //DB INSERTION RESERVATION
+                        
+                 /*   //DB INSERTION RESERVATION
                         lifecycleScope.launch(Dispatchers.IO){
                             db.reservationDao().save(Reservation(0,date,date.time.toString(), dropmenu.text.toString(),14,15, dropmenufields.text.toString()))
-                        }
+                        }*/
                     }
                     override fun onMonthChanged(date: Date?) {
+                        recycle.visibility=View.GONE
 
                     }
             })

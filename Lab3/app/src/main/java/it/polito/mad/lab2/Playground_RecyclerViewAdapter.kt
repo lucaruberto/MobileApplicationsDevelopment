@@ -16,10 +16,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.lab2.db.GlobalDatabase
 import it.polito.mad.lab2.db.Reservation
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.Date
+import kotlin.concurrent.thread
 
 class Playground_RecyclerViewAdapter(val data : List<ShowReservationModel>, val date: Date? ,val dropmenu : String, val dropmenufields: String) : RecyclerView.Adapter <Playground_RecyclerViewAdapter.MyViewHolder>(){
 
@@ -35,6 +40,7 @@ class Playground_RecyclerViewAdapter(val data : List<ShowReservationModel>, val 
         position: Int) {
         val rs= data[position];
         holder.bind(rs, holder, date!!,  dropmenu, dropmenufields);
+
     }
 
     override fun getItemCount(): Int {
@@ -45,6 +51,8 @@ class Playground_RecyclerViewAdapter(val data : List<ShowReservationModel>, val 
         val StarHour: TextView = v.findViewById(R.id.Orainizio)
         val FinishHour: TextView = v.findViewById(R.id.Orafine)
         val CardView : CardView = v.findViewById(R.id.cardview)
+
+
         fun bind(rs: ShowReservationModel, holder: MyViewHolder, date: Date?, dropmenu: String, dropmenufields: String) {
             StarHour.text = rs.StartHour.toString();
             FinishHour.text = rs.FinishHour.toString();
@@ -56,6 +64,7 @@ class Playground_RecyclerViewAdapter(val data : List<ShowReservationModel>, val 
             }
             CardView.setOnClickListener {
                 val message = "Are You sure?"
+
                 showCustomDialogBox(holder.CardView.context, message, date!!, dropmenu, dropmenufields, rs.StartHour.toString(), rs.FinishHour.toString())
             }
         }
@@ -88,8 +97,23 @@ class Playground_RecyclerViewAdapter(val data : List<ShowReservationModel>, val 
             playerCourt.text = dropmenufields
 
             btnYes.setOnClickListener {
-                //db.reservationDao().save(Reservation(0,date!!,date.time.toString(), dropmenu,14,15, dropmenufields))
+
+                thread {
+                    db.reservationDao().save(
+                        Reservation(
+                            0,
+                            date!!,
+                            date.time.toString(),
+                            dropmenu,
+                            start.toInt(),
+                            end.toInt(),
+                            dropmenufields
+                        )
+                    )
+                }
                 Toast.makeText(context, "Reservation saved", Toast.LENGTH_LONG).show()
+
+                dialog.dismiss()
             }
             btnNo.setOnClickListener {
                 dialog.dismiss()
