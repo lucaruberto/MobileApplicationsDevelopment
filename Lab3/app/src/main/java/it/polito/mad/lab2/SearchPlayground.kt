@@ -46,16 +46,16 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
                     calendarView.setCalendarListener(object : CalendarListener {
                     val selectedValue = dropmenu.text.toString()
                     override fun onDateSelected(date: Date?) {
-                        val df = SimpleDateFormat("dd-MM-yyyy")
+
                         recycle.visibility=View.VISIBLE
-                        val adapter= Playground_RecyclerViewAdapter(lista.map { x->it.polito.mad.lab2.ReservationModel(x.oraInizio,x.oraFine) }, df.format(date).toString(), dropmenu.text.toString(), dropmenufields.text.toString())
+                        val adapter= Playground_RecyclerViewAdapter(lista.map { x->it.polito.mad.lab2.ReservationModel(x.oraInizio,x.oraFine) }, date!!, dropmenu.text.toString(), dropmenufields.text.toString())
                         recycle.adapter=adapter
                         recycle.layoutManager= LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
 
                     //DB INSERTION RESERVATION
-                        lifecycleScope.launch(Dispatchers.IO){
-                            db.reservationDao().save(Reservation(0,date!!,date.time.toString(), dropmenu.text.toString(),14,15, dropmenufields.text.toString()))
-                        }
+                        /*lifecycleScope.launch(Dispatchers.IO){
+                            db.reservationDao().save(Reservation(0,date,date.time.toString(), dropmenu.text.toString(),14,15, dropmenufields.text.toString()))
+                        }*/
                     }
                     override fun onMonthChanged(date: Date?) {
 

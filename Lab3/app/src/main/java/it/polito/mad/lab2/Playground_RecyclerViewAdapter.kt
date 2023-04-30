@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.icu.text.SimpleDateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +17,11 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import it.polito.mad.lab2.db.GlobalDatabase
+import it.polito.mad.lab2.db.Reservation
+import java.util.Date
 
-class Playground_RecyclerViewAdapter(val data : List<ReservationModel>, val date: String ,val dropmenu : String, val dropmenufields: String) : RecyclerView.Adapter <Playground_RecyclerViewAdapter.MyViewHolder>(){
+class Playground_RecyclerViewAdapter(val data : List<ReservationModel>, val date: Date? ,val dropmenu : String, val dropmenufields: String) : RecyclerView.Adapter <Playground_RecyclerViewAdapter.MyViewHolder>(){
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -30,7 +34,7 @@ class Playground_RecyclerViewAdapter(val data : List<ReservationModel>, val date
         holder: Playground_RecyclerViewAdapter.MyViewHolder,
         position: Int) {
         val rs= data[position];
-        holder.bind(rs, holder, date,  dropmenu, dropmenufields);
+        holder.bind(rs, holder, date!!,  dropmenu, dropmenufields);
     }
 
     override fun getItemCount(): Int {
@@ -41,7 +45,7 @@ class Playground_RecyclerViewAdapter(val data : List<ReservationModel>, val date
         val StarHour: TextView = v.findViewById(R.id.Orainizio)
         val FinishHour: TextView = v.findViewById(R.id.Orafine)
         val CardView : CardView = v.findViewById(R.id.cardview)
-        fun bind(rs: ReservationModel, holder: MyViewHolder, date: String, dropmenu: String, dropmenufields: String) {
+        fun bind(rs: ReservationModel, holder: MyViewHolder, date: Date?, dropmenu: String, dropmenufields: String) {
             StarHour.text = rs.StartHour.toString();
             FinishHour.text = rs.FinishHour.toString();
             if (rs.StartHour == 8) {
@@ -51,17 +55,19 @@ class Playground_RecyclerViewAdapter(val data : List<ReservationModel>, val date
             }
             CardView.setOnClickListener {
                 val message = "Are You sure?"
-                showCustomDialogBox(holder.CardView.context, message, date, dropmenu, dropmenufields)
+                showCustomDialogBox(holder.CardView.context, message, date!!, dropmenu, dropmenufields)
             }
         }
 
         @SuppressLint("ResourceAsColor")
-        private fun showCustomDialogBox(context: Context, message: String?, date: String, dropmenu: String, dropmenufields: String) {
+        private fun showCustomDialogBox(context: Context, message: String?, date: Date?, dropmenu: String, dropmenufields: String) {
             val dialog = Dialog(context)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setCancelable(false)
             dialog.setContentView(R.layout.reservation_popup)
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            val db = GlobalDatabase.getDatabase(context)
+            val df = SimpleDateFormat("dd-MM-yyyy")
 
             val tvMessage :TextView = dialog.findViewById(R.id.tvMessage)
             val btnYes : Button = dialog.findViewById(R.id.btnYes)
@@ -71,13 +77,14 @@ class Playground_RecyclerViewAdapter(val data : List<ReservationModel>, val date
             val dateS : TextView = dialog.findViewById(R.id.dateSelected)
             tvMessage.text = message
             sport.text = dropmenu
-            dateS.text = date
+            dateS.text = df.format(date).toString()
             println(sport.text)
             sport.setTextColor(R.color.black)
             playerCourt.text = dropmenufields
 
             btnYes.setOnClickListener {
-                Toast.makeText(context, "click on Yes", Toast.LENGTH_LONG).show()
+                db.reservationDao().save(Reservation(0,date!!,date.time.toString(), dropmenu,14,15, dropmenufields))
+                Toast.makeText(context, "Reservation saved", Toast.LENGTH_LONG).show()
             }
             btnNo.setOnClickListener {
                 dialog.dismiss()
