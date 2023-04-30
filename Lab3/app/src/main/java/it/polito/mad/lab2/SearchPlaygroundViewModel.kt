@@ -3,8 +3,7 @@ package it.polito.mad.lab2
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+
 import it.polito.mad.lab2.db.FasciaOraria
 import it.polito.mad.lab2.db.GlobalDatabase
 import it.polito.mad.lab2.db.Reservation
@@ -29,9 +28,9 @@ class SearchPlaygroundViewModel(application: Application) : AndroidViewModel(app
         return db.playgroundsDao().getPlayGroundsbySportName(sport)
     }
 
-    fun getRecyclerAdapter(fasce:List<FasciaOraria>,sport:String,field:String,date:Date):Playground_RecyclerViewAdapter{
+    fun getRecyclerAdapter(fasce:List<FasciaOraria>,sport:String,field:String,date:Date,time:String):Playground_RecyclerViewAdapter{
 
-        return Playground_RecyclerViewAdapter(fasce.map { x->it.polito.mad.lab2.ShowReservationModel(sport,field,date,x.oraInizio,x.oraFine) },date,sport,field,this);
+        return Playground_RecyclerViewAdapter(fasce.map { x->it.polito.mad.lab2.ShowReservationModel(sport,field,date,time,x.oraInizio,x.oraFine) },date,sport,field,this);
     }
 
     fun saveReservation(id: Int,date: Date,time:String,discipline:String,starthour:Int,endHour:Int,field: String){

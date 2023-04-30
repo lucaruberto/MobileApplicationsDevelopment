@@ -45,7 +45,8 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
                         hoursfasce,
                         sportsdropdownmenu.text.toString(),
                         fieldsdropdownmenu.text.toString(),
-                        date!!
+                        date!!,
+                        date.time.toString()
                     )
                     recycle.adapter = adapter
                     recycle.layoutManager =

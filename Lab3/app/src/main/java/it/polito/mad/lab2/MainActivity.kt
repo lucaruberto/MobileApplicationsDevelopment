@@ -37,35 +37,5 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-    /*    override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            setContentView(R.layout.activity_main)
-
-            val firstFragment=FirstFragment()
-            val secondFragment=SecondFragment()
-            val thirdFragment=ThirdFragment()
-
-            setCurrentFragment(firstFragment)
-
-            bottomNavigationView.setOnNavigationItemSelectedListener {
-                when(it.itemId){
-                    R.id.home->setCurrentFragment(firstFragment)
-                    R.id.person->setCurrentFragment(secondFragment)
-                    R.id.settings->setCurrentFragment(thirdFragment)
-
-                }
-                true
-            }
-
-        }
-
-        private fun setCurrentFragment(fragment:Fragment)=
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.flFragment,fragment)
-                commit()
-            }
-
-    }*/
-
     }
 }
