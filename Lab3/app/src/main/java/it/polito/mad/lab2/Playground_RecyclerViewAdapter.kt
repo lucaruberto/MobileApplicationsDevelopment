@@ -55,12 +55,12 @@ class Playground_RecyclerViewAdapter(val data : List<ReservationModel>, val date
             }
             CardView.setOnClickListener {
                 val message = "Are You sure?"
-                showCustomDialogBox(holder.CardView.context, message, date!!, dropmenu, dropmenufields)
+                showCustomDialogBox(holder.CardView.context, message, date!!, dropmenu, dropmenufields, rs.StartHour.toString(), rs.FinishHour.toString())
             }
         }
 
         @SuppressLint("ResourceAsColor")
-        private fun showCustomDialogBox(context: Context, message: String?, date: Date?, dropmenu: String, dropmenufields: String) {
+        private fun showCustomDialogBox(context: Context, message: String?, date: Date?, dropmenu: String, dropmenufields: String, start: String, end: String) {
             val dialog = Dialog(context)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setCancelable(false)
@@ -75,9 +75,13 @@ class Playground_RecyclerViewAdapter(val data : List<ReservationModel>, val date
             val sport : TextView = dialog.findViewById(R.id.sportSelected)
             val playerCourt : TextView = dialog.findViewById(R.id.playerCourtSelected)
             val dateS : TextView = dialog.findViewById(R.id.dateSelected)
+            val _start : TextView = dialog.findViewById(R.id.start)
+            val _end : TextView = dialog.findViewById(R.id.end)
             tvMessage.text = message
             sport.text = dropmenu
             dateS.text = df.format(date).toString()
+            _start.text = start
+            _end.text = end
             println(sport.text)
             sport.setTextColor(R.color.black)
             playerCourt.text = dropmenufields
