@@ -11,6 +11,7 @@ import android.widget.AutoCompleteTextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputLayout
@@ -38,7 +39,6 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
 
         db.fasciaorariaDao().getAllFasciaOraria().observe(viewLifecycleOwner, Observer {
             lista->
-
                     calendarView.setCalendarListener(object : CalendarListener {
                     val selectedValue = dropmenu.text.toString()
                     @RequiresApi(Build.VERSION_CODES.O)
@@ -49,7 +49,8 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
                         recycle.visibility=View.VISIBLE
                         val adapter= Playground_RecyclerViewAdapter(lista.map { x->it.polito.mad.lab2.ShowReservationModel(dropmenu.text.toString(),dropmenufields.text.toString(),date,x.oraInizio,x.oraFine) }, date!!, dropmenu.text.toString(), dropmenufields.text.toString())
                         recycle.adapter=adapter
-                        recycle.layoutManager= LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+                        recycle.layoutManager = GridLayoutManager(context, 2)
+                        //recycle.layoutManager= LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
 
 
                  /*   //DB INSERTION RESERVATION

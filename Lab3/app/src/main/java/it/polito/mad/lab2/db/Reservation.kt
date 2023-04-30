@@ -19,7 +19,6 @@ data class Reservation(
     @ColumnInfo(name = "time")
     val time: String,
 
-
     @ColumnInfo(name = "discipline")
     val discipline: String,
 

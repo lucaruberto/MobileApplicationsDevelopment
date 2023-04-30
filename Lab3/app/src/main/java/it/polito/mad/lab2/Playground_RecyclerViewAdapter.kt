@@ -59,7 +59,7 @@ class Playground_RecyclerViewAdapter(val data : List<ShowReservationModel>, val 
             //TODO Sistemare logica
             if (rs.StartHour == 8) {
                 holder.CardView.setCardBackgroundColor(
-                    ContextCompat.getColor(holder.CardView.context, R.color.purple_200)
+                    ContextCompat.getColor(holder.CardView.context, R.color.red)
                 )
             }
             CardView.setOnClickListener {
