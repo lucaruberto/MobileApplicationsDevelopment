@@ -26,12 +26,14 @@ class ShowReservationsViewModel(application: Application) : AndroidViewModel(app
 
     fun deleteReservation(id:Int,date:Date,time:String,discipline:String,starthour:Int,endhour:Int,playgroundName:String)
     {
+        val res= Reservation(id,date,time,discipline, starthour,endhour,playgroundName)
+        val x= 3;
         thread { db.reservationDao().delete(Reservation(id,date,time,discipline, starthour,endhour,playgroundName)) }
 
     }
 
     fun getRecyclerAdapter(lista:List<Reservation>, date:Date):Reservation_RecyclerViewAdapter{
 
-        return Reservation_RecyclerViewAdapter(lista.map { x-> ShowReservationModel(x.discipline,x.playgroundName,x.date,x.time,x.oraInizio,x.oraFine) },date,this)
+        return Reservation_RecyclerViewAdapter(lista.map { x-> ShowReservationModel(x.id,x.discipline,x.playgroundName,x.date,x.time,x.oraInizio,x.oraFine) },date,this)
     }
 }

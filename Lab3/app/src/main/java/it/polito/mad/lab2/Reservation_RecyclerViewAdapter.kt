@@ -55,10 +55,10 @@ class Reservation_RecyclerViewAdapter(val data : List<ShowReservationModel>, val
 
            val message = "Do you really want to delete the reservation?"
            buttonDel.setOnClickListener {
-               showCustomDialogBox(holder.CardView.context, message, srs.Sport, srs.PlayerCourt,  df.format(srs.date).toString(),srs.time, srs.StartHour.toString(), srs.FinishHour.toString(),vm )
+               showCustomDialogBox(holder.CardView.context, message, srs.Sport, srs.PlayerCourt,  df.format(srs.date).toString(),srs.time, srs.StartHour.toString(), srs.FinishHour.toString(),srs.id,vm )
            }
        }
-        private fun showCustomDialogBox(context: Context, message: String?, sport: String, playercourt: String , date: String, time:String, start: String, end: String,vm:ShowReservationsViewModel) {
+        private fun showCustomDialogBox(context: Context, message: String?, sport: String, playercourt: String , date: String, time:String, start: String, end: String,id:Int,vm:ShowReservationsViewModel) {
             val dialog = Dialog(context)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setCancelable(false)
@@ -82,7 +82,7 @@ class Reservation_RecyclerViewAdapter(val data : List<ShowReservationModel>, val
             _start.text = start
             _end.text = end
             btnYes.setOnClickListener {
-                vm.deleteReservation(0, x.parse(date),time,sport,start.toInt(),end.toInt(),playercourt )
+                vm.deleteReservation(id, x.parse(date),time,sport,start.toInt(),end.toInt(),playercourt )
                 Toast.makeText(context, "Reservation deleted", Toast.LENGTH_LONG).show()
                 dialog.dismiss()
             }

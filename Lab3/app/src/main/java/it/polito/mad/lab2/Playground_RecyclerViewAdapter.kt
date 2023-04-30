@@ -103,6 +103,7 @@ class Playground_RecyclerViewAdapter(val data : List<ShowReservationModel>, val 
                             end.toInt(),
                             dropmenufields
                         )
+
                 }
                 Toast.makeText(context, "Reservation saved", Toast.LENGTH_LONG).show()
                 dialog.dismiss()
