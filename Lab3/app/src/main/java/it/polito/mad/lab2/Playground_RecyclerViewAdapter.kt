@@ -83,7 +83,7 @@ class Playground_RecyclerViewAdapter(val data : List<ReservationModel>, val date
             playerCourt.text = dropmenufields
 
             btnYes.setOnClickListener {
-                db.reservationDao().save(Reservation(0,date!!,date.time.toString(), dropmenu,14,15, dropmenufields))
+                //db.reservationDao().save(Reservation(0,date!!,date.time.toString(), dropmenu,14,15, dropmenufields))
                 Toast.makeText(context, "Reservation saved", Toast.LENGTH_LONG).show()
             }
             btnNo.setOnClickListener {
