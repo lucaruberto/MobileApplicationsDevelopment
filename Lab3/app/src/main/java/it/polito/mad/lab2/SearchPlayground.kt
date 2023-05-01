@@ -40,7 +40,7 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
 
 
 
-        vm.getFasceOrari().observe(viewLifecycleOwner) { hoursfasce ->
+        vm.getFasceOrari(/*fieldsdropdownmenu.text.toString()*/).observe(viewLifecycleOwner) { hoursfasce ->
             calendarView.setCalendarListener(object : CalendarListener {
                 @RequiresApi(Build.VERSION_CODES.O)
                 override fun onDateSelected(date: Date?) {

@@ -8,6 +8,15 @@ interface FasciaOrariaDao {
     @Query("SELECT * FROM fasciaoraria")
     fun getAllFasciaOraria() : LiveData<List<FasciaOraria>>
 
+    @Query("SELECT * " +
+            "FROM fasciaoraria " +
+            "WHERE oraInizio NOT IN (" +
+            "SELECT oraInizio " +
+            "FROM reservations " +
+            "WHERE playgroundName=(:playground) )" )
+    fun getFreeSlots(playground: String): LiveData<List<FasciaOraria>>
+
+
     @Insert
     fun save(playground: PlayGrounds)
 

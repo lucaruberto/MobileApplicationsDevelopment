@@ -15,9 +15,10 @@ class SearchPlaygroundViewModel(application: Application) : AndroidViewModel(app
     val db = GlobalDatabase.getDatabase(getApplication<Application>().applicationContext);
 
 
-    fun getFasceOrari():LiveData<List<FasciaOraria>>{
-
+    fun getFasceOrari(/*playgoundName: String*/):LiveData<List<FasciaOraria>>{
+        //return db.fasciaorariaDao().getFreeSlots(playgroundName)
         return db.fasciaorariaDao().getAllFasciaOraria()
+
     }
     fun getListSport():LiveData<List<String>>{
 
