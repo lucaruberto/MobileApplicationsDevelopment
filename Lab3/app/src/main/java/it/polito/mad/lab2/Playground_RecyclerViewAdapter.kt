@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.AutoCompleteTextView
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
@@ -64,7 +63,7 @@ class Playground_RecyclerViewAdapter(val data : List<ShowReservationModel>, val 
 
             CardView.setOnClickListener {
                 val message = "Are You sure?"
-                showCustomDialogBox(holder.CardView.context, message, date!!, dropmenu, dropmenufields, rs.StartHour.toString(), rs.FinishHour.toString(),vm )
+                showCustomDialogBox(holder.CardView.context, message, date!!, dropmenu, dropmenufields, rs.StartHour.toString(), rs.FinishHour.toString(),vm)
             }
         }
 
@@ -84,15 +83,17 @@ class Playground_RecyclerViewAdapter(val data : List<ShowReservationModel>, val 
             val dateS : TextView = dialog.findViewById(R.id.dateSelected)
             val _start : TextView = dialog.findViewById(R.id.start)
             val _end : TextView = dialog.findViewById(R.id.end)
-            val customRequest: EditText = dialog.findViewById(R.id.customrequest)
             tvMessage.text = message
             sport.text = dropmenu
             dateS.text = df.format(date).toString()
             _start.text = start
             _end.text = end
+            println(sport.text)
+            sport.setTextColor(R.color.black)
             playerCourt.text = dropmenufields
-            val text = customRequest.text.toString()
+
             btnYes.setOnClickListener {
+
                 thread {
                         vm.saveReservation(
                             0,
@@ -101,9 +102,9 @@ class Playground_RecyclerViewAdapter(val data : List<ShowReservationModel>, val 
                             dropmenu,
                             start.toInt(),
                             end.toInt(),
-                            dropmenufields,
-                            text
+                            dropmenufields
                         )
+
                 }
                 Toast.makeText(context, "Reservation saved", Toast.LENGTH_LONG).show()
                 dialog.dismiss()
