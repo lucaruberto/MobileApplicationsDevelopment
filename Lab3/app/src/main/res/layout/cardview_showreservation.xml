@@ -10,20 +10,21 @@
         android:id="@+id/cardviewshow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp"
         app:cardCornerRadius="20dp"
         app:cardElevation="8dp"
+        android:padding="16dp"
+        app:cardBackgroundColor="#F3E5F5"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginEnd="16dp"
             >
 
             <TextView
@@ -32,6 +33,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:text="Sport"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_marginStart="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/playercourtreservation"
                 app:layout_constraintStart_toStartOf="parent"
@@ -43,29 +47,63 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:text="Playground"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_marginStart="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/startstring"
+                app:layout_constraintStart_toEndOf="@id/sportreservation"
+                app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/startstring"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start:"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_marginStart="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/timereservationstart"
-                app:layout_constraintStart_toEndOf="@id/sportreservation"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.517" />
+                app:layout_constraintStart_toEndOf="@id/playercourtreservation"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/timereservationstart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Start"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/timereservationend"
-                app:layout_constraintStart_toEndOf="@id/playercourtreservation"
+                app:layout_constraintStart_toEndOf="@id/startstring"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/endstring"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="End:"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_marginStart="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/timereservationend"
+                app:layout_constraintStart_toEndOf="@id/timereservationstart"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/timereservationend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="End"
+                android:textAlignment="gravity"
+                android:textColor="@color/black"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/buttondelete"
-                app:layout_constraintStart_toEndOf="@id/timereservationstart"
+                app:layout_constraintStart_toEndOf="@id/endstring"
                 app:layout_constraintTop_toTopOf="parent" />
             <Button
                 android:id="@+id/buttondelete"
@@ -73,13 +111,15 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/red"
                 android:text="Delete"
+                android:layout_marginStart="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/timereservationend"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
