@@ -15,9 +15,10 @@ class SearchPlaygroundViewModel(application: Application) : AndroidViewModel(app
     val db = GlobalDatabase.getDatabase(getApplication<Application>().applicationContext);
 
 
-    fun getFasceOrari(/* playgroundName: String*/):LiveData<List<FasciaOraria>>{
+    fun getFasceOrari(/*playgoundName: String*/):LiveData<List<FasciaOraria>>{
+        //return db.fasciaorariaDao().getFreeSlots(playgroundName)
         return db.fasciaorariaDao().getAllFasciaOraria()
-        //return db.fasciaorariaDao().getFreeSlots()
+
     }
     fun getListSport():LiveData<List<String>>{
 
@@ -29,12 +30,11 @@ class SearchPlaygroundViewModel(application: Application) : AndroidViewModel(app
     }
 
     fun getRecyclerAdapter(fasce:List<FasciaOraria>,sport:String,field:String,date:Date,time:String):Playground_RecyclerViewAdapter{
-
-        return Playground_RecyclerViewAdapter(fasce.map { x->it.polito.mad.lab2.ShowReservationModel(x.id,sport,field,date,time,x.oraInizio,x.oraFine) },date,sport,field,this);
+        return Playground_RecyclerViewAdapter(fasce.map { x->it.polito.mad.lab2.ShowReservationModel(x.id,sport,field,date,time,x.oraInizio,x.oraFine, "") },date,sport,field,this);
     }
 
-    fun saveReservation(id: Int,date: Date,time:String,discipline:String,starthour:Int,endHour:Int,field: String){
-        thread { db.reservationDao().save(Reservation(id,date,time,discipline,starthour,endHour,field)) };
+    fun saveReservation(id: Int,date: Date,time:String,discipline:String,starthour:Int,endHour:Int,field: String, customRequest: String){
+        thread { db.reservationDao().save(Reservation(id,date,time,discipline,starthour,endHour,field, customRequest)) };
         return
     }
 
