@@ -12,8 +12,8 @@ interface FasciaOrariaDao {
             "FROM fasciaoraria " +
             "WHERE oraInizio NOT IN (" +
             "SELECT oraInizio " +
-            "FROM reservations" +
-            "WHERE playgroundName = (:playground) )" )
+            "FROM reservations " +
+            "WHERE playgroundName=(:playground) )" )
     fun getFreeSlots(playground: String): LiveData<List<FasciaOraria>>
 
     @Insert

@@ -29,9 +29,6 @@ data class Reservation(
     val oraFine : Int,
 
     @ColumnInfo(name="playgroundName")
-    val playgroundName : String,
-
-    @ColumnInfo(name="customRequest")
-    val customRequest : String
+    val playgroundName : String
 
 )

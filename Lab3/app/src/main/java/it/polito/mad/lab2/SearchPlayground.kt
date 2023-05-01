@@ -26,9 +26,9 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var sportsdropdownmenu: AutoCompleteTextView = view.findViewById(R.id.dropdown_sports)
-        var fieldsdropdownmenu : AutoCompleteTextView = view.findViewById(R.id.dropdown_playgrounds)
-        var playgroundText : TextInputLayout = view.findViewById(R.id.dropdown_playgrounds_parent)
+        val sportsdropdownmenu: AutoCompleteTextView = view.findViewById(R.id.dropdown_sports)
+        val fieldsdropdownmenu : AutoCompleteTextView = view.findViewById(R.id.dropdown_playgrounds)
+        val playgroundText : TextInputLayout = view.findViewById(R.id.dropdown_playgrounds_parent)
         val calendarView = view.findViewById<CustomCalendarView>(R.id.playground_calendar_view)
 
         val recycle : RecyclerView = view.findViewById(R.id.playground_recycle_view)
@@ -40,7 +40,7 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
 
 
 
-        vm.getFasceOrari().observe(viewLifecycleOwner) { hoursfasce ->
+        vm.getFasceOrari(/*fieldsdropdownmenu.text.toString()*/).observe(viewLifecycleOwner) { hoursfasce ->
             calendarView.setCalendarListener(object : CalendarListener {
                 @RequiresApi(Build.VERSION_CODES.O)
                 override fun onDateSelected(date: Date?) {
