@@ -16,7 +16,6 @@ interface FasciaOrariaDao {
             "WHERE playgroundName=(:playground) )" )
     fun getFreeSlots(playground: String): LiveData<List<FasciaOraria>>
 
-
     @Insert
     fun save(playground: PlayGrounds)
 
