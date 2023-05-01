@@ -30,7 +30,6 @@ class ShowReservations : Fragment(R.layout.fragment_show_reservations) {
 
         calendarView.setCalendarListener(object : CalendarListener {
                override fun onDateSelected(date: Date?) {
-
                    if (date != null) {
                        vm.getReservationFromDate(date).observe(viewLifecycleOwner){ x->
                            recycle.visibility = View.VISIBLE
@@ -40,12 +39,10 @@ class ShowReservations : Fragment(R.layout.fragment_show_reservations) {
                        }
                    }
                }
-
                override fun onMonthChanged(date: Date?) {
                 recycle.visibility=View.GONE
                }
            })
-
 
         vm.getLiveDates().observe(viewLifecycleOwner) { it ->
             class HasReservationDecorator : DayDecorator {

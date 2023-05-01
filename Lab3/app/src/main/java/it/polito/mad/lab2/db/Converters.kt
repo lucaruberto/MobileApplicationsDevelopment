@@ -6,18 +6,17 @@ import java.util.*
 
 
 class Converters {
-
     @TypeConverter
     fun fromTimestamp(value: Long?): Date? {
         return value?.let { Date(value) }
     }
 
     @TypeConverter
-    fun dateToTimestamp(date: Date?): Long? {
-
-        val x=SimpleDateFormat("dd-MM-yyyy");
+    fun dateToTimestamp(date: Date): Long {
+        val x=SimpleDateFormat("dd-MM-yyyy", Locale.ITALY);
         val y= x.format(date);
-        val data: Date=x.parse(y)
-        return data.time;
+        val data = x.parse(y) as Date
+        val tempo = data.time
+        return tempo
     }
 }

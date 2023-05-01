@@ -22,7 +22,6 @@ import java.util.*
 
 
 class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -35,28 +34,29 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
         val vm : SearchPlaygroundViewModel = ViewModelProvider(this)[SearchPlaygroundViewModel::class.java]
         var selectedsport: String
 
-
         recycle.visibility=View.GONE
 
-
-
-        vm.getFasceOrari(/*fieldsdropdownmenu.text.toString()*/).observe(viewLifecycleOwner) { hoursfasce ->
+        vm.getFasceOrari().observe(viewLifecycleOwner) { hoursfasce ->
             calendarView.setCalendarListener(object : CalendarListener {
                 @RequiresApi(Build.VERSION_CODES.O)
                 override fun onDateSelected(date: Date?) {
                     recycle.visibility = View.VISIBLE
-                    val adapter = vm.getRecyclerAdapter(
-                        hoursfasce,
-                        sportsdropdownmenu.text.toString(),
-                        fieldsdropdownmenu.text.toString(),
-                        date!!,
-                        date.time.toString()
-                    )
-                    recycle.adapter = adapter
-                    recycle.layoutManager =
-                         GridLayoutManager(context, 2)
-                }
 
+                    val selectedField = fieldsdropdownmenu.text.toString()
+                    vm.getFasceOrariLibere(selectedField, date!!).observe(viewLifecycleOwner) { fasceLibere ->
+
+                        val adapter = vm.getRecyclerAdapter(
+                            fasceLibere ?: hoursfasce,
+                            sportsdropdownmenu.text.toString(),
+                            fieldsdropdownmenu.text.toString(),
+                            date,
+                            date.time.toString()
+                        )
+                        recycle.adapter = adapter
+                        recycle.layoutManager =
+                            GridLayoutManager(context, 2)
+                    }
+                }
                 override fun onMonthChanged(date: Date?) {
                     recycle.visibility = View.GONE
                 }
