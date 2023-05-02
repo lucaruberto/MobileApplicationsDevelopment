@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#A5D6A7"
+    android:backgroundTint="#C8E6C9"
+    tools:context=".ShowProfileActivity">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.33" />
+
+    <RelativeLayout
+        android:id="@+id/imageWrapper"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline5"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ProfileImage"
+            android:layout_width="186dp"
+            android:layout_height="203dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="63dp"
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="33dp"
+            android:contentDescription="@string/user_profile_image"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.393"
+            app:srcCompat="@drawable/person"
+            tools:srcCompat="@drawable/person" />
+
+        <ImageButton
+            android:id="@+id/EditImage"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignStart="@+id/ProfileImage"
+            android:layout_alignTop="@+id/ProfileImage"
+            android:layout_alignEnd="@+id/ProfileImage"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="66dp"
+            android:layout_marginTop="151dp"
+            android:layout_marginEnd="66dp"
+            android:background="@android:color/transparent"
+            android:layout_marginBottom="67dp"
+            android:contentDescription="@string/change_profile_image"
+            android:src="@android:drawable/ic_menu_camera"
+            tools:srcCompat="@android:drawable/ic_menu_camera" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="2"
+        app:layout_constraintStart_toEndOf="@+id/guideline5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:foregroundGravity="center"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:textAlignment="center"
+            android:visibility="visible">
+
+            <EditText
+                android:id="@+id/EditNickname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:autofillHints="Insert nickname..."
+                android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_person_24"
+                android:gravity="center|center_vertical"
+                android:hint="@string/nickname"
+                android:inputType="textPersonName"
+                android:minHeight="48dp"
+                android:paddingBottom="8dp"
+                android:text=""
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/EditFullName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|center_vertical"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:autofillHints="Insert full name..."
+                android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_person_24"
+                android:ems="10"
+                android:foregroundGravity="center"
+                android:gravity="center|center_vertical"
+                android:hint="@string/fullname"
+                android:inputType="textPersonName"
+                android:minHeight="48dp"
+                android:text=""
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/EditMail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|center_vertical"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:autofillHints="Insert email address..."
+                android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_email_24"
+                android:ems="10"
+                android:foregroundGravity="center"
+                android:gravity="center|center_vertical"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:minHeight="48dp"
+                android:text=""
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/EditBirth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|center_vertical"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:autofillHints="Insert birth date..."
+                android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_calendar_month_24"
+                android:ems="10"
+                android:foregroundGravity="center"
+                android:gravity="center|center_vertical"
+                android:hint="@string/birthdate"
+                android:inputType="date"
+                android:minHeight="48dp"
+                android:text=""
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/EditSex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|center_vertical"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:autofillHints="Insert your gender..."
+                android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_man_4_24"
+                android:ems="10"
+                android:foregroundGravity="center"
+                android:gravity="center|center_vertical"
+                android:hint="@string/gender"
+                android:inputType="text"
+                android:minHeight="48dp"
+                android:text=""
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/EditCity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|center_vertical"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:autofillHints="Insert your city..."
+                android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_location_city_24"
+                android:ems="10"
+                android:foregroundGravity="center"
+                android:gravity="center|center_vertical"
+                android:hint="@string/city"
+                android:inputType="text"
+                android:minHeight="48dp"
+                android:text=""
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/EditSportslist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|center_vertical"
+                android:layout_marginTop="16dp"
+                android:layout_weight="1"
+                android:autofillHints="Insert the sports you play..."
+                android:background="@drawable/custom_input"
+                android:drawableStart="@drawable/baseline_sports_martial_arts_24"
+                android:ems="10"
+                android:foregroundGravity="center"
+                android:gravity="center|center_vertical"
+                android:hint="@string/sportslist"
+                android:inputType="text"
+                android:minHeight="48dp"
+                android:text=""
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/Reputation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reputation"
+                    android:textColorHighlight="#000000"
+                    android:textSize="24sp" />
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/star"
+                    app:srcCompat="@android:drawable/btn_star_big_on" />
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/star"
+                    app:srcCompat="@android:drawable/btn_star_big_on" />
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/star"
+                    app:srcCompat="@android:drawable/btn_star_big_on" />
+
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/star"
+                    app:srcCompat="@android:drawable/btn_star_big_on" />
+
+                <ImageView
+                    android:id="@+id/imageView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/star"
+                    app:srcCompat="@android:drawable/btn_star_big_on" />
+
+            </TableRow>
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
