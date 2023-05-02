@@ -1,10 +1,10 @@
-package it.polito.mad.lab2
+package it.polito.mad.lab3
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import it.polito.mad.lab2.db.GlobalDatabase
-import it.polito.mad.lab2.db.Reservation
+import it.polito.mad.lab3.db.GlobalDatabase
+import it.polito.mad.lab3.db.Reservation
 import java.util.Date
 import kotlin.concurrent.thread
 

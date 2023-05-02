@@ -1,8 +1,7 @@
-package it.polito.mad.lab2.db
+package it.polito.mad.lab3.db
 
 import android.content.Context
 import androidx.room.*
-import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 

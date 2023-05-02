@@ -6,19 +6,19 @@
     app:startDestination="@id/showProfileNavGraph">
     <fragment
         android:id="@+id/showProfileNavGraph"
-        android:name="it.polito.mad.lab2.ShowProfile"
+        android:name="it.polito.mad.lab3.ShowProfile"
         android:label="ShowProfile" />
     <fragment
         android:id="@+id/searchPlaygroundNavGraph"
-        android:name="it.polito.mad.lab2.SearchPlayground"
+        android:name="it.polito.mad.lab3.SearchPlayground"
         android:label="SearchPlayground" />
     <fragment
         android:id="@+id/showReservationsNavGraph"
-        android:name="it.polito.mad.lab2.ShowReservations"
+        android:name="it.polito.mad.lab3.ShowReservations"
         android:label="fragment_show_reservations"
         tools:layout="@layout/fragment_show_reservations" />
     <fragment
         android:id="@+id/editProfileNavGraph"
-        android:name="it.polito.mad.lab2.EditProfile"
+        android:name="it.polito.mad.lab3.EditProfile"
         android:label="EditProfile" />
 </navigation>

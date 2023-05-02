@@ -1,4 +1,4 @@
-package it.polito.mad.lab2
+package it.polito.mad.lab3
 
 import android.Manifest
 import android.app.Activity

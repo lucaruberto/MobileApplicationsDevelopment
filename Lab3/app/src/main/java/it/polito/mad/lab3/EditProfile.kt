@@ -1,4 +1,4 @@
-package it.polito.mad.lab2
+package it.polito.mad.lab3
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
@@ -32,7 +32,7 @@ import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
-import it.polito.mad.lab2.model.ProfileViewModel
+import it.polito.mad.lab3.model.ProfileViewModel
 import java.io.ByteArrayOutputStream
 import java.io.FileDescriptor
 import java.io.IOException

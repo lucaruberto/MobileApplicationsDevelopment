@@ -1,10 +1,8 @@
-package it.polito.mad.lab2.db
+package it.polito.mad.lab3.db
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import java.util.Calendar
 import java.util.Date
 
 @Entity(tableName = "reservations")

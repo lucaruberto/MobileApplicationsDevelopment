@@ -7,7 +7,7 @@
     <data>
         <variable
             name="viewModel"
-            type="it.polito.mad.lab2.model.ProfileViewModel" />
+            type="it.polito.mad.lab3.model.ProfileViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

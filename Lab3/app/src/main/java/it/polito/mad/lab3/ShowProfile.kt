@@ -1,4 +1,4 @@
-package it.polito.mad.lab2
+package it.polito.mad.lab3
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -17,7 +17,7 @@ import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
-import it.polito.mad.lab2.model.ProfileViewModel
+import it.polito.mad.lab3.model.ProfileViewModel
 
 class ShowProfile: Fragment(R.layout.fragment_show_profile) {
     private val sharedViewModel: ProfileViewModel by activityViewModels()

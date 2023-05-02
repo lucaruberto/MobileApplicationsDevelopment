@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace 'it.polito.mad.lab2'
+    namespace 'it.polito.mad.lab3'
     compileSdk 33
 
     defaultConfig {
-        applicationId 'it.polito.mad.lab2'
+        applicationId 'it.polito.mad.lab3'
         minSdk 24
         targetSdk 33
         versionCode 1
@@ -52,7 +52,6 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.1'
-
     //Room components
     implementation 'androidx.room:room-common:2.5.1'
     kapt("androidx.room:room-compiler:2.5.1")

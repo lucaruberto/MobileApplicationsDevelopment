@@ -1,4 +1,4 @@
-package it.polito.mad.lab2.db
+package it.polito.mad.lab3.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

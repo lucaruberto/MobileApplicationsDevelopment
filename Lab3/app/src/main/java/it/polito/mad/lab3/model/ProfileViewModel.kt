@@ -1,25 +1,10 @@
-package it.polito.mad.lab2.model
+package it.polito.mad.lab3.model
 
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.provider.ContactsContract.CommonDataKinds.Email
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import it.polito.mad.lab2.R
-import java.io.ByteArrayOutputStream
-import java.io.File
 
 class ProfileViewModel(private val state: SavedStateHandle): ViewModel() {
     private val _nickname = MutableLiveData<String>(state["nickname"] ?: "")

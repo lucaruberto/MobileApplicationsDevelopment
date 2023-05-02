@@ -1,4 +1,4 @@
-package it.polito.mad.lab2
+package it.polito.mad.lab3
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import it.polito.mad.lab2.db.GlobalDatabase
+import it.polito.mad.lab3.db.GlobalDatabase
 
 class MainActivity : AppCompatActivity() {
     private lateinit var db : GlobalDatabase
