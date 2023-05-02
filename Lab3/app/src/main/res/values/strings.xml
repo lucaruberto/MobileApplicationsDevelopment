@@ -24,8 +24,8 @@
     <string name="image_from_camera">Take a new picture</string>
 
     <string name="bottom_nav_bar_profile">Profile</string>
-    <string name="bottom_nav_bar_reservations">Show Reservations</string>
-    <string name="bottom_nav_bar_search_playground">Search Playground</string>
+    <string name="bottom_nav_bar_reservations">Your Reservations</string>
+    <string name="bottom_nav_bar_search_playground">Book Playground</string>
 
     <string name="add_reservation_button">Add reservation</string>
     <string name="yes">Yes</string>
