@@ -50,7 +50,7 @@ class ShowReservations : Fragment(R.layout.fragment_show_reservations) {
                     if(it.map { SimpleDateFormat("dd-MM-yyyy", Locale.ITALY).format(it) }
                             .contains(SimpleDateFormat("dd-MM-yyyy", Locale.ITALY).format(dayView.date))){
                         dayView.setBackgroundColor(
-                        ContextCompat.getColor(requireContext(), R.color.red))
+                        ContextCompat.getColor(requireContext(), R.color.green))
                     }
                 }
             }
