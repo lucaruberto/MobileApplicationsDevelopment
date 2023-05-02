@@ -18,24 +18,11 @@ class SearchPlaygroundViewModel(application: Application) : AndroidViewModel(app
     val db = GlobalDatabase.getDatabase(getApplication<Application>().applicationContext)
     private var liveFasceLibere = db.fasciaorariaDao().getAllFasciaOraria()
 
-    fun getFasceOrari():LiveData<List<FasciaOraria>>{
-        return db.fasciaorariaDao().getAllFasciaOraria()
-    }
     fun getFasceOrariLibere(playground: String, date: Date): LiveData<List<FasciaOraria>>{
-        //test hardcoded
-        //val p = "Ruffini"
-        //val d = SimpleDateFormat("dd-MM-yyyy").parse("29-05-2023")
-        //liveFasceLibere = db.fasciaorariaDao().getFreeSlots(p,d!!)
-
-        //PROBLEMA: nel db c'è una prenotazione di FootBall al Ruffini per il giorno 29-05, fascia oraria 9-10
-        // Ho settato p e d con valori hardcoded che dovrebbero corrispondere e far tornare correttamente la query
-        // ma ciò non accade: ritorna sempre NULL anche con valori che so essere presenti!
-        // (testando su DB Explorer invece la query ritorna quello che mi aspetto)
-
-        //chiamata "vera"
         liveFasceLibere = db.fasciaorariaDao().getFreeSlots(playground, date)
         return liveFasceLibere
     }
+
     fun getListSport():LiveData<List<String>>{
         return db.sportsDao().getAll()
     }

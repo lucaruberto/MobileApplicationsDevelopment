@@ -2,6 +2,7 @@ package it.polito.mad.lab2
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
@@ -36,33 +37,29 @@ class SearchPlayground: Fragment(R.layout.fragment_search_playground) {
 
         recycle.visibility=View.GONE
 
-        vm.getFasceOrari().observe(viewLifecycleOwner) { hoursfasce ->
-            calendarView.setCalendarListener(object : CalendarListener {
-                @RequiresApi(Build.VERSION_CODES.O)
-                override fun onDateSelected(date: Date?) {
-                    recycle.visibility = View.VISIBLE
+        calendarView.setCalendarListener(object : CalendarListener {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onDateSelected(date: Date?) {
+                recycle.visibility = View.VISIBLE
+                val selectedField = fieldsdropdownmenu.text.toString()
 
-                    val selectedField = fieldsdropdownmenu.text.toString()
-                    vm.getFasceOrariLibere(selectedField, date!!).observe(viewLifecycleOwner) { fasceLibere ->
-
-                        val adapter = vm.getRecyclerAdapter(
-                            fasceLibere ?: hoursfasce,
-                            sportsdropdownmenu.text.toString(),
-                            fieldsdropdownmenu.text.toString(),
-                            date,
-                            date.time.toString()
-                        )
-                        recycle.adapter = adapter
-                        recycle.layoutManager =
-                            GridLayoutManager(context, 2)
-                    }
+                vm.getFasceOrariLibere(selectedField, date!!).observe(viewLifecycleOwner) { fasceLibere ->
+                    val adapter = vm.getRecyclerAdapter(
+                        fasceLibere,
+                        sportsdropdownmenu.text.toString(),
+                        fieldsdropdownmenu.text.toString(),
+                        date,
+                        date.time.toString()
+                    )
+                    recycle.adapter = adapter
+                    recycle.layoutManager =
+                        GridLayoutManager(context, 2)
                 }
-                override fun onMonthChanged(date: Date?) {
-                    recycle.visibility = View.GONE
-                }
-            })
-        }
-
+            }
+            override fun onMonthChanged(date: Date?) {
+                recycle.visibility = View.GONE
+            }
+        })
 
         vm.getListSport().observe(viewLifecycleOwner) { sports ->
             sportsdropdownmenu.setAdapter(ArrayAdapter(view.context, R.layout.list_item, sports))

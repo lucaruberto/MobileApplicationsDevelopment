@@ -12,7 +12,7 @@ interface FasciaOrariaDao {
     @Query("SELECT * FROM fasciaoraria WHERE oraInizio NOT IN (" +
             "SELECT oraInizio " +
             "FROM reservations " +
-            "WHERE playgroundName LIKE :playground AND date LIKE :date" +
+            "WHERE playgroundName = :playground AND date = :date" +
             ")" )
     fun getFreeSlots(playground: String, date: Date): LiveData<List<FasciaOraria>>
 
