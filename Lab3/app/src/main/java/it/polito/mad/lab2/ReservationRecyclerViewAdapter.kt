@@ -16,7 +16,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
-class Reservation_RecyclerViewAdapter(val data : List<ShowReservationModel>, val date: Date?, private val vm: ShowReservationsViewModel) : RecyclerView.Adapter <Reservation_RecyclerViewAdapter.MyViewHolder>(){
+class ReservationRecyclerViewAdapter(val data : List<ShowReservationModel>, val date: Date?, private val vm: ShowReservationsViewModel) : RecyclerView.Adapter <ReservationRecyclerViewAdapter.MyViewHolder>(){
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

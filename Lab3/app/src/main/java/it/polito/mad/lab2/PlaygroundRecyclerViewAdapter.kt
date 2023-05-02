@@ -21,8 +21,6 @@ import kotlin.concurrent.thread
 
 class PlaygroundRecyclerViewAdapter(val data : List<ShowReservationModel>, val date: Date?, private val dropmenu : String, private val dropmenufields: String,
                                     private val vm:SearchPlaygroundViewModel) : RecyclerView.Adapter <PlaygroundRecyclerViewAdapter.MyViewHolder>(){
-
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int): MyViewHolder {

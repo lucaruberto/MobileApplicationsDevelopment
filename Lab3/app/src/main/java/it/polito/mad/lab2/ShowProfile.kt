@@ -3,7 +3,6 @@ package it.polito.mad.lab2
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.os.Build
 import android.os.Bundle
@@ -19,7 +18,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
 import it.polito.mad.lab2.model.ProfileViewModel
-import java.io.File
 
 class ShowProfile: Fragment(R.layout.fragment_show_profile) {
     private val sharedViewModel: ProfileViewModel by activityViewModels()

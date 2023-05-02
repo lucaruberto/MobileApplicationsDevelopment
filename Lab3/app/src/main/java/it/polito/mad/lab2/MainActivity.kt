@@ -9,7 +9,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import it.polito.mad.lab2.db.GlobalDatabase
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var db : GlobalDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +47,5 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-
     }
 }

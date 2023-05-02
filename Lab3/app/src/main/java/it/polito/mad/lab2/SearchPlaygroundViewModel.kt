@@ -3,7 +3,6 @@ package it.polito.mad.lab2
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-
 import it.polito.mad.lab2.db.FasciaOraria
 import it.polito.mad.lab2.db.GlobalDatabase
 import it.polito.mad.lab2.db.Reservation
