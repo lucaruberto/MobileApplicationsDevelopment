@@ -117,7 +117,7 @@
                 app:drawableStartCompat="@drawable/baseline_calendar_month_24" />
 
             <TextView
-                android:id="@+id/Sex"
+                android:id="@+id/Gender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|center_vertical"
@@ -151,7 +151,7 @@
                 app:drawableStartCompat="@drawable/baseline_location_city_24" />
 
             <TextView
-                android:id="@+id/Sport"
+                android:id="@+id/Sports"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|center_vertical"
