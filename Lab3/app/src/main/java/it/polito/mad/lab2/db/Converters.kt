@@ -13,10 +13,9 @@ class Converters {
 
     @TypeConverter
     fun dateToTimestamp(date: Date): Long {
-        val x=SimpleDateFormat("dd-MM-yyyy", Locale.ITALY);
-        val y= x.format(date);
+        val x = SimpleDateFormat("dd-MM-yyyy", Locale.ITALY);
+        val y = x.format(date);
         val data = x.parse(y) as Date
-        val tempo = data.time
-        return tempo
+        return data.time
     }
 }
