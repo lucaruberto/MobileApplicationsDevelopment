@@ -10,61 +10,49 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.findViewTreeLifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
-import it.polito.mad.lab2.db.GlobalDatabase
-import it.polito.mad.lab2.db.Reservation
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.util.Date
+import java.util.*
 import kotlin.concurrent.thread
 
-class Playground_RecyclerViewAdapter(val data : List<ShowReservationModel>, val date: Date?, val dropmenu : String, val dropmenufields: String,
-                                     private val vm:SearchPlaygroundViewModel) : RecyclerView.Adapter <Playground_RecyclerViewAdapter.MyViewHolder>(){
+class PlaygroundRecyclerViewAdapter(val data : List<ShowReservationModel>, val date: Date?, private val dropmenu : String, private val dropmenufields: String,
+                                    private val vm:SearchPlaygroundViewModel) : RecyclerView.Adapter <PlaygroundRecyclerViewAdapter.MyViewHolder>(){
 
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int): Playground_RecyclerViewAdapter.MyViewHolder {
+        viewType: Int): MyViewHolder {
 
         val v= LayoutInflater.from(parent.context).inflate(R.layout.cardview_reservation,parent,false)
         return MyViewHolder(v,vm)
     }
 
     override fun onBindViewHolder(
-        holder: Playground_RecyclerViewAdapter.MyViewHolder,
+        holder: MyViewHolder,
         position: Int) {
         val rs= data[position];
         holder.bind(rs, holder, date!!,  dropmenu, dropmenufields,vm);
-
     }
 
     override fun getItemCount(): Int {
         return data.size
         }
 
-    class  MyViewHolder(v: View,vm:SearchPlaygroundViewModel) : RecyclerView.ViewHolder(v){
-        val StarHour: TextView = v.findViewById(R.id.Orainizio)
-        val FinishHour: TextView = v.findViewById(R.id.Orafine)
-        val CardView : CardView = v.findViewById(R.id.cardview)
-
-
+    class  MyViewHolder(v: View, vm:SearchPlaygroundViewModel) : RecyclerView.ViewHolder(v){
+        private val startHour: TextView = v.findViewById(R.id.Orainizio)
+        private val finishHour: TextView = v.findViewById(R.id.Orafine)
+        val cardView : CardView = v.findViewById(R.id.cardview)
         fun bind(rs: ShowReservationModel, holder: MyViewHolder, date: Date?, dropmenu: String, dropmenufields: String,vm: SearchPlaygroundViewModel) {
-            StarHour.text = rs.StartHour.toString();
-            FinishHour.text = rs.FinishHour.toString();
+            startHour.text = rs.startHour.toString();
+            finishHour.text = rs.finishHour.toString();
 
-            CardView.setOnClickListener {
-                val message = "Are You sure?"
-                showCustomDialogBox(holder.CardView.context, message, date!!, dropmenu, dropmenufields, rs.StartHour.toString(), rs.FinishHour.toString(),vm )
+            cardView.setOnClickListener {
+                val message = "Are you sure?"
+                showCustomDialogBox(holder.cardView.context, message, date!!, dropmenu, dropmenufields, rs.startHour.toString(), rs.finishHour.toString(), vm)
             }
         }
 
@@ -75,7 +63,7 @@ class Playground_RecyclerViewAdapter(val data : List<ShowReservationModel>, val 
             dialog.setCancelable(false)
             dialog.setContentView(R.layout.reservation_popup)
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            val df = SimpleDateFormat("dd-MM-yyyy")
+            val df = SimpleDateFormat("dd-MM-yyyy", Locale.ITALY)
             val tvMessage :TextView = dialog.findViewById(R.id.tvMessage)
             val btnYes : Button = dialog.findViewById(R.id.btnYes)
             val btnNo : Button = dialog.findViewById(R.id.btnNo)
@@ -91,7 +79,6 @@ class Playground_RecyclerViewAdapter(val data : List<ShowReservationModel>, val 
             _start.text = start
             _end.text = end
             playerCourt.text = dropmenufields
-            val text = customRequest.text.toString()
             btnYes.setOnClickListener {
                 thread {
                         vm.saveReservation(
@@ -102,7 +89,7 @@ class Playground_RecyclerViewAdapter(val data : List<ShowReservationModel>, val 
                             start.toInt(),
                             end.toInt(),
                             dropmenufields,
-                            text
+                            customRequest.text.toString()
                         )
                 }
                 Toast.makeText(context, "Reservation saved", Toast.LENGTH_LONG).show()

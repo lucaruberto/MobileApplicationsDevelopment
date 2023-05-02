@@ -9,10 +9,8 @@ import java.util.Date
 import kotlin.concurrent.thread
 
 class ShowReservationsViewModel(application: Application) : AndroidViewModel(application) {
-
     private val db = GlobalDatabase.getDatabase(getApplication<Application>().applicationContext)
     private var liveDates = db.reservationDao().loadAllDate()
-
 
     fun getReservationFromDate(d: Date): LiveData<List<Reservation>> {
        return db.reservationDao().loadAllByDate(d)

@@ -3,24 +3,10 @@ package it.polito.mad.lab2
 import java.util.Date
 
 
-class ShowReservationModel(id: Int,Sport: String, PlayerCourt: String, date: Date?,time:String, StartHour: Int, FinishHour: Int, CustomRequest: String){
-
-    var id = id
-        get()=field
-
-    var Sport = Sport
-        get() = field
-    var PlayerCourt = PlayerCourt
-        get() = field
-    var date = date
-        get() = field
-    var time = time
-        get() = field
-    var StartHour = StartHour
-        get() = field
-    var CustomRequest = CustomRequest
-        get() = field
-    var FinishHour = FinishHour
-        get() = field
-
-}
+class ShowReservationModel(var id: Int,
+                           var sport: String,
+                           var playerCourt: String,
+                           var date: Date?,
+                           var time: String, var startHour: Int, var finishHour: Int,
+                           var customRequest: String
+){}

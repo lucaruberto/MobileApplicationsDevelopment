@@ -14,8 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import it.polito.mad.lab2.db.GlobalDatabase
-import java.util.Date
+import java.util.*
 
 class Reservation_RecyclerViewAdapter(val data : List<ShowReservationModel>, val date: Date?, private val vm: ShowReservationsViewModel) : RecyclerView.Adapter <Reservation_RecyclerViewAdapter.MyViewHolder>(){
 
@@ -47,15 +46,15 @@ class Reservation_RecyclerViewAdapter(val data : List<ShowReservationModel>, val
         val buttonDel : Button = v.findViewById(R.id.buttondelete)
 
        fun bind(srs: ShowReservationModel, holder: MyViewHolder, date: Date?,vm: ShowReservationsViewModel){
-           val df = SimpleDateFormat("dd-MM-yyyy")
-           Sport.text = srs.Sport
-           PlayerCourt.text = srs.PlayerCourt
-           timeStart.text = srs.StartHour.toString()
-           timeEnd.text = srs.FinishHour.toString()
+           val df = SimpleDateFormat("dd-MM-yyyy", Locale.ITALY)
+           Sport.text = srs.sport
+           PlayerCourt.text = srs.playerCourt
+           timeStart.text = srs.startHour.toString()
+           timeEnd.text = srs.finishHour.toString()
 
-           val message = "Do youwant to delete the reservation?"
+           val message = "Do you want to delete the reservation?"
            buttonDel.setOnClickListener {
-               showCustomDialogBox(holder.CardView.context, message, srs.Sport, srs.PlayerCourt,  df.format(srs.date).toString(),srs.time, srs.StartHour.toString(), srs.FinishHour.toString(),srs.id, srs.CustomRequest,vm )
+               showCustomDialogBox(holder.CardView.context, message, srs.sport, srs.playerCourt,  df.format(srs.date).toString(),srs.time, srs.startHour.toString(), srs.finishHour.toString(),srs.id, srs.customRequest,vm )
            }
        }
         private fun showCustomDialogBox(context: Context, message: String?, sport: String, playercourt: String , date: String, time:String, start: String, end: String,id:Int, customRequest: String,vm:ShowReservationsViewModel) {
@@ -74,7 +73,7 @@ class Reservation_RecyclerViewAdapter(val data : List<ShowReservationModel>, val
             val _start :TextView = dialog.findViewById(R.id.startdelete)
             val _end :TextView = dialog.findViewById(R.id.enddelete)
             val _customRequest : TextView = dialog.findViewById(R.id.customerequestdelete)
-            val x= java.text.SimpleDateFormat("dd-MM-yyyy")
+            val x= SimpleDateFormat("dd-MM-yyyy", Locale.ITALY)
 
             tvMessage.text = message
             _sport.text = sport
@@ -82,7 +81,13 @@ class Reservation_RecyclerViewAdapter(val data : List<ShowReservationModel>, val
             _date.text = date
             _start.text = start
             _end.text = end
-            _customRequest.text = customRequest
+
+            val text: String = if(customRequest.isNotEmpty()) {
+                "Custom request:\n $customRequest"
+            } else {
+                "No custom request"
+            }
+            _customRequest.text = text
             btnYes.setOnClickListener {
                 vm.deleteReservation(id, x.parse(date),time,sport,start.toInt(),end.toInt(),playercourt, customRequest )
                 Toast.makeText(context, "Reservation deleted", Toast.LENGTH_LONG).show()

@@ -47,7 +47,8 @@ class ShowReservations : Fragment(R.layout.fragment_show_reservations) {
         vm.getLiveDates().observe(viewLifecycleOwner) { it ->
             class HasReservationDecorator : DayDecorator {
                 override fun decorate(dayView: DayView) {
-                    if(it.map { SimpleDateFormat("dd-MM-yyyy").format(it) }.contains(SimpleDateFormat("dd-MM-yyyy").format(dayView.date))){
+                    if(it.map { SimpleDateFormat("dd-MM-yyyy", Locale.ITALY).format(it) }
+                            .contains(SimpleDateFormat("dd-MM-yyyy", Locale.ITALY).format(dayView.date))){
                         dayView.setBackgroundColor(
                         ContextCompat.getColor(requireContext(), R.color.red))
                     }
@@ -58,8 +59,5 @@ class ShowReservations : Fragment(R.layout.fragment_show_reservations) {
             calendarView.decorators = decorators
             calendarView.refreshCalendar(currentCalendar)
         }
-
     }
-
-
 }
