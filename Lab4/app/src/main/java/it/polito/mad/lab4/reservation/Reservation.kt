@@ -30,11 +30,11 @@ import it.polito.mad.lab3.RentViewModel
 @Preview(showBackground = true)
 @Composable
 fun Reservation() {
-
+    //val vm: RentViewModel = viewModel()
             Kalendar(kalendarType = KalendarType.Firey, modifier = Modifier.fillMaxWidth())
 
             Card {
-
+                //vm.getListSport().value
             }
 
 }

@@ -11,7 +11,7 @@ import kotlin.concurrent.thread
 
 class RentViewModel(application: Application) : AndroidViewModel(application) {
 
-    val db = GlobalDatabase.getDatabase(getApplication<Application>().applicationContext)
+    val db = GlobalDatabase.getDatabase(application.applicationContext)
     private var liveFasceLibere = db.fasciaorariaDao().getAllFasciaOraria()
 
     fun getFasceOrariLibere(playground: String, date: Date): LiveData<List<FasciaOraria>>{
@@ -19,9 +19,7 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
         return liveFasceLibere
     }
 
-    fun getListSport():LiveData<List<String>>{
-        return db.sportsDao().getAll()
-    }
+    val sportsList: LiveData<List<String>> = db.sportsDao().getAll()
 
     fun getPlaygroundsbyName(sport:String):LiveData<List<String>>{
         return db.playgroundsDao().getPlayGroundsbySportName(sport)

@@ -25,94 +25,58 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.himanshoe.kalendar.Kalendar
 import com.himanshoe.kalendar.model.KalendarType
 import it.polito.mad.lab3.RentViewModel
-
+import androidx.compose.runtime.livedata.observeAsState
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
-fun Rent(){
-    val vm: RentViewModel = viewModel()
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 16.dp)){
+fun Rent() {
+    val viewModel: RentViewModel = viewModel()
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp)
+    ) {
         val context = LocalContext.current
-        val sports = vm.getListSport().value
+        val sportsList by viewModel.sportsList.observeAsState(initial = emptyList())
         var selectedSport by remember { mutableStateOf("Sport") }
-        val fields = if (selectedSport.isNotEmpty()) vm.getPlaygroundsbyName(selectedSport).value else listOf()
-        var selectedField by remember{ mutableStateOf("Field") }
+        //val fields = if (selectedSport.isNotEmpty()) vm.getPlaygroundsbyName(selectedSport).value else listOf()
+        var selectedField by remember { mutableStateOf("Field") }
         var expanded by remember { mutableStateOf(false) }
-        Row(modifier = Modifier.fillMaxWidth()) {
-            ExposedDropdownMenuBox(
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = {
+                expanded = !expanded
+            },
+            modifier = Modifier.padding(bottom = 50.dp).fillMaxWidth()
+        ) {
+            OutlinedTextField(
+                value = selectedSport,
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                modifier = Modifier.fillMaxWidth().menuAnchor()
+            )
+
+            DropdownMenu(
                 expanded = expanded,
-                onExpandedChange = {
-                    expanded = !expanded
+                onDismissRequest = { expanded = false },
+                modifier = Modifier.fillMaxWidth()
+                ) {
 
-                },
-                modifier = Modifier.weight(1f)
-            ) {
-                OutlinedTextField(
-                    value = selectedSport,
-                    onValueChange = {},
-                    readOnly = true,
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                    modifier = Modifier.menuAnchor()
-                )
-
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-
-                    ) {
-                    if (sports != null) {
-                        sports.forEach { item ->
-                            DropdownMenuItem(
-                                text = { Text(text = item) },
-                                onClick = {
-                                    selectedSport = item
-                                    expanded = false
-                                    Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
-                                }
-                            )
-                        }
-                    }
-                }
-            }
-
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = {
-                    expanded = !expanded
-                },
-                modifier = Modifier.weight(1f)
-            ) {
-                OutlinedTextField(
-                    value = selectedField ,
-                    onValueChange = {},
-                    readOnly = true,
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                    modifier = Modifier.menuAnchor()
-                )
-
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-
-                    ) {
-                    if (fields != null) {
-                        fields.forEach { item ->
-                            DropdownMenuItem(
-                                text = { Text(text = item) },
-                                onClick = {
-                                    selectedField = item
-                                    expanded = false
-                                    Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
-                                }
-                            )
-                        }
-                    }
+                sportsList.forEach { item ->
+                    DropdownMenuItem(
+                        text = { Text(text = item, modifier = Modifier.fillMaxWidth())  },
+                        onClick = {
+                            selectedSport = item
+                            expanded = false
+                            Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
         }
 
         Kalendar(kalendarType = KalendarType.Firey, modifier = Modifier.fillMaxWidth())
-        }
+    }
 }

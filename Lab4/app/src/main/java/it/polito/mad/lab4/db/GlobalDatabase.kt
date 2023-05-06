@@ -19,11 +19,7 @@ abstract class GlobalDatabase: RoomDatabase() {
     companion object {
         @Volatile
         private var INSTANCE: GlobalDatabase? = null
-        val MIGRATION_1_2 = object : Migration(1, 2) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("ALTER TABLE reservations ADD COLUMN customRequest TEXT NOT NULL DEFAULT ''")
-            }
-        }
+
 
         fun getDatabase(context: Context): GlobalDatabase =
             (INSTANCE ?:
@@ -33,7 +29,6 @@ abstract class GlobalDatabase: RoomDatabase() {
                     GlobalDatabase::class.java,
                     "reservation_database").
                 createFromAsset("db/reservation.db").
-                addMigrations(MIGRATION_1_2).
                 build()
                 INSTANCE = i
                 INSTANCE
