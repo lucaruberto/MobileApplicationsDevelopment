@@ -35,6 +35,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import it.polito.mad.lab4.rent.Rent
+import it.polito.mad.lab4.rate.Rate
+import it.polito.mad.lab4.reservation.Reservation
 import it.polito.mad.lab4.ui.theme.Lab4Theme
 
 class MainActivity : ComponentActivity() {
@@ -129,7 +132,7 @@ fun Mainscreen(){
         Box(Modifier.padding(it)){
             NavHost(navController = navController, startDestination = "ScreenOne"){
                 composable("ScreenOne"){ Profile()}
-                composable("ScreenTwo"){ Reservations()}
+                composable("ScreenTwo"){ Reservation()}
                 composable("ScreenThree"){ Rent()}
                 composable("ScreenFour") {Rate()}
             }
@@ -146,31 +149,7 @@ fun Profile(){
     }
 }
 
-@Composable
-fun Reservations(){
-    Box(Modifier.fillMaxSize()){
-        Text("Screen Two",
-            modifier = Modifier.align(Alignment.Center),
-            style= MaterialTheme.typography.headlineLarge)
-    }
-}
 
-@Composable
-fun Rent(){
-    Box(Modifier.fillMaxSize()){
-        Text("Screen Three",
-            modifier = Modifier.align(Alignment.Center),
-            style= MaterialTheme.typography.headlineLarge)
-    }
-}
-@Composable
-fun Rate(){
-    Box(Modifier.fillMaxSize()){
-        Text("Screen Four",
-            modifier = Modifier.align(Alignment.Center),
-            style= MaterialTheme.typography.headlineLarge)
-    }
-}
 
 @Composable
 fun GreetingPreview() {
