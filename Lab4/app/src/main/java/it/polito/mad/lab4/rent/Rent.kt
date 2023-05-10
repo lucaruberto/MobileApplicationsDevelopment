@@ -33,9 +33,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.himanshoe.kalendar.Kalendar
 import com.himanshoe.kalendar.model.KalendarType
-import io.github.boguszpawlowski.composecalendar.SelectableCalendar
-import io.github.boguszpawlowski.composecalendar.SelectableWeekCalendar
-import io.github.boguszpawlowski.composecalendar.StaticCalendar
 import it.polito.mad.lab3.RentViewModel
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -164,7 +161,9 @@ fun Rent() {
 
     }
 
-
+    fun LocalDate.toDate(): Date {
+        return Date.from(this.atStartOfDayIn(TimeZone.currentSystemDefault()).toJavaInstant())
+    }
     @Composable
     fun CardDate(localDate: kotlinx.datetime.LocalDate) {
         Card{
