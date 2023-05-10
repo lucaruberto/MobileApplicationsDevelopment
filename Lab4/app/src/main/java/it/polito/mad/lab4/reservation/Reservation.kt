@@ -19,8 +19,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.himanshoe.kalendar.Kalendar
 import com.himanshoe.kalendar.model.KalendarType
@@ -31,11 +33,14 @@ import it.polito.mad.lab3.RentViewModel
 @Composable
 fun Reservation() {
     //val vm: RentViewModel = viewModel()
-            Kalendar(kalendarType = KalendarType.Firey, modifier = Modifier.fillMaxWidth())
+    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+        Text(text = "Your reservations", fontSize = 30.sp, fontStyle = FontStyle.Normal)
+        Kalendar(kalendarType = KalendarType.Firey, modifier = Modifier.fillMaxWidth())
 
-            Card {
-                //vm.getListSport().value
-            }
+        Card {
+            //vm.getListSport().value
+        }
+    }
 
 }
 
