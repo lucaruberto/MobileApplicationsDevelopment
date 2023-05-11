@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "it.polito.mad.lab2.app-mergeDebugResources-46:/layout/activity_edit_profile.xml",
+        "source": "it.polito.mad.lab2.app-main-49:/layout/activity_edit_profile.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-mergeDebugResources-46:/layout/activity_show_profile.xml",
+        "source": "it.polito.mad.lab2.app-main-49:/layout/activity_show_profile.xml"
+    }
+]

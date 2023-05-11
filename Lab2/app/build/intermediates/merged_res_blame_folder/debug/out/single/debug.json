@@ -1,0 +1,142 @@
+[
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/drawable-v24_ic_launcher_foreground.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/drawable-v24/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/layout-land_activity_edit_profile.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/layout-land/activity_edit_profile.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/navigation_nav_graph.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/navigation/nav_graph.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/mipmap-anydpi-v33_ic_launcher.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/mipmap-anydpi-v33/ic_launcher.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/menu_homemenu.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/menu/homemenu.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/menu_homeditmenu.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/menu/homeditmenu.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/drawable_baseline_calendar_month_24.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/drawable/baseline_calendar_month_24.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/drawable_baseline_man_4_24.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/drawable/baseline_man_4_24.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/mipmap-xxxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/mipmap-xxxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/mipmap-xxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/mipmap-mdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/drawable_baseline_check_circle_24.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/drawable/baseline_check_circle_24.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/layout_activity_show_profile.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/layout/activity_show_profile.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/drawable_person.png.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/drawable/person.png"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/drawable_outline_mode_edit_24.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/drawable/outline_mode_edit_24.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/menu_photocontextmenu.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/menu/photocontextmenu.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/drawable_baseline_location_city_24.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/drawable/baseline_location_city_24.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/xml_data_extraction_rules.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/layout_activity_edit_profile.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/layout/activity_edit_profile.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/mipmap-hdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/xml_backup_rules.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/mipmap-mdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/mipmap-xhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/drawable_baseline_sports_martial_arts_24.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/drawable/baseline_sports_martial_arts_24.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/drawable_ic_launcher_background.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/mipmap-xxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/drawable_baseline_person_24.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/drawable/baseline_person_24.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/drawable_baseline_email_24.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/drawable/baseline_email_24.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/layout-land_activity_show_profile.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/layout-land/activity_show_profile.xml"
+    },
+    {
+        "merged": "it.polito.mad.lab2.app-merged_res-47:/drawable_custom_input.xml.flat",
+        "source": "it.polito.mad.lab2.app-main-49:/drawable/custom_input.xml"
+    }
+]
