@@ -104,11 +104,6 @@ fun Profile(checkpermission : ()->Unit, context: Context) {
 @Composable
 fun ProfileImage(editmode : Boolean,changephotoexpanded :  Boolean,setChangePhotoExpanded : (Boolean)->Unit,checkpermission : ()->Unit,context: Context){
     val imageUri = rememberSaveable { mutableStateOf("") }
-
-    val imageCapture: ImageCapture = remember { ImageCapture.Builder().build() }
-    val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-    var cameraExecutor: ExecutorService = Executors.newSingleThreadExecutor()
-    var photoUri: Uri
     val photo=    rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()){
         if (it != null) {
            val x= getImageUriFromBitmap(context,it)
@@ -143,14 +138,15 @@ fun ProfileImage(editmode : Boolean,changephotoexpanded :  Boolean,setChangePhot
         ) {
             Image(
                 painter = painter,
-                contentDescription = null,
-                modifier = Modifier
-                    .wrapContentSize(),
+                contentDescription = "ProfilePic",
+                modifier = Modifier.wrapContentSize(),
+                contentScale = ContentScale.Crop
+
 
             )
         }
         if(editmode)
-        Button(onClick = {setChangePhotoExpanded(true)}){
+            Button(onClick = {setChangePhotoExpanded(true)}){
             Text(text = "Change Profile Picture!")
 
             DropdownMenu(
