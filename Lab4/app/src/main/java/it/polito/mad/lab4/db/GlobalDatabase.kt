@@ -1,20 +1,19 @@
-package it.polito.mad.lab3.db
+package it.polito.mad.lab4.db
 
 import android.content.Context
 import androidx.room.*
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
+import it.polito.mad.lab3.db.FasciaOrariaDao
 
-@Database(entities = [Reservation::class, Sports::class,PlayGrounds::class,FasciaOraria::class,User::class], version = 2)
+@Database(entities = [Reservation::class, Sports::class, PlayGrounds::class, FasciaOraria::class, User::class], version = 2)
 @TypeConverters(Converters::class)
 abstract class GlobalDatabase: RoomDatabase() {
     abstract  fun reservationDao(): ReservationDao
     abstract fun sportsDao(): SportsDao
 
-    abstract fun playgroundsDao():PlayGroundsDAO
+    abstract fun playgroundsDao(): PlayGroundsDAO
 
-    abstract fun fasciaorariaDao():FasciaOrariaDao
-    abstract fun userDao():UserDao
+    abstract fun fasciaorariaDao(): FasciaOrariaDao
+    abstract fun userDao(): UserDao
 
 
     companion object {

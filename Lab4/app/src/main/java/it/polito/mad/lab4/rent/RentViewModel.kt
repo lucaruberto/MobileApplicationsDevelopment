@@ -1,11 +1,11 @@
-package it.polito.mad.lab3
+package it.polito.mad.lab4.rent
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import it.polito.mad.lab3.db.FasciaOraria
-import it.polito.mad.lab3.db.GlobalDatabase
-import it.polito.mad.lab3.db.Reservation
+import it.polito.mad.lab4.db.FasciaOraria
+import it.polito.mad.lab4.db.GlobalDatabase
+import it.polito.mad.lab4.db.Reservation
 import java.util.Date
 import kotlin.concurrent.thread
 
@@ -26,7 +26,7 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
     }
     /*
     fun getRecyclerAdapter(fasce:List<FasciaOraria>,sport:String,field:String,date:Date,time:String):RentRecyclerViewAdapter{
-        return RentRecyclerViewAdapter(fasce.map { x->it.polito.mad.lab3.ShowReservationModel(x.id,sport,field,date,time,x.oraInizio,x.oraFine, "") },date,sport,field,this);
+        return RentRecyclerViewAdapter(fasce.map { x->it.polito.mad.lab4.reservation.ShowReservationModel(x.id,sport,field,date,time,x.oraInizio,x.oraFine, "") },date,sport,field,this);
     }*/
 
     fun saveReservation(id: Int,date: Date,time:String,discipline:String,starthour:Int,endHour:Int,field: String, customRequest: String){

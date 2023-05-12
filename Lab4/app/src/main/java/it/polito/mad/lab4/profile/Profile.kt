@@ -3,7 +3,6 @@ package it.polito.mad.lab4.profile
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
-import android.provider.ContactsContract.CommonDataKinds.Nickname
 import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -39,8 +38,7 @@ import androidx.compose.ui.res.*
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
-import it.polito.mad.lab3.ProfileViewModel
-import it.polito.mad.lab3.db.User
+import it.polito.mad.lab4.db.User
 import it.polito.mad.lab4.R
 import java.io.ByteArrayOutputStream
 
@@ -233,8 +231,8 @@ fun ProfileImage(editmode : Boolean,changephotoexpanded :  Boolean,setChangePhot
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun myTopBar(editmode : Boolean,setEditMode : (Boolean)->Unit,u:User?,viewModel: ProfileViewModel
-,name:String,nickname: String,mail:String,birthdate:String,sex:String,city:String){
+fun myTopBar(editmode : Boolean, setEditMode : (Boolean)->Unit, u: User?, viewModel: ProfileViewModel
+             , name:String, nickname: String, mail:String, birthdate:String, sex:String, city:String){
     TopAppBar(
         title = { Text(text = "Your Profile") },
 
@@ -243,7 +241,7 @@ fun myTopBar(editmode : Boolean,setEditMode : (Boolean)->Unit,u:User?,viewModel:
             IconButton(onClick = {
                 if(editmode){
                     if(u === null) {
-                        val insertuser=User(nickname = nickname, fullname = name, mail = mail, birthdate = birthdate, sex = sex, city = city)
+                        val insertuser= User(nickname = nickname, fullname = name, mail = mail, birthdate = birthdate, sex = sex, city = city)
                             viewModel.insertUser(insertuser)
 
                     }

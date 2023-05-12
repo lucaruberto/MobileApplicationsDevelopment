@@ -1,4 +1,4 @@
-package it.polito.mad.lab3
+package it.polito.mad.lab4.reservation
 
 import java.util.Date
 

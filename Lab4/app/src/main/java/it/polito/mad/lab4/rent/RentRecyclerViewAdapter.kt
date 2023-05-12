@@ -1,4 +1,4 @@
-package it.polito.mad.lab3
+package it.polito.mad.lab4.rent
 
 /*
 class PlaygroundRecyclerViewAdapter(val data : List<ShowReservationModel>, val date: Date?, private val dropmenu : String, private val dropmenufields: String,

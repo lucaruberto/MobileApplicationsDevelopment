@@ -2,6 +2,8 @@ package it.polito.mad.lab3.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import it.polito.mad.lab4.db.FasciaOraria
+import it.polito.mad.lab4.db.PlayGrounds
 import java.util.*
 
 @Dao

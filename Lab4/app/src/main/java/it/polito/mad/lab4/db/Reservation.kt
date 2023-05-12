@@ -1,4 +1,4 @@
-package it.polito.mad.lab3.db
+package it.polito.mad.lab4.db
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

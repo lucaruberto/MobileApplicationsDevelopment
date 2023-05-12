@@ -1,12 +1,12 @@
-package it.polito.mad.lab3
+package it.polito.mad.lab4.profile
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import it.polito.mad.lab3.db.GlobalDatabase
-import it.polito.mad.lab3.db.Reservation
-import it.polito.mad.lab3.db.User
+import it.polito.mad.lab4.db.GlobalDatabase
+import it.polito.mad.lab4.db.Reservation
+import it.polito.mad.lab4.db.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Date
@@ -23,7 +23,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
        return db.userDao().getUserbyId(i);
     }
 
-    fun saveUpdatedUser(u:User){
+    fun saveUpdatedUser(u: User){
         return db.userDao().update(u);
     }
 
@@ -32,7 +32,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         return
     }
 
-    fun insertUser(u:User){
+    fun insertUser(u: User){
         viewModelScope.launch(Dispatchers.IO){
             db.userDao().save(u)
         }
