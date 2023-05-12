@@ -5,7 +5,7 @@ import androidx.room.*
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [Reservation::class, Sports::class,PlayGrounds::class,FasciaOraria::class], version = 2)
+@Database(entities = [Reservation::class, Sports::class,PlayGrounds::class,FasciaOraria::class,User::class], version = 2)
 @TypeConverters(Converters::class)
 abstract class GlobalDatabase: RoomDatabase() {
     abstract  fun reservationDao(): ReservationDao
@@ -14,6 +14,7 @@ abstract class GlobalDatabase: RoomDatabase() {
     abstract fun playgroundsDao():PlayGroundsDAO
 
     abstract fun fasciaorariaDao():FasciaOrariaDao
+    abstract fun userDao():UserDao
 
 
     companion object {
