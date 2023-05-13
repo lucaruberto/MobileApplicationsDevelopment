@@ -15,11 +15,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -41,11 +40,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.*
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.window.Dialog
@@ -81,7 +78,7 @@ fun Profile(checkpermission : ()->Unit, context: Context) {
     val (changephotoexpanded,setChangePhotoExpanded) = remember {
         mutableStateOf(false)
     }
-    var selectedSports by remember { mutableStateOf(emptyList<Sports>()) }
+    var (selectedSports,setSelectedSport) = remember { mutableStateOf(emptyList<Sports>()) }
     var showDialog by remember { mutableStateOf(false) }
     //valori di prova
     val sports= listOf<Sports>(Sports(1,"Calcio"), Sports(2,"Basket"), Sports(3,"Danza"));
@@ -183,10 +180,11 @@ fun Profile(checkpermission : ()->Unit, context: Context) {
                 SelectSportsDialog(
                     availableSports = sports,
                     selectedSports = selectedSports,
+                    setSelectedSport= setSelectedSport,
                     onAddSport = { sport ->
                         // Do something when a sport is selected
                     },
-                    onDismissRequest = { }
+                    onDismissRequest = {showDialog=false }
                 )
             }
 
@@ -385,7 +383,10 @@ fun SportCard(
     sport: Sports,
     level: Int,
     onLevelChanged: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    setSelectedSport: (List<Sports>) -> Unit,
+    selectedSport: List<Sports>,
+    add:Boolean
 ) {
 
     var (expandable,setExpandable) = remember { mutableStateOf(false) }
@@ -435,8 +436,7 @@ fun SportCard(
                             (1..5).forEach { level ->
                                 DropdownMenuItem(
                                     text = { Text(text = "$level")}, onClick = {
-                                        // onLevelChanged(level)
-                                       setTesto("$level")
+                                        setTesto("$level")
                                         setExpandable(false)
                                     }, enabled = true)
                             }
@@ -448,7 +448,13 @@ fun SportCard(
                 }
             }
             Column(modifier = Modifier.weight(0.24f)) {
-                Button(modifier = Modifier.padding(top=40.dp).size(40.dp), onClick = { {  } }) {
+                Button(modifier = Modifier
+                    .padding(top = 40.dp)
+                    .size(40.dp), onClick = {
+                    if(add)
+                    setSelectedSport(selectedSport.plus(sport))
+                    else
+                    setSelectedSport(selectedSport.filter { it!=sport })}) {
                     Text(text = "+")
                 }
             }
@@ -456,23 +462,7 @@ fun SportCard(
 
     }
 }
-@Composable
-fun RatingBar(rating: Int, onRatingChanged: (Int) -> Unit) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        (1..5).forEach { level ->
-            Icon(
-                imageVector = if (level <= rating) Icons.Filled.Star else Icons.Outlined.Star,
-                contentDescription = null,
-                tint = Color.Black,
-                modifier = Modifier.clickable {
-                    onRatingChanged(level)
-                }
-            )
-        }
-    }
-}
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -481,7 +471,8 @@ fun SelectSportsDialog(
     availableSports: List<Sports>,
     selectedSports: List<Sports>,
     onAddSport: (Sports) -> Unit,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
+    setSelectedSport: (List<Sports>) -> Unit
 ) {
     val filteredSports = remember { mutableStateOf(availableSports) }
     val searchText = remember { mutableStateOf("") }
@@ -499,15 +490,16 @@ fun SelectSportsDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(),
-                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                shape = androidx.compose.ui.graphics.RectangleShape
             ) {
+
                 Row(Modifier.fillMaxSize()) {
                     Column(Modifier.weight(1f)) {
                         Text(
                             text = "Selected Sports",
                             fontWeight = FontWeight.Bold,
                             fontSize = 24.sp,
-                            modifier = Modifier.padding(start = 16.dp, top = 16.dp)
+                            modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)
                         )
                         LazyColumn(Modifier.weight(1f)) {
                             items(selectedSports) { sport ->
@@ -515,10 +507,17 @@ fun SelectSportsDialog(
                                     sport = sport,
                                     level = 1,
                                     onLevelChanged = { level ->
-                                        // Update the level of the selected sport
+                                        selectedLevel.value=level
                                     },
                                     modifier = Modifier
                                         .padding(16.dp)
+                                        .clickable {
+                                            onAddSport(sport)
+                                        }
+                                        .fillMaxWidth(),
+                                    setSelectedSport = setSelectedSport,
+                                    selectedSport = selectedSports,
+                                    add = false
                                 )
                             }
                         }
@@ -528,7 +527,10 @@ fun SelectSportsDialog(
                             value = searchText.value,
                             onValueChange = { searchText.value = it },
                             label = { Text(text = "Search for sport") },
-                            modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)
+                            modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
+                            maxLines = 1,
+                            singleLine = true
+
                         )
                         LazyColumn(Modifier.weight(1f)) {
                             items(filteredSports.value) { sport ->
@@ -543,7 +545,10 @@ fun SelectSportsDialog(
                                         .clickable {
                                             onAddSport(sport)
                                         }
-                                        .fillMaxWidth()
+                                        .fillMaxWidth(),
+                                    setSelectedSport=setSelectedSport,
+                                    selectedSport=selectedSports,
+                                    add = true
                                 )
                             }
                         }
