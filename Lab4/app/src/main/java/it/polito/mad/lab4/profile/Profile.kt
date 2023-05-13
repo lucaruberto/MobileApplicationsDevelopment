@@ -11,6 +11,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -27,6 +29,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
@@ -35,6 +38,10 @@ import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.*
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
@@ -85,21 +92,27 @@ fun Profile(checkpermission : ()->Unit, context: Context) {
     }, content = {
         Column(modifier = Modifier
             .padding(it)
-            .fillMaxWidth()
+            .fillMaxSize()
             .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally) {
             Row() {
-                ProfileImage(editmode,changephotoexpanded,setChangePhotoExpanded,checkpermission,context)
+                ProfileImage(
+                    editmode,
+                    changephotoexpanded,
+                    setChangePhotoExpanded,
+                    checkpermission,
+                    context
+                )
 
             }
 
-            ProfileField(hover = "Nickname", text = nickname , setText = setNickname, editmode =editmode )
-            ProfileField(hover = "FullName", text = name, setText = setName, editmode = editmode)
-            ProfileField(hover= "Mail",text =mail , setText = setMail , editmode = editmode)
-            ProfileField(hover= "Birthdate",text =birthdate , setText = setBirthdate , editmode = editmode)
-            ProfileField(hover= "Sex",text =sex , setText = setSex , editmode = editmode)
-            ProfileField(hover= "City",text =city , setText = setCity , editmode = editmode)
-            ProfileField(hover= "Sport",text =sport , setText = setSport , editmode = editmode)
+            ProfileField(hover = "Nickname:", text = nickname , setText = setNickname, editmode =editmode )
+            ProfileField(hover = "FullName:", text = name, setText = setName, editmode = editmode)
+            ProfileField(hover= "Mail:",text =mail , setText = setMail , editmode = editmode)
+            ProfileField(hover= "Birthdate:",text =birthdate , setText = setBirthdate , editmode = editmode)
+            ProfileField(hover= "Sex:",text =sex , setText = setSex , editmode = editmode)
+            ProfileField(hover= "City:",text =city , setText = setCity , editmode = editmode)
+            ProfileField(hover= "Sport:",text =sport , setText = setSport , editmode = editmode)
 
 
 
@@ -119,32 +132,59 @@ fun Profile(checkpermission : ()->Unit, context: Context) {
 @Composable
 fun ProfileField(hover:String,text:String,setText : (String)->Unit,editmode: Boolean)
 {
-    Row(modifier = Modifier.padding(vertical = 5.dp), horizontalArrangement = Arrangement.SpaceEvenly)
-    {
-
-
-        Text(
-            text = hover, modifier = Modifier
-                .fillMaxHeight()
-                .background(Color.Red, RoundedCornerShape(30.dp)), maxLines = 1
-        )
-        Card(modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 36.dp), elevation = CardDefaults.cardElevation(10.dp)) {
-            if (editmode)
-
-                TextField(
-                    value = text,
-                    onValueChange = { setText(it) },
-                    maxLines = 1,
-                    singleLine = true
-                )
+    Card(
+        modifier = Modifier
+            .padding(16.dp)
+            .height(50.dp)
+            .width(250.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)
+                .weight(1f),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = hover,
+                modifier = Modifier.padding(top=15.dp,end = 8.dp).width(100.dp),
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Serif,
+                color = Color.Red,
+                textAlign = TextAlign.Center
+            )
+           if(editmode)
+            TextField(
+                value = text,
+                onValueChange = { setText(it) },
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .fillMaxSize()
+                    .height(48.dp),
+                maxLines = 1,
+                singleLine = true
+            )
             else
-                Text(text = text)
+           {
+                if(text==="")
+                    Text(
+                        text = "Not Inserted Yet",
+                        modifier = Modifier.padding(top=15.dp,end = 8.dp),
 
+                    )
+               else
+                    Text(
+                        text = text,
+                        modifier = Modifier.padding(top=15.dp,end = 8.dp),
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.Serif,
+                    )
 
-
+           }
         }
+
+
     }
 
 
@@ -192,7 +232,7 @@ fun ProfileImage(editmode : Boolean,changephotoexpanded :  Boolean,setChangePhot
             Image(
                 painter = painter,
                 contentDescription = "ProfilePic",
-                modifier = Modifier.wrapContentSize(),
+                modifier = Modifier.fillMaxWidth(1f),
                 contentScale = ContentScale.Crop
 
 
