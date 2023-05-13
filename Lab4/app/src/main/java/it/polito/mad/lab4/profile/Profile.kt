@@ -493,7 +493,21 @@ fun SelectSportsDialog(
                 shape = androidx.compose.ui.graphics.RectangleShape
             ) {
 
-                Row(Modifier.fillMaxSize()) {
+                Row(modifier = Modifier.height(50.dp)) {
+                    IconButton(onClick = {}) {
+                        Icon(
+                            Icons.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+
+                Row(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(top = 50.dp)) {
+
                     Column(Modifier.weight(1f)) {
                         Text(
                             text = "Selected Sports",
