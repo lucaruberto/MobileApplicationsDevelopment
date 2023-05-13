@@ -18,8 +18,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
 
     fun getUserbyId(i: Int): LiveData<User> {
-
-
        return db.userDao().getUserbyId(i);
     }
 
@@ -36,7 +34,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch(Dispatchers.IO){
             db.userDao().save(u)
         }
-
     }
 
 }

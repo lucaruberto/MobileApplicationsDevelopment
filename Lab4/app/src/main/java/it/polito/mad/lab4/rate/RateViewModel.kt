@@ -1,0 +1,34 @@
+package it.polito.mad.lab4.rate
+
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
+import it.polito.mad.lab4.db.GlobalDatabase
+import it.polito.mad.lab4.db.Rating
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
+class RateViewModel(application: Application): AndroidViewModel(application) {
+    val db = GlobalDatabase.getDatabase(application.applicationContext)
+
+    fun getAllReviews(): LiveData<List<Rating>> {
+        return db.rateDao().getAll()
+    }
+
+    fun getAllReviewsForField(fieldName: String): LiveData<List<Rating>> {
+        return db.rateDao().getAllReviewsForField(fieldName)
+    }
+
+    fun saveReview(review: Rating) {
+        viewModelScope.launch(Dispatchers.IO){
+            db.rateDao().saveReview(review)
+        }
+    }
+
+    fun deleteReview(review : Rating) {
+        viewModelScope.launch(Dispatchers.IO){
+            db.rateDao().deleteReview(review)
+        }
+    }
+}
