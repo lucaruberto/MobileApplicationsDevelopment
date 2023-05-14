@@ -22,7 +22,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -48,6 +50,7 @@ fun SelectSportsDialog(
     val filteredSports = remember { mutableStateOf(availableSports) }
     val searchText = remember { mutableStateOf("") }
     val selectedLevel = remember { mutableStateOf(1) }
+
 
     filteredSports.value = availableSports.filter {
         it.discipline.contains(searchText.value, ignoreCase = true) && it !in selectedSports
@@ -92,9 +95,11 @@ fun SelectSportsDialog(
                         )
                         LazyColumn(Modifier.weight(1f)) {
                             items(selectedSports) { sport ->
+                                println("diocandiocan")
+
                                 SportCard(
                                     sport = sport,
-                                    level = 1,
+                                    level =selectedLevel.value,
                                     onLevelChanged = { level ->
                                         selectedLevel.value=level
                                     },

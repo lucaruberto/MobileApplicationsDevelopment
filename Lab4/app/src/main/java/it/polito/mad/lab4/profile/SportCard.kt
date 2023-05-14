@@ -90,6 +90,7 @@ fun SportCard(
                                     DropdownMenuItem(
                                         text = { Text(text = "$level") }, onClick = {
                                             setTesto("$level")
+                                            onLevelChanged(level)
                                             setExpandable(false)
                                         }, enabled = true
                                     )
@@ -99,11 +100,13 @@ fun SportCard(
                     }
                     else
                     {
-                        println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")
-                        var livello= selectedSportLevel.first { it.sportname === sport.discipline }.level
-                        println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD + $livello")
+                       println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")
+                        println( selectedSportLevel.size)
+                       //var livello= selectedSportLevel.first { it.sportname === sport.discipline }.level
+                        println(selectedSportLevel.toString())
+                       // println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD + $livello")
 
-                        Text(text ="$livello" ,style = MaterialTheme.typography.bodyMedium,
+                        Text(text ="$level" ,style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.weight(.60f) )
                     }
 
@@ -127,11 +130,7 @@ fun SportCard(
                             println("size di selected = ${selectedSport.size}")
 
                             val x= SportList(sportname = sport.discipline,level = testo.toInt())
-                            val y= selectedSportLevel.plus(x)
-                            println("size di y = ${y.size}")
-                            setSelectedSportLevel(y)
-                            setSelectedSport(listOf<Sports>(Sports(discipline = "Calcio", id = 2)))
-                            println("size della lista aggiornata = ${selectedSportLevel.size}")
+                            setSelectedSportLevel(selectedSportLevel.plus(x))
                             setTesto("None")
                         }
 
