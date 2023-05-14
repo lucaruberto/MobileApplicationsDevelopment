@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -24,6 +25,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -33,7 +35,9 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,6 +49,7 @@ import com.himanshoe.kalendar.KalendarType
 //import com.himanshoe.kalendar.model.KalendarType
 import it.polito.mad.lab4.db.FasciaOraria
 import it.polito.mad.lab4.rent.RentViewModel
+import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -52,6 +57,7 @@ import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toJavaInstant
 import kotlinx.datetime.todayIn
 import java.util.Date
+import kotlin.concurrent.thread
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
@@ -74,9 +80,10 @@ fun Rent() {
         modifier = Modifier
             .padding(16.dp)
     ) {
-        item{
+        item {
             Text(text = "Rent your player court", fontSize = 30.sp, fontStyle = FontStyle.Normal)
-            Spacer(modifier = Modifier.height(32.dp))}
+            Spacer(modifier = Modifier.height(32.dp))
+        }
 
         item {
             ExposedDropdownMenuBox(
@@ -98,7 +105,7 @@ fun Rent() {
 
                 DropdownMenu(
                     expanded = expandedSport,
-                    onDismissRequest = { expandedSport = false },
+                    onDismissRequest = { expandedSport = false; selectedDate = null },
                     modifier = Modifier.fillMaxWidth()
                 ) {
 
@@ -140,7 +147,7 @@ fun Rent() {
 
                         DropdownMenu(
                             expanded = expandedField,
-                            onDismissRequest = { expandedField = false },
+                            onDismissRequest = { expandedField = false; selectedDate = null },
                             modifier = Modifier.fillMaxWidth()
                         ) {
 
@@ -172,41 +179,66 @@ fun Rent() {
 
             Kalendar(currentDay = Clock.System.todayIn(
                 TimeZone.currentSystemDefault()
-            ),kalendarType = KalendarType.Firey,
+            ), kalendarType = KalendarType.Firey,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(350.dp),
-                onDayClick = { day, events -> selectedDate = day })
+                onDayClick = { day, events ->
+                    if (selectedSport != "Sport" && selectedField != "Field") {
+                        selectedDate = day
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Please select sport and field first",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                })
+            Spacer(modifier = Modifier.height(5.dp))
         }
 
-            //https://github.com/hi-manshu/Kalendar
-        item {
-            val date = selectedDate?.toDate()
+        //https://github.com/hi-manshu/Kalendar
+        if (selectedSport != "Sport" && selectedField != "Field" && selectedDate != null) {
+            item {
+                val date = selectedDate?.toDate()
 
-            if (date != null) {
-                val fasceLibere by viewModel.getFasceOrariLibere(selectedField, date)
-                    .observeAsState(initial = emptyList())
-                ReservationList(data = fasceLibere) { chosenTimeSlot ->
-                    showDialog = true
-                    selectedTimeSlot = chosenTimeSlot
+                if (date != null) {
+                    val fasceLibere by viewModel.getFasceOrariLibere(selectedField, date)
+                        .observeAsState(initial = emptyList())
+                    ReservationList(data = fasceLibere) { chosenTimeSlot ->
+                        showDialog = true
+                        selectedTimeSlot = chosenTimeSlot
+                    }
                 }
-            }
 
 
-            if (showDialog) {
-                ReservationDialog(
-                    onDismiss = { showDialog = false },
-                    onConfirm = {
-                        // Implement your logic for saving the reservation here
-                        showDialog = false
-                    },
-                    sport = selectedSport,
-                    field = selectedField,
-                    date = selectedDate,
-                    timeSlot = selectedTimeSlot,
-                    customRequest = customRequest,
-                    onCustomRequestChange = { customRequest = it }
-                )
+                if (showDialog) {
+                    ReservationDialog(
+                        onDismiss = { showDialog = false },
+                        onConfirm = { sport, field, date, timeSlot, customRequest ->
+                            runBlocking {
+                                viewModel.saveReservation(
+                                    0,
+                                    selectedDate.toDate(),
+                                    selectedDate.toDate().time.toString(),
+                                    sport,
+                                    timeSlot?.oraInizio?.toInt() ?: 0,
+                                    timeSlot?.oraFine?.toInt() ?: 0,
+                                    field,
+                                    customRequest
+                                )
+                            }
+                            Toast.makeText(context, "Reservation saved", Toast.LENGTH_LONG).show()
+                            showDialog = false
+                        },
+                        sport = selectedSport,
+                        field = selectedField,
+                        date = selectedDate,
+                        timeSlot = selectedTimeSlot,
+                        customRequest = customRequest,
+                        onCustomRequestChange = { customRequest = it }
+                    )
+                }
             }
         }
     }
@@ -243,7 +275,7 @@ fun ReservationCard(rent : FasciaOraria, onClick: () -> Unit) {
             .clickable(onClick = onClick),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Row() {
+        Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
             Text("${rent.oraInizio}")
             Text("-${rent.oraFine}")
         }
@@ -252,7 +284,13 @@ fun ReservationCard(rent : FasciaOraria, onClick: () -> Unit) {
 @Composable
 fun ReservationDialog(
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
+    onConfirm: suspend (
+        sport: String,
+        field: String,
+        date: LocalDate?,
+        timeSlot: FasciaOraria?,
+        customRequest: String
+    )-> Unit,
     sport: String,
     field: String,
     date: LocalDate?,
@@ -279,12 +317,12 @@ fun ReservationDialog(
             }
         },
         confirmButton = {
-            Button(onClick = onConfirm) {
+            Button(colors = ButtonDefaults.buttonColors(Color.Green),onClick = {runBlocking{ onConfirm(sport, field, date, timeSlot, customRequest) }}) {
                 Text("Yes")
             }
         },
         dismissButton = {
-            Button(onClick = onDismiss) {
+            Button(colors = ButtonDefaults.buttonColors(Color.Red),onClick = onDismiss) {
                 Text("No")
             }
         }
