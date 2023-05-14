@@ -1,5 +1,6 @@
 package it.polito.mad.lab4
 
+import Rent
 import android.Manifest
 import android.content.ContentResolver
 import android.content.Context
@@ -41,7 +42,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import it.polito.mad.lab4.profile.Profile
 import it.polito.mad.lab4.rate.Rate
-import it.polito.mad.lab4.rent.Rent
 import it.polito.mad.lab4.reservation.Reservation
 import it.polito.mad.lab4.ui.theme.Lab4Theme
 
@@ -86,7 +86,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     )
 }
 
-@Preview(showBackground = true)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Mainscreen(checkpermission: ()->Unit){

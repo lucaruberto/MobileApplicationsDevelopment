@@ -373,7 +373,7 @@ fun myTopBar(editmode : Boolean, setEditMode : (Boolean)->Unit, u: User?, viewMo
             }
 
         },
-        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.Green, titleContentColor = Color.Black)
+        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary, titleContentColor = Color.Black)
     )
 }
 

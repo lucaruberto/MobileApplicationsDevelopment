@@ -13,7 +13,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.himanshoe.kalendar.Kalendar
-import com.himanshoe.kalendar.model.KalendarType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
@@ -22,7 +21,7 @@ fun Reservation() {
     //val vm: RentViewModel = viewModel()
     Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
         Text(text = "Your reservations", fontSize = 30.sp, fontStyle = FontStyle.Normal)
-        Kalendar(kalendarType = KalendarType.Firey, modifier = Modifier.fillMaxWidth())
+        //Kalendar(kalendarType = KalendarType.Firey, modifier = Modifier.fillMaxWidth())
 
         Card {
             //vm.getListSport().value
