@@ -39,13 +39,11 @@ import it.polito.mad.lab4.db.Sports
 @Composable
 fun SelectSportsDialog(
     availableSports: List<Sports>,
-    selectedSports: List<Sports>,
+    selectedSports: MutableList<Sports>,
     onAddSport: (Sports) -> Unit,
     onDismissRequest: () -> Unit,
-    setSelectedSport: (List<Sports>)->Unit,
     setShowDialog: (Boolean) -> Unit,
-    selectedSportLevel: List<SportList>,
-    setSelectedSportLevel: (List<SportList>)->Unit
+    selectedSportLevel: MutableList<SportList>,
 ) {
     val filteredSports = remember { mutableStateOf(availableSports) }
     val searchText = remember { mutableStateOf("") }
@@ -95,7 +93,7 @@ fun SelectSportsDialog(
                         )
                         LazyColumn(Modifier.weight(1f)) {
                             items(selectedSports) { sport ->
-                                println("diocandiocan")
+                                val sportLevel = selectedSportLevel.find { it.sportname == sport.discipline }?.level ?: 1
                                 for (i in selectedSportLevel.listIterator())
                                 {
                                     println("i= ")
@@ -107,21 +105,24 @@ fun SelectSportsDialog(
                                 }
                                 SportCard(
                                     sport = sport,
-                                    level =selectedLevel.value,
+                                    level = sportLevel.toString(),
                                     onLevelChanged = { level ->
-                                       //
-                                    },
+                                        val updatedSportLevel = selectedSportLevel.map { sportList ->
+                                            if (sportList.sportname == sport.discipline) {
+                                                sportList.copy(level = level)
+                                            } else {
+                                                sportList
+                                            }
+                                        }},
                                     modifier = Modifier
                                         .padding(16.dp)
                                         .clickable {
                                             onAddSport(sport)
                                         }
                                         .fillMaxWidth(),
-                                    setSelectedSport = setSelectedSport,
                                     selectedSport = selectedSports,
                                     add = false,
                                     selectedSportLevel = selectedSportLevel,
-                                    setSelectedSportLevel = setSelectedSportLevel
                                 )
                             }
                         }
@@ -138,23 +139,27 @@ fun SelectSportsDialog(
                         )
                         LazyColumn(Modifier.weight(1f)) {
                             items(filteredSports.value) { sport ->
+                                val sportLevel = selectedSportLevel.find { it.sportname == sport.discipline }?.level ?: 1
                                 SportCard(
                                     sport = sport,
-                                    level = selectedLevel.value,
+                                    level = sportLevel.toString(),
                                     onLevelChanged = { level ->
-                                        //
-                                    },
+                                        val updatedSportLevel = selectedSportLevel.map { sportList ->
+                                            if (sportList.sportname == sport.discipline) {
+                                                sportList.copy(level = level)
+                                            } else {
+                                                sportList
+                                            }
+                                        }},
                                     modifier = Modifier
                                         .padding(16.dp)
                                         .clickable {
                                             onAddSport(sport)
                                         }
                                         .fillMaxWidth(),
-                                    setSelectedSport =setSelectedSport,
                                     selectedSport =selectedSports,
                                     add = true,
                                     selectedSportLevel = selectedSportLevel,
-                                    setSelectedSportLevel = setSelectedSportLevel
                                 )
                             }
                         }

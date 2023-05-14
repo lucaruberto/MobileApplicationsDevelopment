@@ -64,8 +64,8 @@ fun Profile(checkpermission: () -> Unit, context: Context, user: UserData) {
     }
 
 
-    var (selectedSports,setSelectedSport) = rememberSaveable { mutableStateOf(emptyList<Sports>()) }
-    var (selectedSportsLevel,setSelectedSportLevel) = rememberSaveable { mutableStateOf(emptyList<SportList>()) }
+    val selectedSports = remember { mutableStateListOf<Sports>() }
+    val selectedSportsLevel = remember { mutableStateListOf<SportList>() }
     var (showDialog,setShowDialog) = rememberSaveable { mutableStateOf(false) }
     //valori di prova
    var user = remember {
@@ -124,14 +124,12 @@ fun Profile(checkpermission: () -> Unit, context: Context, user: UserData) {
                 SelectSportsDialog(
                     availableSports = sports,
                     selectedSports = selectedSports,
-                    setSelectedSport = setSelectedSport,
                     onAddSport = { sport ->
                         // Do something when a sport is selected
                     },
                     onDismissRequest = {showDialog=false },
                     setShowDialog =setShowDialog,
                     selectedSportLevel = selectedSportsLevel,
-                    setSelectedSportLevel = setSelectedSportLevel
                 )
             }
 

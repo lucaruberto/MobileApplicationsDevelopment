@@ -29,14 +29,12 @@ import it.polito.mad.lab4.db.Sports
 @Composable
 fun SportCard(
     sport: Sports,
-    level: Int,
+    level: String,
     onLevelChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
-    setSelectedSport: (List<Sports>) -> Unit,
-    selectedSport: List<Sports>,
+    selectedSport: MutableList<Sports>,
     add: Boolean,
-    selectedSportLevel: List<SportList>,
-    setSelectedSportLevel: (List<SportList>) -> Unit
+    selectedSportLevel : MutableList<SportList>
 ) {
     val context = LocalContext.current
     var (expandable,setExpandable) = remember { mutableStateOf(false) }
@@ -124,21 +122,18 @@ fun SportCard(
                             Toast.makeText(context,"Please Select a Skill Level before Add", Toast.LENGTH_LONG).show()
                         }
                         else{
-                            val x= SportList(sportname = sport.discipline,level = testo.toInt())
-
-                            //setSelectedSportLevel(selectedSportLevel.plus(x))
-                            //setSelectedSport(selectedSport.plus(sport))
-                            addToSelectedSports(sport,testo, setSelectedSport = setSelectedSport,setSelectedSportLevel = setSelectedSportLevel, selectedSport = selectedSport, selectedSportLevel =  selectedSportLevel)
-                            println("size di selected = ${selectedSport.size}")
-
+                            selectedSport.add(sport)
+                            val x= SportList(sportname = sport.discipline,level = testo)
+                            selectedSportLevel.add(x)
                             setTesto("None")
                         }
 
 
                     }
                     else
-                    { setSelectedSport(selectedSport.filter { it.discipline!=sport.discipline })}
-                    setSelectedSportLevel(selectedSportLevel.filter { it.sportname!=sport.discipline })
+                    { selectedSport.remove(sport)
+                        val sportLevelToRemove = selectedSportLevel.firstOrNull { it.sportname == sport.discipline }
+                        sportLevelToRemove?.let { selectedSportLevel.remove(it)} }
                 }
                 )
                 {
@@ -154,7 +149,7 @@ fun SportCard(
 }
 
 fun addToSelectedSports(sport: Sports, testo: String, setSelectedSport: (List<Sports>) -> Unit, setSelectedSportLevel: (List<SportList>) -> Unit, selectedSportLevel: List<SportList>, selectedSport: List<Sports>) {
-    val x = SportList(sportname = sport.discipline, level = testo.toInt())
+    val x = SportList(sportname = sport.discipline, level = testo)
     setSelectedSport(selectedSport.plus(sport));
     setSelectedSportLevel(selectedSportLevel.plus(x))
 
