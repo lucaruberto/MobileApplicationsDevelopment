@@ -30,7 +30,7 @@ import it.polito.mad.lab4.db.Sports
 fun SportCard(
     sport: Sports,
     level: Int,
-    onLevelChanged: (Int) -> Unit,
+    onLevelChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
     setSelectedSport: (List<Sports>) -> Unit,
     selectedSport: List<Sports>,
@@ -86,7 +86,7 @@ fun SportCard(
                                 onDismissRequest = { setExpandable(false) },
                                 modifier = Modifier.width(30.dp)
                             ) {
-                                (1..5).forEach { level ->
+                                (listOf<String>("Beginner","Intermediate","Advanced")).forEach { level ->
                                     DropdownMenuItem(
                                         text = { Text(text = "$level") }, onClick = {
                                             setTesto("$level")
@@ -124,13 +124,13 @@ fun SportCard(
                             Toast.makeText(context,"Please Select a Skill Level before Add", Toast.LENGTH_LONG).show()
                         }
                         else{
+                            val x= SportList(sportname = sport.discipline,level = testo.toInt())
 
-
-                            setSelectedSport(selectedSport.plus(sport))
+                            //setSelectedSportLevel(selectedSportLevel.plus(x))
+                            //setSelectedSport(selectedSport.plus(sport))
+                            addToSelectedSports(sport,testo, setSelectedSport = setSelectedSport,setSelectedSportLevel = setSelectedSportLevel, selectedSport = selectedSport, selectedSportLevel =  selectedSportLevel)
                             println("size di selected = ${selectedSport.size}")
 
-                            val x= SportList(sportname = sport.discipline,level = testo.toInt())
-                            setSelectedSportLevel(selectedSportLevel.plus(x))
                             setTesto("None")
                         }
 
@@ -151,4 +151,11 @@ fun SportCard(
         }
 
     }
+}
+
+fun addToSelectedSports(sport: Sports, testo: String, setSelectedSport: (List<Sports>) -> Unit, setSelectedSportLevel: (List<SportList>) -> Unit, selectedSportLevel: List<SportList>, selectedSport: List<Sports>) {
+    val x = SportList(sportname = sport.discipline, level = testo.toInt())
+    setSelectedSport(selectedSport.plus(sport));
+    setSelectedSportLevel(selectedSportLevel.plus(x))
+
 }

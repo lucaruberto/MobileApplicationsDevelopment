@@ -1,5 +1,6 @@
 package it.polito.mad.lab4.profile
 
+import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
@@ -11,30 +12,31 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import it.polito.mad.lab4.db.User
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun myTopBar(editmode : Boolean, setEditMode : (Boolean)->Unit, u: User?, viewModel: ProfileViewModel
-             , name:String, nickname: String, mail:String, birthdate:String, sex:String, city:String){
+fun myTopBar(
+    editmode: Boolean, setEditMode: (Boolean) -> Unit, viewModel: ProfileViewModel
+    , name: String, nickname: String, mail: String, birthdate: String, sex: String, city: String,
+    saveUserData: (UserData, Context) -> Unit,user:UserData,
+    context: Context
+){
     TopAppBar(
-        title = { Text(text = "Your Profile") },
+        title = { Text(text = "Your Profile" , textAlign = TextAlign.Center) },
 
         actions = {
 
             IconButton(onClick = {
                 if(editmode){
-                    if(u === null) {
-                        val insertuser= User(nickname = nickname, fullname = name, mail = mail, birthdate = birthdate, sex = sex, city = city)
-                        viewModel.insertUser(insertuser)
 
-                    }
-                    else{
-
-                        val updateduser = User(nickname=nickname, fullname = name, city = city, mail = mail, sex =sex, birthdate = birthdate);
-                        viewModel.saveUpdatedUser(updateduser);
-                    }
+                    saveUserData(
+                        UserData(fullName = name, nickname = nickname,mail = mail, birthdate = birthdate
+                    , sex = sex, city = city, emptyList()
+                        ), context = context)
 
                 }
 

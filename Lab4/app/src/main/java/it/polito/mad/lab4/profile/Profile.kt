@@ -12,15 +12,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.*
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.viewModel
-import it.polito.mad.lab4.db.User
 import it.polito.mad.lab4.db.Sports
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import java.io.ByteArrayOutputStream
 
 fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri{
@@ -38,52 +37,49 @@ fun saveUserData(userData: UserData, context: Context) {
     editor.putString("birthdate", userData.birthdate)
     editor.putString("sex", userData.sex)
     editor.putString("city", userData.city)
-    editor.putString("sportlist", Json.encodeToString(userData.sportslist))
+            // editor.putString("sportlist", Json.encodeToString(userData.sportslist))
     editor.apply()
 }
 data class UserData(val fullName: String, val nickname: String,val mail: String,val birthdate: String,val sex: String
                     ,val city: String,val sportslist: List<SportList>)
+{
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Profile(checkpermission : ()->Unit, context: Context) {
+fun Profile(checkpermission: () -> Unit, context: Context, user: UserData) {
 
     val viewModel: ProfileViewModel = viewModel()
 
-    var user: User? =viewModel.getUserbyId(1).value;
-    val (name,setName) = remember { mutableStateOf("") }
-    val (nickname,setNickname) = remember { mutableStateOf("") }
-    val (mail,setMail) = remember { mutableStateOf("") }
-    val (birthdate,setBirthdate) = remember { mutableStateOf("") }
-    val (sex,setSex) = remember { mutableStateOf("") }
-    val (city,setCity) = remember { mutableStateOf("") }
-    val (sport,setSport) = remember { mutableStateOf("") }
-    val (editmode,setEditMode) = remember { mutableStateOf(false) }
-    val (changephotoexpanded,setChangePhotoExpanded) = remember {
+    val (name,setName) = rememberSaveable { mutableStateOf(user.fullName) }
+    val (nickname,setNickname) = rememberSaveable { mutableStateOf(user.nickname) }
+    val (mail,setMail) = rememberSaveable { mutableStateOf(user.mail) }
+    val (birthdate,setBirthdate) = rememberSaveable { mutableStateOf(user.birthdate) }
+    val (sex,setSex) = rememberSaveable { mutableStateOf(user.sex) }
+    val (city,setCity) = rememberSaveable { mutableStateOf(user.city) }
+    val (sport,setSport) = rememberSaveable { mutableStateOf("") }
+    val (editmode,setEditMode) = rememberSaveable { mutableStateOf(false) }
+    val (changephotoexpanded,setChangePhotoExpanded) = rememberSaveable {
         mutableStateOf(false)
     }
 
-    var (selectedSports,setSelectedSport) = remember { mutableStateOf(emptyList<Sports>()) }
-    var (selectedSportsLevel,setSelectedSportLevel) = remember { mutableStateOf(emptyList<SportList>()) }
-    var (showDialog,setShowDialog) = remember { mutableStateOf(false) }
+
+    var (selectedSports,setSelectedSport) = rememberSaveable { mutableStateOf(emptyList<Sports>()) }
+    var (selectedSportsLevel,setSelectedSportLevel) = rememberSaveable { mutableStateOf(emptyList<SportList>()) }
+    var (showDialog,setShowDialog) = rememberSaveable { mutableStateOf(false) }
     //valori di prova
+   var user = remember {
+        mutableStateOf<UserData>(UserData(name, nickname ,mail,birthdate,sex,city, emptyList()))
+    }
     val sports= listOf<Sports>(Sports(1,"Calcio"), Sports(2,"Basket"), Sports(3,"Danza"))
 
 
-    if(user != null)
-    {
-        setName(user.fullname)
-        setNickname(user.nickname);
-        setMail(user.mail);
-        setBirthdate(user.birthdate);
-        setSex(user.sex);
-        setCity(user.city);
-    }
+
 
 
     Scaffold(topBar = {
 
-            myTopBar(editmode = editmode, setEditMode =setEditMode , u = user,viewModel,name,nickname,mail,birthdate,sex,city)
+            myTopBar(editmode = editmode, setEditMode =setEditMode ,viewModel,name,nickname,mail,birthdate,sex,city, saveUserData = ::saveUserData, context = context, user = user.value)
 
     }, content = {
         Column(modifier = Modifier
@@ -108,10 +104,21 @@ fun Profile(checkpermission : ()->Unit, context: Context) {
             ProfileField(hover= "Birthdate:",text =birthdate , setText = setBirthdate , editmode = editmode)
             ProfileField(hover= "Sex:",text =sex , setText = setSex , editmode = editmode)
             ProfileField(hover= "City:",text =city , setText = setCity , editmode = editmode)
-            ProfileField(hover= "Sport:",text =sport , setText = setSport , editmode = editmode)
-            Button(onClick = {setShowDialog(true) }, modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Modifica Sport")
+            SportsTable()
+            if(editmode){
+
+                    ProfileField(hover= "Sport:",text =sport , setText = setSport , editmode = editmode)
+
+                    Button(onClick = {setShowDialog(true) }, modifier = Modifier.width(250.dp)) {
+                        Text(text = "Edit Sport")
+                    }
+
+
             }
+            else
+                ProfileField(hover= "Sport:",text =sport , setText = setSport , editmode = editmode)
+
+
 
             if(showDialog){
                 SelectSportsDialog(

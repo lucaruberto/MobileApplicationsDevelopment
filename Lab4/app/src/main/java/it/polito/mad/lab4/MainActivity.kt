@@ -2,8 +2,6 @@ package it.polito.mad.lab4
 
 import Rent
 import android.Manifest
-import android.content.ContentResolver
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -32,15 +30,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import it.polito.mad.lab4.profile.Profile
+import it.polito.mad.lab4.profile.ProfileViewModel
+import it.polito.mad.lab4.profile.UserData
 import it.polito.mad.lab4.rate.Rate
 import it.polito.mad.lab4.reservation.Reservation
 import it.polito.mad.lab4.ui.theme.Lab4Theme
@@ -48,6 +48,28 @@ import it.polito.mad.lab4.ui.theme.Lab4Theme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
+
+
+        val sharedPref = getSharedPreferences("UserData", MODE_PRIVATE)
+
+        var nickname = sharedPref.getString("nickname", "")
+        var fullname = sharedPref.getString("fullname", "")
+        var email = sharedPref.getString("mail", "")
+        var birth = sharedPref.getString("birthdate", "")
+        var  sex = sharedPref.getString("sex", "")
+        var city = sharedPref.getString("city", "")
+        fullname=  if(fullname=== null) "" else fullname
+        nickname=  if(nickname=== null) "" else nickname
+        email=  if(email=== null) "" else email
+        birth=  if(birth=== null) "" else birth
+        sex=  if(sex=== null) "" else sex
+        city=  if(city=== null) "" else city
+
+        val user: UserData= UserData(fullName = fullname,nickname=nickname,mail=email, birthdate = birth, city = city, sex = sex, sportslist = emptyList())
+
+
 
        val checkpermission = { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
            if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(
@@ -71,7 +93,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Mainscreen(checkpermission)
+                    Mainscreen(checkpermission,user)
                 }
             }
         }
@@ -89,7 +111,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Mainscreen(checkpermission: ()->Unit){
+fun Mainscreen(checkpermission: () -> Unit, user: UserData){
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -156,7 +178,7 @@ fun Mainscreen(checkpermission: ()->Unit){
     ) {
         Box(Modifier.padding(it)){
             NavHost(navController = navController, startDestination = "ScreenOne"){
-                composable("ScreenOne"){ Profile(checkpermission, LocalContext.current)}
+                composable("ScreenOne"){ Profile(checkpermission, LocalContext.current,user)}
                 composable("ScreenTwo"){ Reservation()}
                 composable("ScreenThree"){ Rent()}
                 composable("ScreenFour") {Rate()}

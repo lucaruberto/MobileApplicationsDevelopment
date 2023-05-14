@@ -96,12 +96,20 @@ fun SelectSportsDialog(
                         LazyColumn(Modifier.weight(1f)) {
                             items(selectedSports) { sport ->
                                 println("diocandiocan")
-
+                                for (i in selectedSportLevel.listIterator())
+                                {
+                                    println("i= ")
+                                    println(i)
+                                    if(i.sportname===sport.discipline)
+                                    {
+                                        println("viva la figa")
+                                    }
+                                }
                                 SportCard(
                                     sport = sport,
                                     level =selectedLevel.value,
                                     onLevelChanged = { level ->
-                                        selectedLevel.value=level
+                                       //
                                     },
                                     modifier = Modifier
                                         .padding(16.dp)
@@ -134,7 +142,7 @@ fun SelectSportsDialog(
                                     sport = sport,
                                     level = selectedLevel.value,
                                     onLevelChanged = { level ->
-                                        selectedLevel.value = level
+                                        //
                                     },
                                     modifier = Modifier
                                         .padding(16.dp)
