@@ -31,6 +31,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,8 +52,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
 
-
-
         val sharedPref = getSharedPreferences("UserData", MODE_PRIVATE)
 
         var nickname = sharedPref.getString("nickname", "")
@@ -60,14 +60,18 @@ class MainActivity : ComponentActivity() {
         var birth = sharedPref.getString("birthdate", "")
         var  sex = sharedPref.getString("sex", "")
         var city = sharedPref.getString("city", "")
+        var imageUri = sharedPref.getString("imageUri","")
+        var sportlist = sharedPref.getString("sportlist","")
         fullname=  if(fullname=== null) "" else fullname
         nickname=  if(nickname=== null) "" else nickname
         email=  if(email=== null) "" else email
         birth=  if(birth=== null) "" else birth
         sex=  if(sex=== null) "" else sex
         city=  if(city=== null) "" else city
+        imageUri = if(imageUri=== null)"" else imageUri
+        sportlist = if(sportlist===null)"" else sportlist
 
-        val user: UserData= UserData(fullName = fullname,nickname=nickname,mail=email, birthdate = birth, city = city, sex = sex, sportslist = emptyList())
+        val user: UserData= UserData(fullName = fullname,nickname=nickname,mail=email, birthdate = birth, city = city, sex = sex, selectedSportsLevel =sportlist , imageUri = imageUri)
 
 
 

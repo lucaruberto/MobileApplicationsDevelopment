@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,8 +24,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import it.polito.mad.lab4.db.Sports
 
 @Composable
@@ -69,11 +73,11 @@ fun SportCard(
 
                     Text(
                         text = "Ability Level:",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.weight(.60f)
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.weight(.50f)
                     )
                     if(add) {
-                        Box(modifier = Modifier.weight(.40f)) {
+                        Box(modifier = Modifier.weight(.50f)) {
                             Text(
                                 text = testo,
                                 modifier = Modifier.clickable { setExpandable(true) },
@@ -82,7 +86,7 @@ fun SportCard(
                             DropdownMenu(
                                 expanded = expandable,
                                 onDismissRequest = { setExpandable(false) },
-                                modifier = Modifier.width(30.dp)
+                                modifier = Modifier.width(110.dp)
                             ) {
                                 (listOf<String>("Beginner","Intermediate","Advanced")).forEach { level ->
                                     DropdownMenuItem(
@@ -98,14 +102,8 @@ fun SportCard(
                     }
                     else
                     {
-                       println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")
-                        println( selectedSportLevel.size)
-                       //var livello= selectedSportLevel.first { it.sportname === sport.discipline }.level
-                        println(selectedSportLevel.toString())
-                       // println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD + $livello")
-
                         Text(text ="$level" ,style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.weight(.60f) )
+                            modifier = Modifier.weight(.50f) )
                     }
 
 
@@ -113,9 +111,8 @@ fun SportCard(
                 }
             }
             Column(modifier = Modifier.weight(0.24f)) {
-                Button(modifier = Modifier
-                    .padding(top = 40.dp)
-                    .size(40.dp), onClick = {
+                Button(
+                    onClick = {
                     if(add){
                         if(testo=="None"){
 
@@ -138,7 +135,7 @@ fun SportCard(
                 )
                 {
                     if(add)
-                        Text(text = "+")
+                        Text(text = "AAAAAAAAAA", color = Color.Black , modifier = Modifier.fillMaxWidth(), fontSize = 20.sp)
                     else
                         Text(text = "-")
                 }

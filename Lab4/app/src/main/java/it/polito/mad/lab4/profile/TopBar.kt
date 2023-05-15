@@ -12,19 +12,20 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import it.polito.mad.lab4.db.User
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun myTopBar(
     editmode: Boolean, setEditMode: (Boolean) -> Unit, viewModel: ProfileViewModel
     , name: String, nickname: String, mail: String, birthdate: String, sex: String, city: String,
-    saveUserData: (UserData, Context) -> Unit,user:UserData,
-    context: Context
-){
+    saveUserData: (UserData, Context) -> Unit, user: UserData,
+    context: Context,
+    imageUri: String,
+    selectedSportLevel: String)
+{
     TopAppBar(
         title = { Text(text = "Your Profile" , textAlign = TextAlign.Center) },
 
@@ -35,7 +36,7 @@ fun myTopBar(
 
                     saveUserData(
                         UserData(fullName = name, nickname = nickname,mail = mail, birthdate = birthdate
-                    , sex = sex, city = city, emptyList()
+                    , sex = sex, city = city, selectedSportLevel,imageUri
                         ), context = context)
 
                 }

@@ -12,15 +12,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import it.polito.mad.lab4.db.GlobalDatabase
 import it.polito.mad.lab4.db.Reservation
+import it.polito.mad.lab4.db.Sports
 import it.polito.mad.lab4.db.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Date
 import kotlin.concurrent.thread
 
-class ProfileViewModel() : ViewModel() {
+class ProfileViewModel(application: Application) : AndroidViewModel(application) {
+
+    val db = GlobalDatabase.getDatabase(application.applicationContext)
 
 
-
-
+    fun getAllSports(): LiveData<List<Sports>> {
+        return db.sportsDao().getSports()
+    }
 }

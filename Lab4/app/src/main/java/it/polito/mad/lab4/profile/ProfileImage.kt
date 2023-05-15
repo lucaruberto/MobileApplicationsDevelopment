@@ -18,8 +18,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -28,27 +26,34 @@ import coil.compose.rememberAsyncImagePainter
 import it.polito.mad.lab4.R
 
 @Composable
-fun ProfileImage(editmode : Boolean,changephotoexpanded :  Boolean,setChangePhotoExpanded : (Boolean)->Unit,checkpermission : ()->Unit,context: Context){
-    val imageUri = rememberSaveable { mutableStateOf("") }
+fun ProfileImage(
+    imageUri: String,
+    setImageUri: (String) -> Unit,
+    editmode: Boolean,
+    changephotoexpanded: Boolean,
+    setChangePhotoExpanded: (Boolean) -> Unit,
+    checkpermission: () -> Unit,
+    context: Context
+){
 
     val photo=    rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()){
         if (it != null) {
             val x= getImageUriFromBitmap(context,it)
-            imageUri.value= x.toString();
+           setImageUri( x.toString());
 
         }
     }
 
     val painter = rememberAsyncImagePainter(
-        if (imageUri.value.isEmpty())
+        if (imageUri.isEmpty())
             R.drawable.baseline_person_24
         else
-            imageUri.value
+            Uri.parse(imageUri)
     )
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        uri?.let { imageUri.value = it.toString() }
+        uri?.let { setImageUri( it.toString() )}
     }
 
     Column(

@@ -1,5 +1,6 @@
 package it.polito.mad.lab4.profile
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,18 +23,22 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import it.polito.mad.lab4.db.Sports
+import it.polito.mad.lab4.db.SportsDao
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,13 +50,24 @@ fun SelectSportsDialog(
     setShowDialog: (Boolean) -> Unit,
     selectedSportLevel: MutableList<SportList>,
 ) {
-    val filteredSports = remember { mutableStateOf(availableSports) }
+    val filteredSports = remember { mutableStateOf(availableSports.filter {x-> selectedSportLevel.toList().none{x.discipline===it.sportname} }) }
     val searchText = remember { mutableStateOf("") }
     val selectedLevel = remember { mutableStateOf(1) }
+    val oldSportslevel = remember {
+       mutableStateListOf<SportList>()
+    }.apply { addAll(selectedSportLevel) }
+
+    val oldSports = remember {
+        mutableStateListOf<Sports>()
+    }.apply { addAll(selectedSports) }
+    var context = LocalContext.current
+    println("Sport disponibili:" + availableSports.toString())
+    println("Sport gia scelti:" + selectedSportLevel.toList().toString())
 
 
     filteredSports.value = availableSports.filter {
-        it.discipline.contains(searchText.value, ignoreCase = true) && it !in selectedSports
+
+        (it.discipline.contains(searchText.value, ignoreCase = true) && it !in selectedSports )
     }
 
     Dialog(
@@ -66,15 +82,28 @@ fun SelectSportsDialog(
             ) {
 
                 Row(modifier = Modifier.height(50.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                    IconButton(onClick = {setShowDialog(false)}) {
-                        Icon(
-                            Icons.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
+
+                    Button(onClick = {
+                        Toast.makeText(context,"All preferences Removed!", Toast.LENGTH_LONG).show()
+                        selectedSportLevel.clear()
+                        selectedSports.clear()
+                        setShowDialog(false)
+
+
+                    },) {
+                        Text(text = "Delete all and go back!");
+
+
                     }
-                    Button(onClick = { /*TODO*/ },) {
+
+                    Button(onClick = {
+                        Toast.makeText(context,"Save and go back!", Toast.LENGTH_LONG).show()
+                        setShowDialog(false)
+
+
+                    },) {
                         Text(text = "Save Changes!");
+
 
                     }
                 }
@@ -93,16 +122,8 @@ fun SelectSportsDialog(
                         )
                         LazyColumn(Modifier.weight(1f)) {
                             items(selectedSports) { sport ->
-                                val sportLevel = selectedSportLevel.find { it.sportname == sport.discipline }?.level ?: 1
-                                for (i in selectedSportLevel.listIterator())
-                                {
-                                    println("i= ")
-                                    println(i)
-                                    if(i.sportname===sport.discipline)
-                                    {
-                                        println("viva la figa")
-                                    }
-                                }
+                                val sportLevel = selectedSportLevel.find { it.sportname == sport.discipline }?.level ?: "None"
+
                                 SportCard(
                                     sport = sport,
                                     level = sportLevel.toString(),
@@ -139,7 +160,7 @@ fun SelectSportsDialog(
                         )
                         LazyColumn(Modifier.weight(1f)) {
                             items(filteredSports.value) { sport ->
-                                val sportLevel = selectedSportLevel.find { it.sportname == sport.discipline }?.level ?: 1
+                                val sportLevel = selectedSportLevel.find { it.sportname == sport.discipline }?.level ?: "None"
                                 SportCard(
                                     sport = sport,
                                     level = sportLevel.toString(),

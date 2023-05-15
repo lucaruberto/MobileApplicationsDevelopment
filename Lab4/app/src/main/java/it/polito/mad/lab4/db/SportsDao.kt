@@ -8,6 +8,9 @@ interface SportsDao {
     @Query("SELECT discipline FROM sports")
     fun getAll() : LiveData<List<String>>
 
+    @Query("SELECT * FROM sports")
+    fun getSports():LiveData<List<Sports>>
+
     @Insert
     fun save(sport: Sports)
 

@@ -12,14 +12,18 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.*
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.gson.Gson
 import it.polito.mad.lab4.db.Sports
+import kotlinx.serialization.json.Json
+import okhttp3.internal.userAgent
 import java.io.ByteArrayOutputStream
 
 fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri{
@@ -37,11 +41,13 @@ fun saveUserData(userData: UserData, context: Context) {
     editor.putString("birthdate", userData.birthdate)
     editor.putString("sex", userData.sex)
     editor.putString("city", userData.city)
-            // editor.putString("sportlist", Json.encodeToString(userData.sportslist))
+    editor.putString("imageUri",userData.imageUri)
+    editor.putString("sportlist", userData.selectedSportsLevel)
     editor.apply()
 }
 data class UserData(val fullName: String, val nickname: String,val mail: String,val birthdate: String,val sex: String
-                    ,val city: String,val sportslist: List<SportList>)
+                    ,val city: String,val selectedSportsLevel: String,val imageUri : String
+)
 {
 }
 
@@ -50,6 +56,7 @@ data class UserData(val fullName: String, val nickname: String,val mail: String,
 fun Profile(checkpermission: () -> Unit, context: Context, user: UserData) {
 
     val viewModel: ProfileViewModel = viewModel()
+    val gson = Gson()
 
     val (name,setName) = rememberSaveable { mutableStateOf(user.fullName) }
     val (nickname,setNickname) = rememberSaveable { mutableStateOf(user.nickname) }
@@ -57,29 +64,32 @@ fun Profile(checkpermission: () -> Unit, context: Context, user: UserData) {
     val (birthdate,setBirthdate) = rememberSaveable { mutableStateOf(user.birthdate) }
     val (sex,setSex) = rememberSaveable { mutableStateOf(user.sex) }
     val (city,setCity) = rememberSaveable { mutableStateOf(user.city) }
-    val (sport,setSport) = rememberSaveable { mutableStateOf("") }
+    var (imageUri,setImageUri) = rememberSaveable { mutableStateOf(user.imageUri) }
+
     val (editmode,setEditMode) = rememberSaveable { mutableStateOf(false) }
     val (changephotoexpanded,setChangePhotoExpanded) = rememberSaveable {
         mutableStateOf(false)
     }
 
 
-    val selectedSports = remember { mutableStateListOf<Sports>() }
-    val selectedSportsLevel = remember { mutableStateListOf<SportList>() }
+
+
+     val valori =gson.fromJson(user.selectedSportsLevel, Array<SportList>::class.java).toMutableList()
+    val valori2 = valori.map { Sports(discipline = it.sportname) }
+    val selectedSports = remember { mutableStateListOf<Sports>(*valori2.toTypedArray()) }
+
+    val selectedSportsLevel = remember { mutableStateListOf<SportList>(*valori.toTypedArray()) }
     var (showDialog,setShowDialog) = rememberSaveable { mutableStateOf(false) }
     //valori di prova
    var user = remember {
-        mutableStateOf<UserData>(UserData(name, nickname ,mail,birthdate,sex,city, emptyList()))
+        mutableStateOf<UserData>(UserData(name, nickname ,mail,birthdate,sex,city, gson.toJson(selectedSportsLevel.toList()), imageUri = imageUri))
     }
-    val sports= listOf<Sports>(Sports(1,"Calcio"), Sports(2,"Basket"), Sports(3,"Danza"))
-
-
-
+    val sports by viewModel.getAllSports().observeAsState(initial = emptyList())
 
 
     Scaffold(topBar = {
 
-            myTopBar(editmode = editmode, setEditMode =setEditMode ,viewModel,name,nickname,mail,birthdate,sex,city, saveUserData = ::saveUserData, context = context, user = user.value)
+            myTopBar(editmode = editmode, setEditMode =setEditMode ,viewModel,name,nickname,mail,birthdate,sex,city, saveUserData = ::saveUserData, context = context, user = user.value,imageUri= imageUri,selectedSportLevel = gson.toJson(selectedSportsLevel))
 
     }, content = {
         Column(modifier = Modifier
@@ -89,35 +99,27 @@ fun Profile(checkpermission: () -> Unit, context: Context, user: UserData) {
             horizontalAlignment = Alignment.CenterHorizontally) {
             Row() {
                 ProfileImage(
+                    imageUri,
+                    setImageUri,
                     editmode,
                     changephotoexpanded,
                     setChangePhotoExpanded,
                     checkpermission,
                     context
                 )
-
             }
-
             ProfileField(hover = "Nickname:", text = nickname , setText = setNickname, editmode =editmode )
             ProfileField(hover = "FullName:", text = name, setText = setName, editmode = editmode)
             ProfileField(hover= "Mail:",text =mail , setText = setMail , editmode = editmode)
             ProfileField(hover= "Birthdate:",text =birthdate , setText = setBirthdate , editmode = editmode)
             ProfileField(hover= "Sex:",text =sex , setText = setSex , editmode = editmode)
             ProfileField(hover= "City:",text =city , setText = setCity , editmode = editmode)
-            SportsTable()
+            SportsTable(selectedSportsLevel)
             if(editmode){
-
-                    ProfileField(hover= "Sport:",text =sport , setText = setSport , editmode = editmode)
-
                     Button(onClick = {setShowDialog(true) }, modifier = Modifier.width(250.dp)) {
                         Text(text = "Edit Sport")
                     }
-
-
             }
-            else
-                ProfileField(hover= "Sport:",text =sport , setText = setSport , editmode = editmode)
-
 
 
             if(showDialog){
