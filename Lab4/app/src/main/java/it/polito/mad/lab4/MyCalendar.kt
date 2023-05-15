@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -48,7 +49,7 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
-fun MyCalendar(selectedDate: LocalDate?, setSelectedDate: (LocalDate?)->Unit, isColored: (CalendarDay)->Boolean ) {
+fun MyCalendar(selectedDate: LocalDate?, setSelectedDate: (LocalDate?)->Unit, isColored: (CalendarDay)->Boolean, backgroundColor: Color = Color.Transparent ) {
 
     val currentMonth = remember { YearMonth.now() }
     val startMonth = remember { currentMonth.minusMonths(100) } // Adjust as needed
@@ -66,15 +67,14 @@ fun MyCalendar(selectedDate: LocalDate?, setSelectedDate: (LocalDate?)->Unit, is
     HorizontalCalendar(
         state = state,
         dayContent = { day ->
-            if(isColored(day)){
-
-            }
             Day(day,
                 isSelected = selectedDate == day.date,
                 isColored = isColored(day),
+                backgroundColor = backgroundColor,
                 onClick =  { day ->
-                setSelectedDate(day.date)
-            })
+                    setSelectedDate(day.date)
+                }
+            )
         },
         monthHeader = {
                 month -> MonthHeader(calendarMonth = month, daysOfWeek = daysOfWeek)
@@ -82,13 +82,14 @@ fun MyCalendar(selectedDate: LocalDate?, setSelectedDate: (LocalDate?)->Unit, is
         // Draw the day content gradient.
         monthBody = { _, content ->
             Box(
-                modifier = Modifier.background(
+                modifier = Modifier.background(/*
                     brush = Brush.verticalGradient(
                         colors = listOf(
                             Color(0xFFB2EBF2),
                             Color(0xFFB2B8F2)
                         )
-                    )
+                    )*/
+                    MaterialTheme.colorScheme.background
                 )
             ) {
                 content() // Render the provided content!
@@ -121,7 +122,7 @@ private fun MonthHeader(calendarMonth: CalendarMonth, daysOfWeek: List<DayOfWeek
     Column(
         modifier = Modifier
             .wrapContentHeight()
-            .background(color = Color.Red)
+            .background(color = MaterialTheme.colorScheme.primary)
             .padding(top = 6.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
@@ -148,21 +149,21 @@ private fun MonthHeader(calendarMonth: CalendarMonth, daysOfWeek: List<DayOfWeek
 }
 
 @Composable
-fun Day(day: CalendarDay, isSelected: Boolean, isColored: Boolean, onClick: (CalendarDay) -> Unit) {
+fun Day(day: CalendarDay, isSelected: Boolean, isColored: Boolean, backgroundColor: Color, onClick: (CalendarDay) -> Unit) {
     Box(
         modifier = Modifier
             .aspectRatio(1f)
             .clip(CircleShape)
-            .background(color = if (isSelected) Color.Green else if(isColored) Color.Gray else Color.Transparent)
+            .background(color = if (isSelected) MaterialTheme.colorScheme.primary else if (isColored) backgroundColor else Color.Transparent)
             .clickable(
-                enabled = day.position == DayPosition.MonthDate,
+                enabled = (day.position == DayPosition.MonthDate) && (!day.date.isBefore(LocalDate.now())) ,
                 onClick = { onClick(day) }
             ),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = day.date.dayOfMonth.toString(),
-            color = if (day.position == DayPosition.MonthDate) Color.White else Color.Gray
+            color = if ((day.position == DayPosition.MonthDate) && (!day.date.isBefore(LocalDate.now()))) Color.Black else Color.Gray
         )
     }
 }
