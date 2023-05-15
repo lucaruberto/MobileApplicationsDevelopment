@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import it.polito.mad.lab4.db.FasciaOraria
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.LocalDate
+import java.time.LocalDate
 
 @Composable
 fun ReservationDialog(
@@ -24,7 +24,7 @@ fun ReservationDialog(
     )-> Unit,
     sport: String,
     field: String,
-    date: LocalDate?,
+    date: java.time.LocalDate?,
     timeSlot: FasciaOraria?,
     customRequest: String,
     onCustomRequestChange: (String) -> Unit

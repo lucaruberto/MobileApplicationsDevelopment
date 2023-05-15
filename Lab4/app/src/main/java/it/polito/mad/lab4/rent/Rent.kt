@@ -1,20 +1,9 @@
 import android.widget.Toast
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,34 +11,30 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.himanshoe.kalendar.KalendarType
+import it.polito.mad.lab4.MyCalendar
 import it.polito.mad.lab4.db.FasciaOraria
 import it.polito.mad.lab4.rent.RentViewModel
 import it.polito.mad.lab4.rent.ReservationDialog
 import it.polito.mad.lab4.rent.ReservationList
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toJavaInstant
-import kotlinx.datetime.todayIn
+import java.time.LocalDate
+import java.time.ZoneOffset
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,16 +50,19 @@ fun Rent() {
     var expandedSport by remember { mutableStateOf(false) }
     var expandedField by remember { mutableStateOf(false) }
     var showFieldsDropDown  by remember { mutableStateOf(false) }
-    var selectedDate by remember { mutableStateOf<kotlinx.datetime.LocalDate?>(null) }
+    val (selectedDate, setSelectedDate) = remember { mutableStateOf<LocalDate?>(null) }
     var showDialog by remember { mutableStateOf(false) }
     var selectedTimeSlot by remember { mutableStateOf<FasciaOraria?>(null) }
     var customRequest by remember { mutableStateOf("") }
     LazyColumn(
-        modifier = Modifier
-            .padding(16.dp)
+        /*modifier = Modifier
+            .padding(16.dp)*/
     ) {
         item {
-            Text(text = "Rent your player court", fontSize = 30.sp, fontStyle = FontStyle.Normal)
+            Text(text = "Rent your player court", fontSize = 30.sp, fontStyle = FontStyle.Normal,
+                modifier = Modifier
+                    .padding(top = 16.dp, start = 16.dp)
+                )
             Spacer(modifier = Modifier.height(32.dp))
         }
 
@@ -84,7 +72,9 @@ fun Rent() {
                 onExpandedChange = {
                     expandedSport = !expandedSport
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp)
             ) {
                 OutlinedTextField(
                     value = selectedSport,
@@ -98,13 +88,16 @@ fun Rent() {
 
                 DropdownMenu(
                     expanded = expandedSport,
-                    onDismissRequest = { expandedSport = false; selectedDate = null },
-                    modifier = Modifier.fillMaxWidth()
+                    onDismissRequest = { expandedSport = false; setSelectedDate(null) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp)
                 ) {
 
                     sportsList.forEach { item ->
                         DropdownMenuItem(
-                            text = { Text(text = item, modifier = Modifier.fillMaxWidth()) },
+                            text = { Text(text = item, modifier = Modifier.fillMaxWidth()
+                                .padding(start = 16.dp, end = 16.dp)) },
                             onClick = {
                                 selectedSport = item
                                 expandedSport = false
@@ -124,8 +117,8 @@ fun Rent() {
                             expandedField = !expandedField
                         },
                         modifier = Modifier
-                            .padding(top = 16.dp)
                             .fillMaxWidth()
+                            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
                     ) {
                         OutlinedTextField(
                             value = selectedField,
@@ -139,8 +132,10 @@ fun Rent() {
 
                         DropdownMenu(
                             expanded = expandedField,
-                            onDismissRequest = { expandedField = false; selectedDate = null },
-                            modifier = Modifier.fillMaxWidth()
+                            onDismissRequest = { expandedField = false; setSelectedDate(null) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp, end = 16.dp)
                         ) {
 
                             fields.forEach { item ->
@@ -149,6 +144,7 @@ fun Rent() {
                                         Text(
                                             text = item,
                                             modifier = Modifier.fillMaxWidth()
+                                                .padding(start = 16.dp, end = 16.dp)
                                         )
                                     },
                                     onClick = {
@@ -168,7 +164,7 @@ fun Rent() {
         item {
             Spacer(modifier = Modifier.height(8.dp))
             if (selectedSport != "Sport" && selectedField != "Field") {
-                com.himanshoe.kalendar.Kalendar(currentDay = Clock.System.todayIn(
+                /*com.himanshoe.kalendar.Kalendar(currentDay = Clock.System.todayIn(
                     TimeZone.currentSystemDefault()
                 ), kalendarType = KalendarType.Firey,
                     modifier = Modifier
@@ -188,7 +184,8 @@ fun Rent() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-                    })
+                    })*/
+                    MyCalendar(selectedDate = selectedDate, setSelectedDate = setSelectedDate, isColored = {false})
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
@@ -229,9 +226,8 @@ fun Rent() {
                         field = selectedField,
                         date = selectedDate,
                         timeSlot = selectedTimeSlot,
-                        customRequest = customRequest,
-                        onCustomRequestChange = { customRequest = it }
-                    )
+                        customRequest = customRequest
+                    ) { customRequest = it }
                 }
             }
         }
@@ -239,7 +235,7 @@ fun Rent() {
 }
 
 fun LocalDate?.toDate(): Date {
-    return Date.from(this!!.atStartOfDayIn(TimeZone.currentSystemDefault()).toJavaInstant())
+    return Date.from(this!!.atStartOfDay(ZoneOffset.systemDefault()).toInstant())
 }
 
 
