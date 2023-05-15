@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Delete
@@ -35,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
@@ -54,8 +56,6 @@ fun Rate() {
     val (showForm, setShowForm) = remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
     var selectedField by remember { mutableStateOf("Select field") }
-
-
 
     if(readMode) {
         LazyColumn {
@@ -177,6 +177,7 @@ fun ReviewComponent(reviewId: Int, fieldName: String, reviewText: String, vm: Ra
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
+                    .clip(RoundedCornerShape(50))
             ) {
                 IconButton(
                     onClick = { vm.deleteReview(Rating(reviewId, reviewText, fieldName)) },
