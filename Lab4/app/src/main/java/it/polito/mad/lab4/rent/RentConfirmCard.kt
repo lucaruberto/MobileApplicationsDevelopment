@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -48,12 +49,13 @@ fun ReservationDialog(
             }
         },
         confirmButton = {
-            Button(colors = ButtonDefaults.buttonColors(Color.Green),onClick = { runBlocking{ onConfirm(sport, field, date, timeSlot, customRequest) } }) {
+            Button(colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondary),onClick = { runBlocking{ onConfirm(sport, field, date, timeSlot, customRequest) } }) {
                 Text("Yes")
             }
         },
         dismissButton = {
-            Button(colors = ButtonDefaults.buttonColors(Color.Red),onClick = onDismiss) {
+            Button(onClick = onDismiss) {
                 Text("No")
             }
         }

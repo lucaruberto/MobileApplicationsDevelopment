@@ -137,7 +137,7 @@ fun SportCard(
                     else
                     {
                         Text(text ="$level" ,
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.weight(1f) )
                     }
 
