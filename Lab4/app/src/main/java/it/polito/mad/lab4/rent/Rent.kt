@@ -20,7 +20,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -39,10 +38,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.himanshoe.kalendar.Kalendar
 import com.himanshoe.kalendar.KalendarType
 import it.polito.mad.lab4.db.FasciaOraria
 import it.polito.mad.lab4.rent.RentViewModel
+import it.polito.mad.lab4.rent.ReservationDialog
+import it.polito.mad.lab4.rent.ReservationList
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -167,28 +167,31 @@ fun Rent() {
 
         item {
             Spacer(modifier = Modifier.height(8.dp))
-            val currentDate = remember { mutableStateOf<Date?>(null) }
-
-            Kalendar(currentDay = Clock.System.todayIn(
-                TimeZone.currentSystemDefault()
-            ), kalendarType = KalendarType.Firey,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(350.dp),
-                onDayClick = { day, events ->
-                    if (selectedSport != "Sport" && selectedField != "Field") {
-                        selectedDate = day
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Please select sport and field first",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                })
-            Spacer(modifier = Modifier.height(5.dp))
+            if (selectedSport != "Sport" && selectedField != "Field") {
+                com.himanshoe.kalendar.Kalendar(currentDay = Clock.System.todayIn(
+                    TimeZone.currentSystemDefault()
+                ), kalendarType = KalendarType.Firey,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(350.dp),
+                    onDayClick = { day, events ->
+                        val currentDay = Clock.System.todayIn(TimeZone.currentSystemDefault())
+                        if (selectedSport != "Sport" && selectedField != "Field" && day.compareTo(
+                                currentDay
+                            ) >= 0
+                        ) {
+                            selectedDate = day
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "You can't select a past date",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    })
+                Spacer(modifier = Modifier.height(8.dp))
+            }
         }
-
         if (selectedSport != "Sport" && selectedField != "Field" && selectedDate != null) {
             item {
                 val date = selectedDate?.toDate()
@@ -239,83 +242,5 @@ fun LocalDate?.toDate(): Date {
     return Date.from(this!!.atStartOfDayIn(TimeZone.currentSystemDefault()).toJavaInstant())
 }
 
-@Composable
-fun ReservationList(data : List<FasciaOraria>, onTimeSlotClick: (FasciaOraria) -> Unit) {
-    val columns = 4
-    val rows = data.size / columns + if (data.size % columns != 0) 1 else 0
-
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(columns),
-        modifier = Modifier.height(200.dp)
-    ) {
-            items(data) { item ->
-                ReservationCard(rent = item, onClick = { onTimeSlotClick(item) })
-            }
-
-    }
 
 
-}
-
-@Composable
-fun ReservationCard(rent : FasciaOraria, onClick: () -> Unit) {
-    Card(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-            Text("${rent.oraInizio}")
-            Text("-${rent.oraFine}")
-        }
-    }
-}
-@Composable
-fun ReservationDialog(
-    onDismiss: () -> Unit,
-    onConfirm: suspend (
-        sport: String,
-        field: String,
-        date: LocalDate?,
-        timeSlot: FasciaOraria?,
-        customRequest: String
-    )-> Unit,
-    sport: String,
-    field: String,
-    date: LocalDate?,
-    timeSlot: FasciaOraria?,
-    customRequest: String,
-    onCustomRequestChange: (String) -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(text = "Confirm Reservation") },
-        text = {
-            Column {
-                Text("Sport: $sport")
-                Text("Field: $field")
-                Text("Date: ${date.toString()}")
-                timeSlot?.let {
-                    Text("Time: ${it.oraInizio} - ${it.oraFine}")
-                }
-                TextField(
-                    value = customRequest,
-                    onValueChange = onCustomRequestChange,
-                    label = { Text("Custom Request") }
-                )
-            }
-        },
-        confirmButton = {
-            Button(colors = ButtonDefaults.buttonColors(Color.Green),onClick = {runBlocking{ onConfirm(sport, field, date, timeSlot, customRequest) }}) {
-                Text("Yes")
-            }
-        },
-        dismissButton = {
-            Button(colors = ButtonDefaults.buttonColors(Color.Red),onClick = onDismiss) {
-                Text("No")
-            }
-        }
-    )
-    }

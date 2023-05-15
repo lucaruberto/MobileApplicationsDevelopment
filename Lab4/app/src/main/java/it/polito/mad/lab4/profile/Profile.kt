@@ -74,8 +74,9 @@ fun Profile(checkpermission: () -> Unit, context: Context, user: UserData) {
 
 
 
-     val valori =gson.fromJson(user.selectedSportsLevel, Array<SportList>::class.java).toMutableList()
-    val valori2 = valori.map { Sports(discipline = it.sportname) }
+    val fromJson = gson.fromJson(user.selectedSportsLevel, Array<SportList>::class.java)
+    val valori = fromJson?.toMutableList() ?: mutableListOf()
+    val valori2 =valori.map { Sports(discipline = it.sportname) }
     val selectedSports = remember { mutableStateListOf<Sports>(*valori2.toTypedArray()) }
 
     val selectedSportsLevel = remember { mutableStateListOf<SportList>(*valori.toTypedArray()) }
