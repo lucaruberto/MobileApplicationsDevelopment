@@ -18,11 +18,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -126,9 +128,11 @@ fun Rate() {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Button(onClick = {
-                    setReadMode(true)
-                    setShowForm(false)
-                }) {
+                        setReadMode(true)
+                        setShowForm(false)
+                        },
+                        colors = ButtonDefaults
+                            .buttonColors(containerColor = MaterialTheme.colorScheme.secondary)) {
                     Text("Back")
                 }
             }
