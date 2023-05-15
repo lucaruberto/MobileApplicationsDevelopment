@@ -10,15 +10,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -77,116 +81,123 @@ fun SelectSportsDialog(
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
+                    .padding(16.dp),
                 shape = RectangleShape
             ) {
-
-                Row(modifier = Modifier.height(50.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-
-                    Button(onClick = {
-                        Toast.makeText(context,"All preferences Removed!", Toast.LENGTH_LONG).show()
-                        selectedSportLevel.clear()
-                        selectedSports.clear()
-                        setShowDialog(false)
-
-
-                    },) {
-                        Text(text = "Delete all and go back!");
-
-
-                    }
-
-                    Button(onClick = {
-                        Toast.makeText(context,"Save and go back!", Toast.LENGTH_LONG).show()
-                        setShowDialog(false)
-
-
-                    },) {
-                        Text(text = "Save Changes!");
-
-
-                    }
-                }
-
-                Row(
-                    Modifier
-                        .fillMaxSize()
-                        .padding(top = 50.dp)) {
-
-                    Column(Modifier.weight(1f)) {
+                Column(
+                    modifier = Modifier.padding(16.dp).fillMaxWidth()) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
                         Text(
-                            text = "Selected Sports",
+                            text = "Your sports",
                             fontWeight = FontWeight.Bold,
                             fontSize = 24.sp,
                             modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)
                         )
-                        LazyColumn(Modifier.weight(1f)) {
-                            items(selectedSports) { sport ->
-                                val sportLevel = selectedSportLevel.find { it.sportname == sport.discipline }?.level ?: "None"
-
-                                SportCard(
-                                    sport = sport,
-                                    level = sportLevel.toString(),
-                                    onLevelChanged = { level ->
-                                        val updatedSportLevel = selectedSportLevel.map { sportList ->
-                                            if (sportList.sportname == sport.discipline) {
-                                                sportList.copy(level = level)
-                                            } else {
-                                                sportList
+                        Row {
+                            LazyRow() {
+                                items(selectedSports) { sport ->
+                                    val sportLevel =
+                                        selectedSportLevel.find { it.sportname == sport.discipline }?.level
+                                            ?: "None"
+                                    SportCard(
+                                        sport = sport,
+                                        level = sportLevel.toString(),
+                                        onLevelChanged = { level ->
+                                            val updatedSportLevel =
+                                                selectedSportLevel.map { sportList ->
+                                                    if (sportList.sportname == sport.discipline) {
+                                                        sportList.copy(level = level)
+                                                    } else {
+                                                        sportList
+                                                    }
+                                                }
+                                        },
+                                        modifier = Modifier
+                                            .padding(8.dp)
+                                            .clickable {
+                                                onAddSport(sport)
                                             }
-                                        }},
-                                    modifier = Modifier
-                                        .padding(16.dp)
-                                        .clickable {
-                                            onAddSport(sport)
-                                        }
-                                        .fillMaxWidth(),
-                                    selectedSport = selectedSports,
-                                    add = false,
-                                    selectedSportLevel = selectedSportLevel,
-                                )
+                                            .fillMaxWidth(),
+                                        selectedSport = selectedSports,
+                                        add = false,
+                                        selectedSportLevel = selectedSportLevel,
+                                    )
+                                }
                             }
                         }
-                    }
-                    Column(Modifier.weight(1f)) {
-                        TextField(
+                        Text(
+                            text = "Add a new sport",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 24.sp,
+                            modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)
+                        )
+                        OutlinedTextField(
                             value = searchText.value,
                             onValueChange = { searchText.value = it },
-                            label = { Text(text = "Search for sport") },
-                            modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
-                            maxLines = 1,
+                            label = { Text(text = "Search") },
+                            modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp)
+                                .width(150.dp),
                             singleLine = true
-
                         )
-                        LazyColumn(Modifier.weight(1f)) {
-                            items(filteredSports.value) { sport ->
-                                val sportLevel = selectedSportLevel.find { it.sportname == sport.discipline }?.level ?: "None"
-                                SportCard(
-                                    sport = sport,
-                                    level = sportLevel.toString(),
-                                    onLevelChanged = { level ->
-                                        val updatedSportLevel = selectedSportLevel.map { sportList ->
-                                            if (sportList.sportname == sport.discipline) {
-                                                sportList.copy(level = level)
-                                            } else {
-                                                sportList
+                        Row {
+                            LazyRow() {
+                                items(filteredSports.value) { sport ->
+                                    val sportLevel =
+                                        selectedSportLevel.find { it.sportname == sport.discipline }?.level
+                                            ?: "None"
+                                    SportCard(
+                                        sport = sport,
+                                        level = sportLevel.toString(),
+                                        onLevelChanged = { level ->
+                                            val updatedSportLevel =
+                                                selectedSportLevel.map { sportList ->
+                                                    if (sportList.sportname == sport.discipline) {
+                                                        sportList.copy(level = level)
+                                                    } else {
+                                                        sportList
+                                                    }
+                                                }
+                                        },
+                                        modifier = Modifier
+                                            .padding(8.dp)
+                                            .clickable {
+                                                onAddSport(sport)
                                             }
-                                        }},
-                                    modifier = Modifier
-                                        .padding(16.dp)
-                                        .clickable {
-                                            onAddSport(sport)
-                                        }
-                                        .fillMaxWidth(),
-                                    selectedSport =selectedSports,
-                                    add = true,
-                                    selectedSportLevel = selectedSportLevel,
-                                )
+                                            .fillMaxWidth(),
+                                        selectedSport = selectedSports,
+                                        add = true,
+                                        selectedSportLevel = selectedSportLevel,
+                                    )
+                                }
                             }
                         }
                     }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween) {
+                        Button(onClick = {
+                            Toast.makeText(context,"All preferences Removed!", Toast.LENGTH_LONG).show()
+                            selectedSportLevel.clear()
+                            selectedSports.clear()
+                            setShowDialog(false)
+                        },colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.secondary)) {
+                            Text(text = "Discard")
+                        }
+                        Button(onClick = {
+                            Toast.makeText(context,"Save and go back!", Toast.LENGTH_LONG).show()
+                            setShowDialog(false)
+                        }) {
+                            Text(text = "Save")
+                        }
+                    }
+
                 }
-            }
-        }
+
+        }}
     )
 }

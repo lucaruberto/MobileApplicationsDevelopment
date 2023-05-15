@@ -12,20 +12,32 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import it.polito.mad.lab4.db.Sports
@@ -41,43 +53,63 @@ fun SportCard(
     selectedSportLevel : MutableList<SportList>
 ) {
     val context = LocalContext.current
-    var (expandable,setExpandable) = remember { mutableStateOf(false) }
+    var (expandable,setExpandable) = remember {mutableStateOf(false)}
     var (testo, setTesto) = remember {
         mutableStateOf("None")
     }
     Card(
         modifier = modifier
             .height(100.dp)
-            .width(100.dp),
+            .width(150.dp)
+            .clickable {
+                if (add) {
+                    if (testo == "None") {
+                        Toast
+                            .makeText(
+                                context,
+                                "Please Select a Skill Level before Add",
+                                Toast.LENGTH_LONG
+                            )
+                            .show()
+                    } else {
+                        selectedSport.add(sport)
+                        val x = SportList(sportname = sport.discipline, level = testo)
+                        selectedSportLevel.add(x)
+                        setTesto("None")
+                    }
+                } else {
+                    selectedSport.remove(sport)
+                    val sportLevelToRemove =
+                        selectedSportLevel.firstOrNull { it.sportname == sport.discipline }
+                    sportLevelToRemove?.let { selectedSportLevel.remove(it) }
+                }
+            } ,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(16.dp),
-
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+        )
         ) {
         Row() {
             Column(
                 modifier = Modifier
                     .padding(16.dp)
-                    .weight(0.76f)
+                    .weight(0.70f)
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+
                     Text(
                         text = sport.discipline,
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.weight(1f)
                     )
-                }
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
 
                     Text(
                         text = "Ability Level:",
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.weight(.50f)
+                        modifier = Modifier.weight(1f),
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                     if(add) {
-                        Box(modifier = Modifier.weight(.50f)) {
+                        Box(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = testo,
                                 modifier = Modifier.clickable { setExpandable(true) },
@@ -99,49 +131,38 @@ fun SportCard(
                                 }
                             }
                         }
+
+
                     }
                     else
                     {
-                        Text(text ="$level" ,style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.weight(.50f) )
+                        Text(text ="$level" ,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(1f) )
                     }
 
 
-
-                }
             }
-            Column(modifier = Modifier.weight(0.24f)) {
-                Button(
-                    onClick = {
-                    if(add){
-                        if(testo=="None"){
+            Column(modifier = Modifier
+                .weight(0.30f)
+                .align(CenterVertically)
+                .padding(end = 8.dp)){
+               if(add) {
+                   Icon(
+                       imageVector = Icons.Default.Add,
+                       contentDescription = null,
+                       modifier = Modifier.padding(8.dp)
+                   )
+               }
+                else{
+                   Icon(
+                       imageVector = Icons.Default.Delete,
+                       contentDescription = null,
+                       modifier = Modifier.padding(8.dp)
+                   )
+               }
 
-                            Toast.makeText(context,"Please Select a Skill Level before Add", Toast.LENGTH_LONG).show()
-                        }
-                        else{
-                            selectedSport.add(sport)
-                            val x= SportList(sportname = sport.discipline,level = testo)
-                            selectedSportLevel.add(x)
-                            setTesto("None")
-                        }
-
-
-                    }
-                    else
-                    { selectedSport.remove(sport)
-                        val sportLevelToRemove = selectedSportLevel.firstOrNull { it.sportname == sport.discipline }
-                        sportLevelToRemove?.let { selectedSportLevel.remove(it)} }
-                }
-                )
-                {
-                    if(add)
-                        Text(text = "AAAAAAAAAA", color = Color.Black , modifier = Modifier.fillMaxWidth(), fontSize = 20.sp)
-                    else
-                        Text(text = "-")
-                }
-            }
-        }
-
+        }}
     }
 }
 
