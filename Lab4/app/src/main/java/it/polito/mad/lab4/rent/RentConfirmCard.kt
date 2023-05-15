@@ -49,13 +49,13 @@ fun ReservationDialog(
             }
         },
         confirmButton = {
-            Button(colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary),onClick = { runBlocking{ onConfirm(sport, field, date, timeSlot, customRequest) } }) {
+            Button(onClick = { runBlocking{ onConfirm(sport, field, date, timeSlot, customRequest) } }) {
                 Text("Yes")
             }
         },
         dismissButton = {
-            Button(onClick = onDismiss) {
+            Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondary)) {
                 Text("No")
             }
         }
