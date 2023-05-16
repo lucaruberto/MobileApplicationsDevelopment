@@ -79,7 +79,7 @@ fun Reservation() {
                     }, Color.Gray)
                 }
 
-                items(items = slots.sortedBy { it.oraInizio }, key = { it.oraInizio}){
+                items(items = slots.sortedBy { it.oraInizio }/*, key = { it.oraInizio}*/){
                     //Text(text = "${it.oraInizio}:00 - ${it.oraFine}:00")
                     Card(
                         shape = RoundedCornerShape(12. dp),
