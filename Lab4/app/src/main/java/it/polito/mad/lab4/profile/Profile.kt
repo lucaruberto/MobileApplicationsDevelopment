@@ -7,14 +7,11 @@ import android.provider.MediaStore
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.*
@@ -22,8 +19,6 @@ import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.gson.Gson
 import it.polito.mad.lab4.db.Sports
-import kotlinx.serialization.json.Json
-import okhttp3.internal.userAgent
 import java.io.ByteArrayOutputStream
 
 fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri{
@@ -50,7 +45,6 @@ data class UserData(val fullName: String, val nickname: String,val mail: String,
 )
 {
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Profile(checkpermission: () -> Unit, context: Context, user: UserData) {
@@ -89,8 +83,9 @@ fun Profile(checkpermission: () -> Unit, context: Context, user: UserData) {
 
 
     Scaffold(topBar = {
-
-            myTopBar(editmode = editmode, setEditMode =setEditMode ,viewModel,name,nickname,mail,birthdate,sex,city, saveUserData = ::saveUserData, context = context, user = user.value,imageUri= imageUri,selectedSportLevel = gson.toJson(selectedSportsLevel))
+            myTopBar(editmode = editmode, setEditMode =setEditMode ,viewModel,name,nickname,mail,birthdate,sex,city,
+                saveUserData = ::saveUserData, context = context, user = user.value,
+                imageUri= imageUri,selectedSportLevel = gson.toJson(selectedSportsLevel))
 
     }, content = {
         Column(modifier = Modifier
@@ -109,20 +104,56 @@ fun Profile(checkpermission: () -> Unit, context: Context, user: UserData) {
                     context
                 )
             }
-            ProfileField(hover = "Nickname:", text = nickname , setText = setNickname, editmode =editmode )
-            ProfileField(hover = "FullName:", text = name, setText = setName, editmode = editmode)
-            ProfileField(hover= "Mail:",text =mail , setText = setMail , editmode = editmode)
-            ProfileField(hover= "Birthdate:",text =birthdate , setText = setBirthdate , editmode = editmode)
-            ProfileField(hover= "Sex:",text =sex , setText = setSex , editmode = editmode)
-            ProfileField(hover= "City:",text =city , setText = setCity , editmode = editmode)
-            SportsTable(selectedSportsLevel)
-            if(editmode){
-                    Button(onClick = {setShowDialog(true) }, modifier = Modifier.width(250.dp)) {
-                        Text(text = "Edit Sport")
-                    }
+
+                Column(modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()) {
+                    ProfileField(
+                        hover = "Nickname:",
+                        text = nickname,
+                        setText = setNickname,
+                        editmode = editmode
+                    )
+                    ProfileField(
+                        hover = "FullName:",
+                        text = name,
+                        setText = setName,
+                        editmode = editmode
+                    )
+                    ProfileField(
+                        hover = "Mail:",
+                        text = mail,
+                        setText = setMail,
+                        editmode = editmode
+                    )
+                    ProfileField(
+                        hover = "Birthdate:",
+                        text = birthdate,
+                        setText = setBirthdate,
+                        editmode = editmode
+                    )
+                    ProfileField(
+                        hover = "Sex:",
+                        text = sex,
+                        setText = setSex,
+                        editmode = editmode)
+                    ProfileField(
+                        hover = "City:",
+                        text = city,
+                        setText = setCity,
+                        editmode = editmode
+                    )
+                }
+
+            //
+            Row {
+                Column( modifier = if(editmode) Modifier.weight(0.7f) else Modifier.weight(1f) ) {
+                    SportsTable(selectedSportsLevel, setShowDialog)
+                }
+
+
+
             }
-
-
             if(showDialog){
                 SelectSportsDialog(
                     availableSports = sports,

@@ -1,12 +1,15 @@
 package it.polito.mad.lab4.profile
 
 import android.content.Context
+import android.provider.CalendarContract.Colors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -27,13 +30,12 @@ fun myTopBar(
     selectedSportLevel: String)
 {
     TopAppBar(
-        title = { Text(text = "Your Profile" , textAlign = TextAlign.Center) },
+        title = { Text(text = "Your Profile" , textAlign = TextAlign.Center, color = Color.White) },
 
         actions = {
 
             IconButton(onClick = {
                 if(editmode){
-
                     saveUserData(
                         UserData(fullName = name, nickname = nickname,mail = mail, birthdate = birthdate
                     , sex = sex, city = city, selectedSportLevel,imageUri
@@ -43,8 +45,9 @@ fun myTopBar(
 
                 setEditMode(!editmode)
 
-            }, enabled = true) {
-                Icon(imageVector = if(editmode) Icons.Default.Check else Icons.Default.Edit, contentDescription = null)
+            }
+                , enabled = true) {
+                Icon(imageVector = if(editmode) Icons.Default.Check else Icons.Default.Edit, contentDescription = null, tint = Color.White)
             }
 
         },

@@ -102,7 +102,7 @@ fun MyCalendar(selectedDate: LocalDate?, setSelectedDate: (LocalDate?)->Unit, is
             Box(
                 modifier = Modifier
                     .width(screenWidth /* * 0.73f*/)
-                    .padding(8.dp)
+                    .padding(16.dp)
                     .clip(shape = RoundedCornerShape(8.dp))
                     .border(
                         color = Color.Black,

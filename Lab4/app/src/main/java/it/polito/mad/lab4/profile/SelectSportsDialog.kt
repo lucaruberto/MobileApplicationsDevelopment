@@ -68,9 +68,7 @@ fun SelectSportsDialog(
     println("Sport disponibili:" + availableSports.toString())
     println("Sport gia scelti:" + selectedSportLevel.toList().toString())
 
-
     filteredSports.value = availableSports.filter {
-
         (it.discipline.contains(searchText.value, ignoreCase = true) && it !in selectedSports )
     }
 

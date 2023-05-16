@@ -30,15 +30,12 @@ fun ReservationList(data : List<FasciaOraria>, onTimeSlotClick: (FasciaOraria) -
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(columns),
-        modifier = Modifier.height(200.dp)
+        modifier = Modifier.height(200.dp).padding(16.dp)
     ) {
         items(data) { item ->
             ReservationCard(rent = item, onClick = { onTimeSlotClick(item) })
         }
-
     }
-
-
 }
 
 @Composable

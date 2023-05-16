@@ -96,7 +96,6 @@ fun SportCard(
                     .padding(16.dp)
                     .weight(0.70f)
             ) {
-
                     Text(
                         text = sport.discipline,
                         style = MaterialTheme.typography.titleMedium,
