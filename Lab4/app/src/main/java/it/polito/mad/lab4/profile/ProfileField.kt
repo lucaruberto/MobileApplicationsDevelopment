@@ -3,7 +3,6 @@ package it.polito.mad.lab4.profile
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
@@ -57,12 +56,11 @@ fun ProfileField(hover: String, text: String, type: String, setText: (String)->U
                         )
                         "mail" -> KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Email,
-                            capitalization = KeyboardCapitalization.Sentences,
                             imeAction = ImeAction.Next
                         )
                         "simple" -> KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Text,
-                            capitalization = KeyboardCapitalization.Sentences,
+                            capitalization = KeyboardCapitalization.Words,
                             imeAction = ImeAction.Next
                         )
                         else -> KeyboardOptions.Default.copy(

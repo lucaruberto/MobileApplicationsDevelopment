@@ -3,7 +3,6 @@ package it.polito.mad.lab4.rate
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import it.polito.mad.lab4.db.GlobalDatabase
 import it.polito.mad.lab4.db.Rating

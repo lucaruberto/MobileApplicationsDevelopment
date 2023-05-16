@@ -59,7 +59,6 @@ android {
 }
 
 dependencies {
-
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
     implementation 'androidx.activity:activity-compose:1.7.1'
@@ -99,6 +98,4 @@ dependencies {
     implementation "androidx.camera:camera-extensions:1.2.2"
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
     implementation 'com.google.code.gson:gson:2.9.0'
-
-
 }

@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Delete
@@ -41,7 +43,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -180,12 +186,12 @@ fun ReviewComponent(reviewId: Int, fieldName: String, reviewText: String, vm: Ra
         modifier = modifier.then(
             Modifier
                 .padding(start = 16.dp, end = 16.dp)
-                .background(Color(0xFFF5F5F5))
+                //.background(Color(0xFFF5F5F5))
         )
     ) {
         Text(
             text = fieldName,
-            style = TextStyle(fontSize = 24.sp, textAlign = TextAlign.Center),
+            style = TextStyle(fontSize = 28.sp, textAlign = TextAlign.Center),
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
@@ -238,15 +244,22 @@ fun InsertReviewForm(modifier: Modifier, selectedField: String, vm: RateViewMode
                 .fillMaxWidth()),
         horizontalAlignment = Alignment.CenterHorizontally)
     {
-       Text("Insert your review", fontSize = 24.sp)
-       Spacer(modifier = Modifier.height(16.dp))
+        val focusManager = LocalFocusManager.current
+        Text("Insert your review", fontSize = 24.sp)
+        Spacer(modifier = Modifier.height(16.dp))
 
-       TextField(
-           value = content,
-           onValueChange = { content = it },
-           label = { Text("Review...") },
-           modifier = Modifier.fillMaxWidth()
+        TextField(
+            value = content,
+            onValueChange = { content = it },
+            label = { Text("Review...") },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Text,
+                capitalization = KeyboardCapitalization.Sentences,
+                imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = {focusManager.clearFocus()})
        )
+
        Spacer(modifier = Modifier.height(16.dp))
        Row(
            horizontalArrangement = Arrangement.Center,

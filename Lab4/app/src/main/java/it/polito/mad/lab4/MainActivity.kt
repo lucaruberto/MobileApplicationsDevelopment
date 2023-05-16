@@ -3,8 +3,6 @@ package it.polito.mad.lab4
 import Rent
 import android.Manifest
 import android.content.Context
-import android.content.SharedPreferences
-
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -46,59 +44,46 @@ import it.polito.mad.lab4.reservation.Reservation
 import it.polito.mad.lab4.ui.theme.Lab4Theme
 
 
-fun getUserData( context: Context): UserData {
+fun getUserData(context: Context): UserData {
     val sharedPref = context.getSharedPreferences("UserData", Context.MODE_PRIVATE)
     var nickname = sharedPref.getString("nickname", "")
     var fullname = sharedPref.getString("fullname", "")
     var email = sharedPref.getString("mail", "")
     var birth = sharedPref.getString("birthdate", "")
-    var  sex = sharedPref.getString("sex", "")
+    var sex = sharedPref.getString("sex", "")
     var city = sharedPref.getString("city", "")
-    var imageUri = sharedPref.getString("imageUri","")
-    var sportlist = sharedPref.getString("sportlist","")
-    fullname=  if(fullname=== null) "" else fullname
-    nickname=  if(nickname=== null) "" else nickname
-    email=  if(email=== null) "" else email
-    birth=  if(birth=== null) "" else birth
-    sex=  if(sex=== null) "" else sex
-    city=  if(city=== null) "" else city
-    imageUri = if(imageUri=== null)"" else imageUri
-    sportlist = if(sportlist===null)"" else sportlist
+    var imageUri = sharedPref.getString("imageUri", "")
+    var sportlist = sharedPref.getString("sportlist", "")
+    fullname = if (fullname === null) "" else fullname
+    nickname = if (nickname === null) "" else nickname
+    email = if (email === null) "" else email
+    birth = if (birth === null) "" else birth
+    sex = if (sex === null) "" else sex
+    city = if (city === null) "" else city
+    imageUri = if (imageUri === null) "" else imageUri
+    sportlist = if (sportlist === null) "" else sportlist
 
-    val user = UserData(fullName=fullname, nickname=nickname, mail=email,birthdate = birth,city = city, sex = sex, selectedSportsLevel =sportlist , imageUri = imageUri)
-return user
+    return UserData(
+        fullName = fullname,
+        nickname = nickname,
+        mail = email,
+        birthdate = birth,
+        city = city,
+        sex = sex,
+        selectedSportsLevel = sportlist,
+        imageUri = imageUri
+    )
 }
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        val sharedPref = getSharedPreferences("UserData", MODE_PRIVATE)
-        var nickname = sharedPref.getString("nickname", "")
-        var fullname = sharedPref.getString("fullname", "")
-        var email = sharedPref.getString("mail", "")
-        var birth = sharedPref.getString("birthdate", "")
-        var  sex = sharedPref.getString("sex", "")
-        var city = sharedPref.getString("city", "")
-        var imageUri = sharedPref.getString("imageUri","")
-        var sportlist = sharedPref.getString("sportlist","")
-        fullname=  if(fullname=== null) "" else fullname
-        nickname=  if(nickname=== null) "" else nickname
-        email=  if(email=== null) "" else email
-        birth=  if(birth=== null) "" else birth
-        sex=  if(sex=== null) "" else sex
-        city=  if(city=== null) "" else city
-        imageUri = if(imageUri=== null)"" else imageUri
-        sportlist = if(sportlist===null)"" else sportlist
-
-        val user = UserData(fullName=fullname, nickname=nickname, mail=email,birthdate = birth,city = city, sex = sex, selectedSportsLevel =sportlist , imageUri = imageUri)
-
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+            if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
+                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
+                checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                 val permission =
-                    arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
                 requestPermissions(permission, 112)
             }
         }
@@ -111,7 +96,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Mainscreen(user,sharedPref)
+                    Mainscreen()
                 }
             }
         }
@@ -122,10 +107,10 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun Mainscreen(user: UserData, sharedPref: SharedPreferences){
+fun Mainscreen(){
     val navController = rememberNavController()
     var realuser : UserData = getUserData(LocalContext.current)
-    var contesto = LocalContext.current
+    val context = LocalContext.current
     Scaffold(
         bottomBar = {
             BottomAppBar( ){
@@ -136,8 +121,8 @@ fun Mainscreen(user: UserData, sharedPref: SharedPreferences){
                        verticalArrangement = Arrangement.Center,
                        horizontalAlignment = Alignment.CenterHorizontally
                    ) {
-                       Button(onClick = {var nickname = sharedPref.getString("nickname", "")
-                           realuser = getUserData(context = contesto)
+                       Button(onClick = {
+                           realuser = getUserData(context = context)
                            navController.navigate("ScreenOne") }, colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer)) {
                            Icon(
                                Icons.Sharp.Person,
@@ -202,13 +187,3 @@ fun Mainscreen(user: UserData, sharedPref: SharedPreferences){
     }
 }
 
-/*
-@Composable
-fun Profile(){
-    Box(Modifier.fillMaxSize()){
-        Text("Screen One",
-            modifier = Modifier.align(Alignment.Center),
-            style= MaterialTheme.typography.headlineLarge)
-    }
-}
-*/
