@@ -33,19 +33,21 @@ fun MyTopBar(
             IconButton(onClick = {
                 if(editmode){
                     saveUserData(
-                        UserData(fullName = name, nickname = nickname,mail = mail, birthdate = birthdate
-                    , sex = sex, city = city, selectedSportLevel,imageUri
-                        ), context = context)
-
+                        UserData(
+                            fullName = name,
+                            nickname = nickname,
+                            mail = mail,
+                            birthdate = birthdate,
+                            sex = sex,
+                            city = city,
+                            selectedSportsLevel = selectedSportLevel,
+                            imageUri = imageUri), context = context)
                 }
 
                 setEditMode(!editmode)
-
-            }
-                , enabled = true) {
+            }, enabled = true) {
                 Icon(imageVector = if(editmode) Icons.Default.Check else Icons.Default.Edit, contentDescription = null, tint = Color.White)
             }
-
         },
         colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary, titleContentColor = MaterialTheme.colorScheme.onPrimary)
     )

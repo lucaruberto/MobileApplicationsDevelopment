@@ -108,9 +108,21 @@ fun Profile(context: Context) {
 
     Scaffold(
         topBar = {
-            MyTopBar(editmode, setEditMode ,viewModel,name,nickname,mail,birthdate,sex,city,
-                ::saveUserData, user.value, context,
-                imageUri, gson.toJson(selectedSportsLevel)
+            MyTopBar(
+                editmode = editmode,
+                setEditMode = setEditMode ,
+                viewModel = viewModel,
+                name = name,
+                nickname = nickname,
+                mail = mail,
+                birthdate = birthdate,
+                sex = sex,
+                city = city,
+                saveUserData = ::saveUserData,
+                user = user.value,
+                context = context,
+                imageUri = imageUri,
+                selectedSportLevel = gson.toJson(selectedSportsLevel)
             )
         },
         content = {
