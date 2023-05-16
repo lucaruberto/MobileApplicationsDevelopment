@@ -170,7 +170,7 @@ fun Profile(context: Context, user: UserData) {
                 //
                 Row {
                     Column( modifier = if(editmode) Modifier.weight(0.7f) else Modifier.weight(1f) ) {
-                        SportsTable(selectedSportsLevel, setShowDialog)
+                        SportsTable(selectedSportsLevel, setShowDialog,editmode)
                     }
 
 

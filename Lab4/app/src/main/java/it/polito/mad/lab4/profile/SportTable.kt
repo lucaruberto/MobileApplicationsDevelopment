@@ -23,7 +23,11 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun SportsTable(selectedSportsLevel: SnapshotStateList<SportList>, setShowDialog: (Boolean) -> Unit) {
+fun SportsTable(
+    selectedSportsLevel: SnapshotStateList<SportList>,
+    setShowDialog: (Boolean) -> Unit,
+    editmode: Boolean
+) {
             Card(
                 shape = RoundedCornerShape(16.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
@@ -41,6 +45,7 @@ fun SportsTable(selectedSportsLevel: SnapshotStateList<SportList>, setShowDialog
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.weight(0.75f)
                         )
+                        if(editmode)
                         Button(
                             onClick = { setShowDialog(true) }, modifier = Modifier.weight(0.25f)
                         ) {
@@ -84,11 +89,7 @@ fun SportsTable(selectedSportsLevel: SnapshotStateList<SportList>, setShowDialog
                                     textAlign = TextAlign.Center
                                 )
                             }
-                            /*
-                            Divider(
-                                modifier = Modifier.padding(vertical = 6.dp),
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
-                            )*/
+
                         }
                     }
 
