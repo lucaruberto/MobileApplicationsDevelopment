@@ -132,6 +132,7 @@ private fun MonthHeader(calendarMonth: CalendarMonth, daysOfWeek: List<DayOfWeek
             fontSize = 18.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onPrimary
         )
         Row(modifier = Modifier.fillMaxWidth()) {
             for (dayOfWeek in daysOfWeek) {
@@ -141,6 +142,7 @@ private fun MonthHeader(calendarMonth: CalendarMonth, daysOfWeek: List<DayOfWeek
                     fontSize = 15.sp,
                     text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
                     fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }
@@ -154,7 +156,8 @@ fun Day(day: CalendarDay, isSelected: Boolean, isColored: Boolean, backgroundCol
         modifier = Modifier
             .aspectRatio(1f)
             .clip(CircleShape)
-            .background(color = if (isSelected) MaterialTheme.colorScheme.primary else if (isColored) backgroundColor else Color.Transparent)
+            .background(color = if (isSelected) MaterialTheme.colorScheme.primary
+                else if (isColored && (day.position == DayPosition.MonthDate)) backgroundColor else Color.Transparent)
             .clickable(
                 enabled = (day.position == DayPosition.MonthDate) && (!day.date.isBefore(LocalDate.now())) ,
                 onClick = { onClick(day) }
@@ -163,7 +166,9 @@ fun Day(day: CalendarDay, isSelected: Boolean, isColored: Boolean, backgroundCol
     ) {
         Text(
             text = day.date.dayOfMonth.toString(),
-            color = if ((day.position == DayPosition.MonthDate) && (!day.date.isBefore(LocalDate.now()))) Color.Black else Color.Gray
+            color = if(isSelected) MaterialTheme.colorScheme.onPrimary
+                else if ((day.position == DayPosition.MonthDate) && (!day.date.isBefore(LocalDate.now()))) Color.Black
+                else Color.Gray
         )
     }
 }
