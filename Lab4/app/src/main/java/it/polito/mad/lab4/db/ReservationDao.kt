@@ -18,6 +18,9 @@ interface ReservationDao {
     @Query("SELECT date FROM reservations")
     fun loadAllDate(): LiveData<List<Date>>
 
+    @Query("SELECT date FROM reservations WHERE playgroundName LIKE :playground GROUP BY date HAVING COUNT(*)=14")
+    fun getFullDates(playground: String): LiveData<List<Date>>
+
     @Insert(onConflict = OnConflictStrategy.ABORT)
     fun save(reservation: Reservation)
 

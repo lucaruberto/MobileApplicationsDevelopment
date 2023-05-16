@@ -24,6 +24,10 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
     fun getPlaygroundsbyName(sport:String):LiveData<List<String>>{
         return db.playgroundsDao().getPlayGroundsbySportName(sport)
     }
+
+    fun getFullDates(playground: String): LiveData<List<Date>>{
+        return db.reservationDao().getFullDates(playground)
+    }
     /*
     fun getRecyclerAdapter(fasce:List<FasciaOraria>,sport:String,field:String,date:Date,time:String):RentRecyclerViewAdapter{
         return RentRecyclerViewAdapter(fasce.map { x->it.polito.mad.lab4.reservation.ShowReservationModel(x.id,sport,field,date,time,x.oraInizio,x.oraFine, "") },date,sport,field,this);

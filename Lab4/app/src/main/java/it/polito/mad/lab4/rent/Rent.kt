@@ -21,6 +21,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -36,6 +37,7 @@ import it.polito.mad.lab4.rent.RentViewModel
 import it.polito.mad.lab4.rent.ReservationDialog
 import it.polito.mad.lab4.rent.ReservationList
 import kotlinx.coroutines.runBlocking
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.Date
@@ -58,7 +60,6 @@ fun Rent() {
     var selectedTimeSlot by remember { mutableStateOf<FasciaOraria?>(null) }
     var customRequest by remember { mutableStateOf("") }
 
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -66,12 +67,13 @@ fun Rent() {
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary, titleContentColor = MaterialTheme.colorScheme.onPrimary)
             )
         },
-        content = {
+        content = {it ->
             LazyColumn(
                 modifier = Modifier.padding(it)
             ) {
                 item {
-                    Spacer(modifier = Modifier.height(16.dp))
+                    //Spacer(modifier = Modifier.height(16.dp))
+                    Text(text = "Choose your sport:", modifier = Modifier.padding(16.dp))
                     ExposedDropdownMenuBox(
                         expanded = expandedSport,
                         onExpandedChange = {
@@ -121,6 +123,7 @@ fun Rent() {
                     }
                     if (showFieldsDropDown) {
                         if (selectedSport.isNotEmpty()) {
+                            Text(text = "Select the playground:", modifier = Modifier.padding(16.dp))
                             ExposedDropdownMenuBox(
                                 expanded = expandedField,
                                 onExpandedChange = {
@@ -128,7 +131,7 @@ fun Rent() {
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+                                    .padding(/*top = 16.dp, */start = 16.dp, end = 16.dp)
                             ) {
                                 OutlinedTextField(
                                     value = selectedField,
@@ -179,8 +182,10 @@ fun Rent() {
                 }
 
                 item {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    //Spacer(modifier = Modifier.height(8.dp))
                     if (selectedSport != "Sport" && selectedField != "Field") {
+                        val fullDates by viewModel.getFullDates(selectedField).observeAsState(initial = emptyList())
+                        Text(text = "Select the date:", modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp))
                         /*com.himanshoe.kalendar.Kalendar(currentDay = Clock.System.todayIn(
                             TimeZone.currentSystemDefault()
                         ), kalendarType = KalendarType.Firey,
@@ -205,8 +210,18 @@ fun Rent() {
                         MyCalendar(
                             selectedDate = selectedDate,
                             setSelectedDate = setSelectedDate,
-                            isColored = { false })
-                        Spacer(modifier = Modifier.height(8.dp))
+                            isColored = {
+                                var found = false
+                                for (d in fullDates) {
+                                    if (d == Date.from(it.date.atStartOfDay(ZoneOffset.systemDefault()).toInstant())) {
+                                        found = true
+                                        break
+                                    }
+                                }
+                                found},
+                            backgroundColor = Color(0xFFe06666)
+                        )
+                        //Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
                 if (selectedSport != "Sport" && selectedField != "Field" && selectedDate != null) {
@@ -214,11 +229,17 @@ fun Rent() {
                         val date = selectedDate?.toDate()
 
                         if (date != null) {
+                            Text(text = "Choose the hour:", modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp))
                             val fasceLibere by viewModel.getFasceOrariLibere(selectedField, date)
                                 .observeAsState(initial = emptyList())
-                            ReservationList(data = fasceLibere) { chosenTimeSlot ->
-                                showDialog = true
-                                selectedTimeSlot = chosenTimeSlot
+                            if(fasceLibere.isNotEmpty()) {
+                                ReservationList(data = fasceLibere) { chosenTimeSlot ->
+                                    showDialog = true
+                                    selectedTimeSlot = chosenTimeSlot
+                                }
+                            }
+                            else{
+                                Text(text = "No hour available", modifier = Modifier.fillMaxWidth().padding(16.dp), textAlign = TextAlign.Center)
                             }
                         }
 
