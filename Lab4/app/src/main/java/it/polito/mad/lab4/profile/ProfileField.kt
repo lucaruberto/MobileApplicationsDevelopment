@@ -48,7 +48,7 @@ fun ProfileField(hover: String, text: String, type: String, setText: (String)->U
                     onValueChange = { setText(it) },
                     modifier = Modifier
                         .weight(2f)
-                        .size(width = 200.dp, height = 30.dp),
+                        ,
                     singleLine = true,
                     keyboardOptions = when(type) {
                         "date" -> KeyboardOptions.Default.copy(
