@@ -139,36 +139,42 @@ fun Profile(context: Context) {
                         hover = "Nickname",
                         text = nickname,
                         setText = setNickname,
+                        type = "simple",
                         editmode = editmode
                     )
                     ProfileField(
                         hover = "FullName",
                         text = name,
                         setText = setName,
+                        type = "simple",
                         editmode = editmode
                     )
                     ProfileField(
                         hover = "Mail",
                         text = mail,
                         setText = setMail,
+                        type = "mail",
                         editmode = editmode
                     )
                     ProfileField(
                         hover = "Birthdate",
                         text = birthdate,
                         setText = setBirthdate,
+                        type = "date",
                         editmode = editmode
                     )
                     ProfileField(
                         hover = "Sex",
                         text = sex,
                         setText = setSex,
+                        type = "simple",
                         editmode = editmode
                     )
                     ProfileField(
                         hover = "City",
                         text = city,
                         setText = setCity,
+                        type = "simple-last",
                         editmode = editmode
                     )
                 }
