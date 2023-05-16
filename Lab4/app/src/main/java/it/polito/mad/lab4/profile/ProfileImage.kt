@@ -47,17 +47,19 @@ fun ProfileImage(
         }
     }
 
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let { setImageUri( it.toString() )}
+    }
+
     val painter = rememberAsyncImagePainter(
         if (imageUri.isEmpty())
             R.drawable.baseline_person_24
         else
             Uri.parse(imageUri)
     )
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let { setImageUri( it.toString() )}
-    }
+
 
     Column(
         modifier = Modifier
@@ -76,8 +78,6 @@ fun ProfileImage(
                 contentDescription = "ProfilePic",
                 modifier = Modifier.fillMaxWidth(1f),
                 contentScale = ContentScale.Crop
-
-
             )
         }
         if(editmode)

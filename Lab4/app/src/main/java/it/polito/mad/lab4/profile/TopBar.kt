@@ -41,7 +41,9 @@ fun MyTopBar(
                             sex = sex,
                             city = city,
                             selectedSportsLevel = selectedSportLevel,
-                            imageUri = imageUri), context = context)
+                            imageUri = imageUri),
+                        context = context
+                    )
                 }
 
                 setEditMode(!editmode)

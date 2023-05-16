@@ -2,6 +2,7 @@ package it.polito.mad.lab4
 
 import Rent
 import android.Manifest
+
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -45,11 +46,29 @@ import it.polito.mad.lab4.ui.theme.Lab4Theme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        val sharedPref = getSharedPreferences("UserData", MODE_PRIVATE)
+        var nickname = sharedPref.getString("nickname", "")
+        var fullname = sharedPref.getString("fullname", "")
+        var email = sharedPref.getString("mail", "")
+        var birth = sharedPref.getString("birthdate", "")
+        var  sex = sharedPref.getString("sex", "")
+        var city = sharedPref.getString("city", "")
+        var imageUri = sharedPref.getString("imageUri","")
+        var sportlist = sharedPref.getString("sportlist","")
+        fullname=  if(fullname=== null) "" else fullname
+        nickname=  if(nickname=== null) "" else nickname
+        email=  if(email=== null) "" else email
+        birth=  if(birth=== null) "" else birth
+        sex=  if(sex=== null) "" else sex
+        city=  if(city=== null) "" else city
+        imageUri = if(imageUri=== null)"" else imageUri
+        sportlist = if(sportlist===null)"" else sportlist
+
+        val user = UserData(fullName=fullname, nickname=nickname, mail=email,birthdate = birth,city = city, sex = sex, selectedSportsLevel =sportlist , imageUri = imageUri)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_DENIED) {
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                 val permission =
                     arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 requestPermissions(permission, 112)
@@ -64,14 +83,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Mainscreen()
+                    Mainscreen(user)
                 }
             }
         }
     }
 }
 @Composable
-fun Mainscreen(){
+fun Mainscreen(user: UserData){
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -138,7 +157,7 @@ fun Mainscreen(){
     ) {
         Box(Modifier.padding(it)){
             NavHost(navController = navController, startDestination = "ScreenOne"){
-                composable("ScreenOne"){ Profile(LocalContext.current)}
+                composable("ScreenOne"){ Profile(LocalContext.current, user)}
                 composable("ScreenTwo"){ Reservation()}
                 composable("ScreenThree"){ Rent()}
                 composable("ScreenFour") {Rate()}

@@ -1,28 +1,20 @@
 package it.polito.mad.lab4.profile
 
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.*
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.gson.Gson
@@ -36,20 +28,6 @@ fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri{
     return Uri.parse(path.toString())
 }
 
-fun getUserDataFromSP(context: Context): UserData {
-    val sharedPref = context.getSharedPreferences("UserData", MODE_PRIVATE)
-
-    val nicknameSP = sharedPref.getString("nickname", "") ?: ""
-    val fullnameSP = sharedPref.getString("fullname", "") ?: ""
-    val emailSP = sharedPref.getString("mail", "") ?: ""
-    val birthSP = sharedPref.getString("birthdate", "") ?: ""
-    val sexSP = sharedPref.getString("sex", "") ?: ""
-    val citySP = sharedPref.getString("city", "") ?: ""
-    val imageUriSP = sharedPref.getString("imageUri","") ?: ""
-    val sportlistSP = sharedPref.getString("sportlist","") ?: ""
-
-    return UserData(fullnameSP,nicknameSP,emailSP,birthSP,sexSP,citySP, sportlistSP,imageUriSP)
-}
 fun saveUserData(userData: UserData, context: Context) {
     val sharedPref = context.getSharedPreferences("UserData", Context.MODE_PRIVATE)
     val editor = sharedPref.edit()
@@ -70,20 +48,18 @@ data class UserData(val fullName: String, val nickname: String,val mail: String,
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Profile(context: Context) {
+fun Profile(context: Context, user: UserData) {
 
     val viewModel: ProfileViewModel = viewModel()
     val gson = Gson()
 
-    val userFromSP = getUserDataFromSP(context)
-
-    val (name,setName) = remember { mutableStateOf(userFromSP.fullName) }
-    val (nickname,setNickname) = rememberSaveable { mutableStateOf(userFromSP.nickname) }
-    val (mail,setMail) = rememberSaveable { mutableStateOf(userFromSP.mail) }
-    val (birthdate,setBirthdate) = rememberSaveable { mutableStateOf(userFromSP.birthdate) }
-    val (sex,setSex) = rememberSaveable { mutableStateOf(userFromSP.sex) }
-    val (city,setCity) = rememberSaveable { mutableStateOf(userFromSP.city) }
-    val (imageUri,setImageUri) = rememberSaveable { mutableStateOf(userFromSP.imageUri) }
+    val (name,setName) = remember { mutableStateOf(user.fullName) }
+    val (nickname,setNickname) = rememberSaveable { mutableStateOf(user.nickname) }
+    val (mail,setMail) = rememberSaveable { mutableStateOf(user.mail) }
+    val (birthdate,setBirthdate) = rememberSaveable { mutableStateOf(user.birthdate) }
+    val (sex,setSex) = rememberSaveable { mutableStateOf(user.sex) }
+    val (city,setCity) = rememberSaveable { mutableStateOf(user.city) }
+    val (imageUri,setImageUri) = rememberSaveable { mutableStateOf(user.imageUri) }
 
     val (editmode,setEditMode) = rememberSaveable { mutableStateOf(false) }
     val (changephotoexpanded,setChangePhotoExpanded) = rememberSaveable {
@@ -91,7 +67,7 @@ fun Profile(context: Context) {
     }
 
 
-    val fromJson = gson.fromJson(userFromSP.selectedSportsLevel, Array<SportList>::class.java)
+    val fromJson = gson.fromJson(user.selectedSportsLevel, Array<SportList>::class.java)
     val vals = fromJson?.toMutableList() ?: mutableListOf()
     val valsString =vals.map { Sports(discipline = it.sportname) }
     val selectedSports = remember { mutableStateListOf(*valsString.toTypedArray()) }
