@@ -26,8 +26,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -57,87 +60,102 @@ fun Rate() {
     var expanded by remember { mutableStateOf(false) }
     var selectedField by remember { mutableStateOf("Select field") }
 
-    if(readMode) {
-        LazyColumn {
-            ratings?.forEach {
-                item {
-                    ReviewComponent(
-                        it.id,
-                        it.fieldName,
-                        it.reviewText,
-                        vmRatings,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                    //Spacer(modifier = Modifier.height(16.dp))
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Reviews", textAlign = TextAlign.Center)},
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary, titleContentColor = Color.Black)
+            )
+        },
+        content = {
+            Column(modifier = Modifier.padding(it)) {
+                if(readMode) {
+                    LazyColumn {
+                        item {
+                            Spacer(modifier = Modifier.height(16.dp))
+                        }
+                        ratings?.forEach { r ->
+                            item {
+                                ReviewComponent(
+                                    r.id,
+                                    r.fieldName,
+                                    r.reviewText,
+                                    vmRatings,
+                                    modifier = Modifier.padding(16.dp)
+                                )
+                            }
+                        }
+                        item {
+                            Spacer(modifier = Modifier.height(64.dp))
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Button(onClick = { setReadMode(false) }) {
+                                    Text("Add new review")
+                                }
+                            }
+                        }
+                    }
                 }
-            }
+                else {
+                    Column {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                                .clickable(onClick = { expanded = true })
+                                .background(Color.LightGray),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            Text(
+                                selectedField, modifier = Modifier
+                                    .padding(16.dp)
+                                    .align(Alignment.Center)
+                            )
+                            Icon(
+                                imageVector = Icons.Default.ArrowDropDown,
+                                contentDescription = "Dropdown Icon",
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            fieldsNotRated?.forEach { field -> DropdownMenuItem(
+                                text = { Text(text = field, modifier = Modifier
+                                    .fillMaxWidth()
+                                    .align(Alignment.CenterHorizontally))},
+                                onClick = {
+                                    selectedField = field
+                                    expanded = false
+                                    setShowForm(true) },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            }
+                        }
 
-            item {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Button(onClick = { setReadMode(false) }) {
-                        Text("Add review")
+                        if (showForm)
+                            InsertReviewForm(modifier = Modifier.padding(24.dp), selectedField, vmRatings) { setReadMode(true) }
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Button(onClick = {
+                                setReadMode(true)
+                                setShowForm(false)
+                            },
+                                colors = ButtonDefaults
+                                    .buttonColors(containerColor = MaterialTheme.colorScheme.secondary)) {
+                                Text("Back")
+                            }
+                        }
                     }
                 }
             }
-        }
-    }
-    else {
-        Column {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .clickable(onClick = { expanded = true })
-                    .background(Color.LightGray),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                Text(
-                    selectedField, modifier = Modifier
-                        .padding(16.dp)
-                        .align(Alignment.Center)
-                )
-                Icon(
-                    imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = "Dropdown Icon",
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                fieldsNotRated?.forEach { field -> DropdownMenuItem(
-                    text = { Text(text = field, modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally))},
-                    onClick = {
-                        selectedField = field
-                        expanded = false
-                        setShowForm(true) },
-                    modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
-
-            if (showForm)
-                InsertReviewForm(modifier = Modifier.padding(24.dp), selectedField, vmRatings) { setReadMode(true) }
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Button(onClick = {
-                        setReadMode(true)
-                        setShowForm(false)
-                        },
-                        colors = ButtonDefaults
-                            .buttonColors(containerColor = MaterialTheme.colorScheme.secondary)) {
-                    Text("Back")
-                }
-            }
-        }
-    }
+        })
 }
 
 
