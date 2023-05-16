@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,7 +43,7 @@ fun ReservationList(data : List<FasciaOraria>, onTimeSlotClick: (FasciaOraria) -
 fun ReservationCard(rent : FasciaOraria, onClick: () -> Unit) {
     Card(
        shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()

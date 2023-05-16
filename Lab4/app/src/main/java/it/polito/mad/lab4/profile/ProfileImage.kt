@@ -18,6 +18,10 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -33,11 +37,9 @@ fun ProfileImage(
     editmode: Boolean,
     changephotoexpanded: Boolean,
     setChangePhotoExpanded: (Boolean) -> Unit,
-    checkpermission: () -> Unit,
     context: Context
 ){
-
-    val photo=    rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()){
+    val photo=rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()){
         if (it != null) {
             val x= getImageUriFromBitmap(context,it)
            setImageUri( x.toString());
@@ -79,32 +81,31 @@ fun ProfileImage(
             )
         }
         if(editmode)
-            Button(onClick = {setChangePhotoExpanded(true)}){
-                Text(text = "Change Profile Picture!")
-
+            Button(onClick = {
+                setChangePhotoExpanded(true)
+            }){
+                Text(text = "Change profile picture")
                 DropdownMenu(
                     expanded = changephotoexpanded,
-                    onDismissRequest = { setChangePhotoExpanded (false) }
+                    onDismissRequest = { setChangePhotoExpanded(false) }
                 ) {
                     DropdownMenuItem(
-                        text = {  Text("Select From gallery") },
-                        onClick = { launcher.launch("image/*")
-                            setChangePhotoExpanded(false)}
+                        text = {  Text("Select from gallery") },
+                        onClick = {
+                            launcher.launch("image/*")
+                            setChangePhotoExpanded(false)
+                        }
                     )
                     Divider()
                     DropdownMenuItem(
-                        text = { Text("Take from Camera") },
-                        onClick = { checkpermission()
+                        text = { Text("Take from camera") },
+                        onClick = {
                             photo.launch()
+                            setChangePhotoExpanded(false)
                         }
                     )
 
                 }
-
-            }
-
+        }
     }
-
-
-
 }

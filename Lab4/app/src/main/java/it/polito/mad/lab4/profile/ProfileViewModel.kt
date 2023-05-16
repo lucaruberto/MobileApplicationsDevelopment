@@ -23,7 +23,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     val db = GlobalDatabase.getDatabase(application.applicationContext)
 
-
     fun getAllSports(): LiveData<List<Sports>> {
         return db.sportsDao().getSports()
     }

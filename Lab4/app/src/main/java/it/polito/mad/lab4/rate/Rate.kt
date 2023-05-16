@@ -68,20 +68,20 @@ fun Rate() {
         },
         content = {
             Column(modifier = Modifier.padding(it)) {
-                if(ratings?.isEmpty() == true) {
-                    Spacer(modifier = Modifier.height(32.dp))
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "No reviews yet...",
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }
-                }
 
                 if(readMode) {
+                    if(ratings?.isEmpty() == true) {
+                        Spacer(modifier = Modifier.height(32.dp))
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "No reviews yet...",
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        }
+                    }
                     LazyColumn {
                         item {
                             Spacer(modifier = Modifier.height(16.dp))
