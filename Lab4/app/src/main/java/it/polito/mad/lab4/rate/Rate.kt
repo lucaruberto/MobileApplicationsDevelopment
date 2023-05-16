@@ -22,7 +22,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -64,11 +63,24 @@ fun Rate() {
         topBar = {
             TopAppBar(
                 title = { Text(text = "Reviews", textAlign = TextAlign.Center)},
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary, titleContentColor = Color.Black)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary, titleContentColor = MaterialTheme.colorScheme.onPrimary)
             )
         },
         content = {
             Column(modifier = Modifier.padding(it)) {
+                if(ratings?.isEmpty() == true) {
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "No reviews yet...",
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+
                 if(readMode) {
                     LazyColumn {
                         item {
@@ -214,7 +226,6 @@ fun ReviewComponent(reviewId: Int, fieldName: String, reviewText: String, vm: Ra
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InsertReviewForm(modifier: Modifier, selectedField: String, vm: RateViewModel, onButtonClick: (Boolean) -> Unit) {
     val context = LocalContext.current

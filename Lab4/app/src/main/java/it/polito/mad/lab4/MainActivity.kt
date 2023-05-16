@@ -23,16 +23,12 @@ import androidx.compose.material.icons.sharp.Star
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,7 +37,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import it.polito.mad.lab4.profile.Profile
-import it.polito.mad.lab4.profile.ProfileViewModel
 import it.polito.mad.lab4.profile.UserData
 import it.polito.mad.lab4.rate.Rate
 import it.polito.mad.lab4.reservation.Reservation
@@ -71,7 +66,7 @@ class MainActivity : ComponentActivity() {
         imageUri = if(imageUri=== null)"" else imageUri
         sportlist = if(sportlist===null)"" else sportlist
 
-        val user: UserData= UserData(fullName = fullname,nickname=nickname,mail=email, birthdate = birth, city = city, sex = sex, selectedSportsLevel =sportlist , imageUri = imageUri)
+        val user = UserData(fullName = fullname,nickname=nickname,mail=email, birthdate = birth, city = city, sex = sex, selectedSportsLevel =sportlist , imageUri = imageUri)
 
 
 
@@ -89,8 +84,6 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
         setContent {
-
-
             Lab4Theme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -103,17 +96,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Mainscreen(checkpermission: () -> Unit, user: UserData){
     val navController = rememberNavController()
@@ -148,7 +130,7 @@ fun Mainscreen(checkpermission: () -> Unit, user: UserData){
                                 tint = Color.Black
                             )
                         }
-                        Text("Reservations", color = MaterialTheme.colorScheme.primary)
+                        Text("Browse", color = MaterialTheme.colorScheme.primary)
 
                     }
 
@@ -173,7 +155,7 @@ fun Mainscreen(checkpermission: () -> Unit, user: UserData){
                                tint = Color.Black
                            )
                        }
-                       Text("Review", color = MaterialTheme.colorScheme.primary)
+                       Text("Reviews", color = MaterialTheme.colorScheme.primary)
 
                    }
                 }
@@ -201,13 +183,3 @@ fun Profile(){
     }
 }
 */
-
-
-
-
-@Composable
-fun GreetingPreview() {
-    Lab4Theme {
-        Greeting("Android")
-    }
-}

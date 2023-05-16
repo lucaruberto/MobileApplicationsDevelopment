@@ -83,7 +83,7 @@ fun Profile(checkpermission: () -> Unit, context: Context, user: UserData) {
 
 
     Scaffold(topBar = {
-            myTopBar(editmode = editmode, setEditMode =setEditMode ,viewModel,name,nickname,mail,birthdate,sex,city,
+            MyTopBar(editmode = editmode, setEditMode =setEditMode ,viewModel,name,nickname,mail,birthdate,sex,city,
                 saveUserData = ::saveUserData, context = context, user = user.value,
                 imageUri= imageUri,selectedSportLevel = gson.toJson(selectedSportsLevel))
 
