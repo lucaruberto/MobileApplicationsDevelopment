@@ -121,6 +121,19 @@ fun Mainscreen(checkpermission: () -> Unit, user: UserData){
 
                    }
 
+                   Column( modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                       Button(onClick = { navController.navigate("ScreenThree") }, colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer)) {
+                           Icon(
+                               Icons.Sharp.Search,
+                               contentDescription = "Rent",
+                               modifier = Modifier.size(ButtonDefaults.IconSize),
+                               tint = Color.Black
+                           )
+                       }
+                       Text("Add", color = MaterialTheme.colorScheme.primary)
+
+                   }
+
                     Column( modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
                         Button(onClick = { navController.navigate("ScreenTwo") }, colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer)  ) {
                             Icon(
@@ -130,20 +143,7 @@ fun Mainscreen(checkpermission: () -> Unit, user: UserData){
                                 tint = Color.Black
                             )
                         }
-                        Text("Browse", color = MaterialTheme.colorScheme.primary)
-
-                    }
-
-                   Column( modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-                        Button(onClick = { navController.navigate("ScreenThree") }, colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer)) {
-                            Icon(
-                                Icons.Sharp.Search,
-                                contentDescription = "Rent",
-                                modifier = Modifier.size(ButtonDefaults.IconSize),
-                                tint = Color.Black
-                            )
-                        }
-                        Text("Rent", color = MaterialTheme.colorScheme.primary)
+                        Text("Reserved", color = MaterialTheme.colorScheme.primary)
 
                     }
                    Column( modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
