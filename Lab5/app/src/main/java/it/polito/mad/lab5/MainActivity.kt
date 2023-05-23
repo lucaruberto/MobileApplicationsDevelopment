@@ -2,10 +2,12 @@ package it.polito.mad.lab5
 
 import Rent
 import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -42,7 +44,10 @@ import it.polito.mad.lab5.profile.UserData
 import it.polito.mad.lab5.rate.Rate
 import it.polito.mad.lab5.reservation.Reservation
 import it.polito.mad.lab5.ui.theme.Lab5Theme
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
+val TEST_FIREBASE = false
 
 fun getUserData(context: Context): UserData {
     val sharedPref = context.getSharedPreferences("UserData", Context.MODE_PRIVATE)
@@ -88,6 +93,8 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        if(TEST_FIREBASE) firebaseTest()
+
         super.onCreate(savedInstanceState)
         setContent {
             Lab5Theme {
@@ -103,7 +110,26 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+fun firebaseTest(){
+    // Create a new user with a first and last name
+    val user = hashMapOf(
+        "first" to "Ada",
+        "last" to "Lovelace",
+        "born" to 1815,
+    )
 
+    val db = Firebase.firestore
+
+    // Add a new document with a generated ID
+    db.collection("test")
+        .add(user)
+        .addOnSuccessListener { documentReference ->
+            Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+        }
+        .addOnFailureListener { e ->
+            Log.w(TAG, "Error adding document", e)
+        }
+}
 
 
 @Composable
