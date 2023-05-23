@@ -1,13 +1,9 @@
 package it.polito.mad.lab4
 
-import Rent
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,11 +15,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.DateRange
 import androidx.compose.material.icons.sharp.Person
+import androidx.compose.material.icons.sharp.Place
 import androidx.compose.material.icons.sharp.Search
 import androidx.compose.material.icons.sharp.Star
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -33,61 +31,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import it.polito.mad.lab4.profile.Profile
-import it.polito.mad.lab4.profile.UserData
-import it.polito.mad.lab4.rate.Rate
-import it.polito.mad.lab4.reservation.Reservation
 import it.polito.mad.lab4.ui.theme.Lab4Theme
-
-
-fun getUserData(context: Context): UserData {
-    val sharedPref = context.getSharedPreferences("UserData", Context.MODE_PRIVATE)
-    var nickname = sharedPref.getString("nickname", "")
-    var fullname = sharedPref.getString("fullname", "")
-    var email = sharedPref.getString("mail", "")
-    var birth = sharedPref.getString("birthdate", "")
-    var sex = sharedPref.getString("sex", "")
-    var city = sharedPref.getString("city", "")
-    var imageUri = sharedPref.getString("imageUri", "")
-    var sportlist = sharedPref.getString("sportlist", "")
-    fullname = if (fullname === null) "" else fullname
-    nickname = if (nickname === null) "" else nickname
-    email = if (email === null) "" else email
-    birth = if (birth === null) "" else birth
-    sex = if (sex === null) "" else sex
-    city = if (city === null) "" else city
-    imageUri = if (imageUri === null) "" else imageUri
-    sportlist = if (sportlist === null) "" else sportlist
-
-    return UserData(
-        fullName = fullname,
-        nickname = nickname,
-        mail = email,
-        birthdate = birth,
-        city = city,
-        sex = sex,
-        selectedSportsLevel = sportlist,
-        imageUri = imageUri
-    )
-}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
-                checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
-                checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-                val permission =
-                    arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-                requestPermissions(permission, 112)
-            }
-        }
-
         super.onCreate(savedInstanceState)
         setContent {
             Lab4Theme {
@@ -103,27 +54,26 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Composable
+fun Greeting(name: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Hello $name!",
+        modifier = modifier
+    )
+}
 
-
-
+@Preview(showBackground = true)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Mainscreen(){
     val navController = rememberNavController()
-    var realuser : UserData = getUserData(LocalContext.current)
-    val context = LocalContext.current
     Scaffold(
         bottomBar = {
             BottomAppBar( ){
 
                Row(Modifier.fillMaxWidth()){
-                   Column(
-                       modifier = Modifier.weight(1f),
-                       verticalArrangement = Arrangement.Center,
-                       horizontalAlignment = Alignment.CenterHorizontally
-                   ) {
-                       Button(onClick = {
-                           realuser = getUserData(context = context)
-                           navController.navigate("ScreenOne") }, colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer)) {
+                   Column( modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally, ) {
+                       Button(onClick = { navController.navigate("ScreenOne") }, colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer)) {
                            Icon(
                                Icons.Sharp.Person,
                                contentDescription = "Profile",
@@ -132,19 +82,6 @@ fun Mainscreen(){
                            )
                        }
                        Text("Profile", color = MaterialTheme.colorScheme.primary)
-
-                   }
-
-                   Column( modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-                       Button(onClick = { navController.navigate("ScreenThree") }, colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer)) {
-                           Icon(
-                               Icons.Sharp.Search,
-                               contentDescription = "Rent",
-                               modifier = Modifier.size(ButtonDefaults.IconSize),
-                               tint = Color.Black
-                           )
-                       }
-                       Text("Add", color = MaterialTheme.colorScheme.primary)
 
                    }
 
@@ -157,7 +94,20 @@ fun Mainscreen(){
                                 tint = Color.Black
                             )
                         }
-                        Text("Reserved", color = MaterialTheme.colorScheme.primary)
+                        Text("Reservations", color = MaterialTheme.colorScheme.primary)
+
+                    }
+
+                   Column( modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                        Button(onClick = { navController.navigate("ScreenThree") }, colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer)) {
+                            Icon(
+                                Icons.Sharp.Search,
+                                contentDescription = "Rent",
+                                modifier = Modifier.size(ButtonDefaults.IconSize),
+                                tint = Color.Black
+                            )
+                        }
+                        Text("Rent", color = MaterialTheme.colorScheme.primary)
 
                     }
                    Column( modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
@@ -169,7 +119,7 @@ fun Mainscreen(){
                                tint = Color.Black
                            )
                        }
-                       Text("Reviews", color = MaterialTheme.colorScheme.primary)
+                       Text("Rent", color = MaterialTheme.colorScheme.primary)
 
                    }
                 }
@@ -178,8 +128,8 @@ fun Mainscreen(){
     ) {
         Box(Modifier.padding(it)){
             NavHost(navController = navController, startDestination = "ScreenOne"){
-                composable("ScreenOne"){ Profile(LocalContext.current, realuser)}
-                composable("ScreenTwo"){ Reservation()}
+                composable("ScreenOne"){ Profile()}
+                composable("ScreenTwo"){ Reservations()}
                 composable("ScreenThree"){ Rent()}
                 composable("ScreenFour") {Rate()}
             }
@@ -187,3 +137,44 @@ fun Mainscreen(){
     }
 }
 
+@Composable
+fun Profile(){
+    Box(Modifier.fillMaxSize()){
+        Text("Screen One",
+            modifier = Modifier.align(Alignment.Center),
+            style= MaterialTheme.typography.headlineLarge)
+    }
+}
+
+@Composable
+fun Reservations(){
+    Box(Modifier.fillMaxSize()){
+        Text("Screen Two",
+            modifier = Modifier.align(Alignment.Center),
+            style= MaterialTheme.typography.headlineLarge)
+    }
+}
+
+@Composable
+fun Rent(){
+    Box(Modifier.fillMaxSize()){
+        Text("Screen Three",
+            modifier = Modifier.align(Alignment.Center),
+            style= MaterialTheme.typography.headlineLarge)
+    }
+}
+@Composable
+fun Rate(){
+    Box(Modifier.fillMaxSize()){
+        Text("Screen Four",
+            modifier = Modifier.align(Alignment.Center),
+            style= MaterialTheme.typography.headlineLarge)
+    }
+}
+
+@Composable
+fun GreetingPreview() {
+    Lab4Theme {
+        Greeting("Android")
+    }
+}
