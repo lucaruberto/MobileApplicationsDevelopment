@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/Gallery"
+        android:title="@string/image_from__gallery"
+        app:actionViewClass="android.widget.ImageButton" />
+    <item
+        android:id="@+id/Picture"
+        android:title="@string/image_from_camera"
+        app:actionViewClass="android.widget.ImageButton" />
+</menu>
