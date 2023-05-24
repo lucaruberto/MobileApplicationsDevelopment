@@ -18,6 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.firebasetest.ui.MyAuthentication
+import com.example.firebasetest.ui.MyAuthenticationViewModel
 import com.example.firebasetest.ui.theme.FireBaseTestTheme
 
 class MainActivity : ComponentActivity() {
@@ -25,6 +27,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         val vm = FireBaseViewModel()
+        val authVm = MyAuthenticationViewModel()
 
         setContent {
             FireBaseTestTheme {
@@ -33,7 +36,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MyFireBase(vm)
+                    if(authVm.isLogged.value) MyFireBase(vm)
+                    else MyAuthentication(vm = authVm)
                 }
             }
         }
@@ -46,7 +50,9 @@ fun MyFireBase(vm: FireBaseViewModel) {
 
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         item {
-            Button(modifier = Modifier.fillMaxWidth().padding(16.dp), onClick = {
+            Button(modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp), onClick = {
                 vm.addUsers()
                 //vm.readUsers()
             }) {
