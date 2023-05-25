@@ -22,10 +22,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import it.polito.mad.lab5.db.ProvaUserSports
 import it.polito.mad.lab5.db.Sports
 
 @Composable
@@ -36,7 +38,7 @@ fun SportCard(
     modifier: Modifier = Modifier,
     selectedSport: MutableList<Sports>,
     add: Boolean,
-    selectedSportLevel : MutableList<SportList>
+    selectedSportLevel: SnapshotStateList<ProvaUserSports>
 ) {
     val context = LocalContext.current
     val (expandable,setExpandable) = remember {mutableStateOf(false)}
@@ -59,14 +61,14 @@ fun SportCard(
                             .show()
                     } else {
                         selectedSport.add(sport)
-                        val x = SportList(sportname = sport.discipline, level = testo)
+                        val x = ProvaUserSports(SportName = sport.discipline, Level = testo)
                         selectedSportLevel.add(x)
                         setTesto("None")
                     }
                 } else {
                     selectedSport.remove(sport)
                     val sportLevelToRemove =
-                        selectedSportLevel.firstOrNull { it.sportname == sport.discipline }
+                        selectedSportLevel.firstOrNull { it.SportName == sport.discipline }
                     sportLevelToRemove?.let { selectedSportLevel.remove(it) }
                 }
             } ,
@@ -149,11 +151,4 @@ fun SportCard(
 
         }}
     }
-}
-
-fun addToSelectedSports(sport: Sports, testo: String, setSelectedSport: (List<Sports>) -> Unit, setSelectedSportLevel: (List<SportList>) -> Unit, selectedSportLevel: List<SportList>, selectedSport: List<Sports>) {
-    val x = SportList(sportname = sport.discipline, level = testo)
-    setSelectedSport(selectedSport.plus(sport));
-    setSelectedSportLevel(selectedSportLevel.plus(x))
-
 }
