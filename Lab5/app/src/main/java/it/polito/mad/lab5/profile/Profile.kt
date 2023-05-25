@@ -17,7 +17,6 @@ import androidx.compose.ui.res.*
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.gson.Gson
-import it.polito.mad.lab5.db.ProvaSports
 import it.polito.mad.lab5.db.ProvaUser
 import it.polito.mad.lab5.db.Sports
 import java.io.ByteArrayOutputStream
@@ -50,30 +49,18 @@ fun Profile(context: Context, user: UserData) {
 
     if (utente != null && chosensport!= null && allsports != null ){
 
-            val (name,setName) = remember { mutableStateOf(utente.FullName) }
-            val (nickname,setNickname) = rememberSaveable { mutableStateOf(utente.Nickname) }
-            val (mail,setMail) = rememberSaveable { mutableStateOf(utente.Mail) }
-            val (birthdate,setBirthdate) = rememberSaveable { mutableStateOf(utente.Birthdate) }
-            val (sex,setSex) = rememberSaveable { mutableStateOf(utente.Sex) }
-            val (city,setCity) = rememberSaveable { mutableStateOf(utente.City) }
-            val (imageUri,setImageUri) = rememberSaveable { mutableStateOf(utente.imageUri) }
-
-            val (editmode,setEditMode) = rememberSaveable { mutableStateOf(false) }
-            val (changephotoexpanded,setChangePhotoExpanded) = rememberSaveable {
-                mutableStateOf(false)
-            }
-
-
-            val fromJson = gson.fromJson(user.selectedSportsLevel, Array<SportList>::class.java)
-            val vals = fromJson?.toMutableList() ?: mutableListOf()
-            val valsString =vals.map { ProvaSports(discipline = it.sportname) }
+            val (name,setName) = remember { mutableStateOf(utente.FullName)}
+            val (nickname,setNickname) = rememberSaveable { mutableStateOf(utente.Nickname)}
+            val (mail,setMail) = rememberSaveable { mutableStateOf(utente.Mail)}
+            val (birthdate,setBirthdate) = rememberSaveable { mutableStateOf(utente.Birthdate)}
+            val (sex,setSex) = rememberSaveable { mutableStateOf(utente.Sex)}
+            val (city,setCity) = rememberSaveable { mutableStateOf(utente.City)}
+            val (imageUri,setImageUri) = rememberSaveable { mutableStateOf(utente.imageUri)}
+            val (editmode,setEditMode) = rememberSaveable { mutableStateOf(false)}
+            val (changephotoexpanded,setChangePhotoExpanded) = rememberSaveable { mutableStateOf(false)}
             val valsStringdb = chosensport.map { Sports(discipline = it.SportName) }
             val selectedSports = remember { mutableStateListOf(*valsStringdb.toTypedArray()) }
-
-            val selectedSportsLevel = remember {
-                mutableStateListOf(*chosensport.toTypedArray())
-            }
-     
+            val selectedSportsLevel = remember { mutableStateListOf(*chosensport.toTypedArray())}
             var (showDialog,setShowDialog) = rememberSaveable { mutableStateOf(false) }
 
             val user = remember {
@@ -83,7 +70,7 @@ fun Profile(context: Context, user: UserData) {
             Scaffold(
                 topBar = {
                     MyTopBar(
-                        userid="rsL1mFSgvJOkjmMUeHXb",
+                        userid ="rsL1mFSgvJOkjmMUeHXb",
                         editmode = editmode,
                         setEditMode = setEditMode ,
                         viewModel = viewModel,
@@ -96,7 +83,7 @@ fun Profile(context: Context, user: UserData) {
                         user = user.value,
                         context = context,
                         imageUri = imageUri,
-                        selectedSportLevel = gson.toJson(selectedSportsLevel)
+                        selectedSportLevel = selectedSportsLevel
                     )
                 },
                 content = {
@@ -165,7 +152,7 @@ fun Profile(context: Context, user: UserData) {
                             )
                         }
 
-                        //
+
                         Row {
                             Column( modifier = if(editmode) Modifier.weight(0.7f) else Modifier.weight(1f) ) {
                                 SportsTable(selectedSportsLevel,setShowDialog, editmode)

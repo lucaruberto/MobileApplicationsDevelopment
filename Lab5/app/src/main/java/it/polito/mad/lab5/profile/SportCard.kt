@@ -152,10 +152,3 @@ fun SportCard(
         }}
     }
 }
-
-fun addToSelectedSports(sport: Sports, testo: String, setSelectedSport: (List<Sports>) -> Unit, setSelectedSportLevel: (List<SportList>) -> Unit, selectedSportLevel: List<SportList>, selectedSport: List<Sports>) {
-    val x = SportList(sportname = sport.discipline, level = testo)
-    setSelectedSport(selectedSport.plus(sport));
-    setSelectedSportLevel(selectedSportLevel.plus(x))
-
-}

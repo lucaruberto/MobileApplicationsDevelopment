@@ -12,9 +12,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import it.polito.mad.lab5.db.ProvaUser
+import it.polito.mad.lab5.db.ProvaUserSports
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,7 +26,7 @@ fun MyTopBar(
     user: UserData,
     context: Context,
     imageUri: String,
-    selectedSportLevel: String,
+    selectedSportLevel: SnapshotStateList<ProvaUserSports>,
     userid: String
 )
 {
@@ -36,7 +38,7 @@ fun MyTopBar(
             IconButton(onClick = {
                 if(editmode){
                     viewModel.updateUser(userid, ProvaUser(name,nickname,mail,birthdate,sex,city,imageUri))
-
+                    viewModel.updateUserSports(userid,selectedSportLevel);
                 }
 
                 setEditMode(!editmode)

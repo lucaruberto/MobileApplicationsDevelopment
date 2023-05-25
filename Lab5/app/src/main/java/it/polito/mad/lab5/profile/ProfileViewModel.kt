@@ -3,26 +3,23 @@ package it.polito.mad.lab5.profile
 import android.app.Application
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
-import it.polito.mad.lab5.db.User
-import it.polito.mad.lab5.db.GlobalDatabase
+import com.google.firebase.firestore.QueryDocumentSnapshot
+import com.google.firebase.firestore.ktx.toObject
 import it.polito.mad.lab5.db.ProvaSports
 import it.polito.mad.lab5.db.ProvaUser
 import it.polito.mad.lab5.db.ProvaUserSports
-import it.polito.mad.lab5.db.Sports
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import kotlin.math.log
+
 
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
-    val db = GlobalDatabase.getDatabase(application.applicationContext)
     var dbreal = FirebaseFirestore.getInstance()
     var user: MutableState<ProvaUser?> = mutableStateOf(null)
         private set
@@ -62,7 +59,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val SportDocuments = dbreal.collection("Sport").get().await()
-                    allSports.clear()
+                allSports.clear()
                 for (document in SportDocuments){
                     val sport = document.toObject(ProvaSports::class.java)
                     allSports.add(sport);
@@ -95,8 +92,46 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             }
         }
     }
+    fun updateUserSports(userId: String, updateSports: SnapshotStateList<ProvaUserSports>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val batch = dbreal.batch()
 
-    fun getAllSports(): LiveData<List<Sports>> {
-        return db.sportsDao().getSports()
+                val userSports = dbreal.collection("Users/"+userId+"/Sports")
+
+                 userSports.get()
+                    .addOnSuccessListener { querySnapshot ->
+
+                        for (document in querySnapshot) {
+                            batch.delete(document.reference)
+                        }
+                        for(UserSport in updateSports.toList())
+                        {
+                            val id = userSports.document()
+                            val newDocument = hashMapOf(
+                                "SportName" to UserSport.SportName,
+                                "Level" to UserSport.Level,
+                            )
+                            batch.set(id,newDocument)
+                        }
+
+                        batch.commit()
+                            .addOnSuccessListener {
+                                println("Documenti Modificati con successo.")
+                            }
+                            .addOnFailureListener { e ->
+                                println("Si è verificato un errore durante l'eliminazione dei documenti: ${e.message}")
+                            }
+                    }
+                    .addOnFailureListener { e ->
+                        println("Si è verificato un errore durante il recupero dei documenti: ${e.message}")
+                    }
+
+
+            } catch (e: Exception) {
+                println("Exception occurred = " + e.toString())
+            }
+        }
     }
+
 }
