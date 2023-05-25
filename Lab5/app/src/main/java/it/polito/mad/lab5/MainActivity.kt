@@ -47,7 +47,7 @@ import it.polito.mad.lab5.ui.theme.Lab5Theme
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-val TEST_FIREBASE = false
+val TEST_FIREBASE = true
 
 fun getUserData(context: Context): UserData {
     val sharedPref = context.getSharedPreferences("UserData", Context.MODE_PRIVATE)

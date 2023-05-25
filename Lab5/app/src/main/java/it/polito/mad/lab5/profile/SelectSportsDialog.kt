@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
@@ -29,25 +30,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import it.polito.mad.lab5.db.ProvaSports
+import it.polito.mad.lab5.db.ProvaUserSports
 import it.polito.mad.lab5.db.Sports
 
 
 @Composable
 fun SelectSportsDialog(
-    availableSports: List<Sports>,
+    availableSports: MutableList<ProvaSports>,
     selectedSports: MutableList<Sports>,
     onAddSport: (Sports) -> Unit,
     onDismissRequest: () -> Unit,
     setShowDialog: (Boolean) -> Unit,
-    selectedSportLevel: MutableList<SportList>,
+    selectedSportLevel: SnapshotStateList<ProvaUserSports>,
 ) {
-    val filteredSports = remember { mutableStateOf(availableSports.filter {x-> selectedSportLevel.toList().none{x.discipline===it.sportname} }) }
+    val filteredSports = remember { mutableStateOf(availableSports.filter {x-> selectedSportLevel.toList().none{x.discipline===it.SportName} }) }
     val searchText = remember { mutableStateOf("") }
     val selectedLevel = remember { mutableStateOf(1) }
-    val oldSportslevel = remember {
+   /* val oldSportslevel = remember {
        mutableStateListOf<SportList>()
     }.apply { addAll(selectedSportLevel) }
-
+*/
     val oldSports = remember {
         mutableStateListOf<Sports>()
     }.apply { addAll(selectedSports) }
@@ -56,7 +59,7 @@ fun SelectSportsDialog(
     println("Sport gia scelti:" + selectedSportLevel.toList().toString())
 
     filteredSports.value = availableSports.filter {
-        (it.discipline.contains(searchText.value, ignoreCase = true) && it !in selectedSports )
+        (it.discipline.contains(searchText.value, ignoreCase = true) &&  selectedSports.none{x-> x.discipline==it.discipline} )
     }
 
     Dialog(
@@ -85,7 +88,7 @@ fun SelectSportsDialog(
                             LazyRow() {
                                 items(selectedSports) { sport ->
                                     val sportLevel =
-                                        selectedSportLevel.find { it.sportname == sport.discipline }?.level
+                                        selectedSportLevel.find { it.SportName == sport.discipline }?.Level
                                             ?: "None"
                                     SportCard(
                                         sport = sport,
@@ -93,8 +96,8 @@ fun SelectSportsDialog(
                                         onLevelChanged = { level ->
                                             val updatedSportLevel =
                                                 selectedSportLevel.map { sportList ->
-                                                    if (sportList.sportname == sport.discipline) {
-                                                        sportList.copy(level = level)
+                                                    if (sportList.SportName == sport.discipline) {
+                                                        sportList.Level=level
                                                     } else {
                                                         sportList
                                                     }
@@ -131,16 +134,16 @@ fun SelectSportsDialog(
                             LazyRow() {
                                 items(filteredSports.value) { sport ->
                                     val sportLevel =
-                                        selectedSportLevel.find { it.sportname == sport.discipline }?.level
+                                        selectedSportLevel.find { it.SportName == sport.discipline }?.Level
                                             ?: "None"
                                     SportCard(
-                                        sport = sport,
+                                        sport = Sports(discipline = sport.discipline),
                                         level = sportLevel.toString(),
                                         onLevelChanged = { level ->
                                             val updatedSportLevel =
                                                 selectedSportLevel.map { sportList ->
-                                                    if (sportList.sportname == sport.discipline) {
-                                                        sportList.copy(level = level)
+                                                    if (sportList.SportName == sport.discipline) {
+                                                        sportList.Level=level
                                                     } else {
                                                         sportList
                                                     }
@@ -149,7 +152,7 @@ fun SelectSportsDialog(
                                         modifier = Modifier
                                             .padding(8.dp)
                                             .clickable {
-                                                onAddSport(sport)
+                                                onAddSport(Sports(discipline = sport.discipline))
                                             }
                                             .fillMaxWidth(),
                                         selectedSport = selectedSports,

@@ -20,11 +20,12 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import it.polito.mad.lab5.db.ProvaUserSports
 
 
 @Composable
 fun SportsTable(
-    selectedSportsLevel: SnapshotStateList<SportList>,
+    selectedSportsLevel: SnapshotStateList<ProvaUserSports>,
     setShowDialog: (Boolean) -> Unit,
     editmode: Boolean
 ) {
@@ -72,18 +73,18 @@ fun SportsTable(
 
                     Divider(modifier = Modifier.height(1.dp), color = MaterialTheme.colorScheme.primary)
 
-                    selectedSportsLevel.forEach { (sport, skillLevel) ->
+                    selectedSportsLevel.forEach { sport ->
 
                             Row(modifier = Modifier.fillMaxWidth().padding(top=5.dp)) {
                                 Text(
-                                    text = sport,
+                                    text = sport.SportName,
                                     modifier = Modifier.weight(1f),
                                     fontFamily = FontFamily.Serif,
                                     textAlign = TextAlign.Center
                                 )
 
                                 Text(
-                                    text = skillLevel,
+                                    text = sport.Level,
                                     modifier = Modifier.weight(1f),
                                     fontFamily = FontFamily.Serif,
                                     textAlign = TextAlign.Center
