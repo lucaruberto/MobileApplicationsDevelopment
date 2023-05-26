@@ -43,6 +43,7 @@ import java.util.Date
 @Preview(showBackground = true)
 @Composable
 fun Reservation() {
+    /*
     val vm: ShowReservationsViewModel = viewModel()
     val liveDates by vm.getLiveDates().observeAsState(initial = emptyList())
     val (selectedDate, setSelectedDate) = remember { mutableStateOf<LocalDate?>(LocalDate.now()) }
@@ -144,5 +145,7 @@ fun Reservation() {
             }
         }
     )
+    */
+
 }
 

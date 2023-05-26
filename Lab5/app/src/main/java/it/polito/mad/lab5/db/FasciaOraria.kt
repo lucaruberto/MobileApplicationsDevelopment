@@ -4,14 +4,12 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "fasciaoraria")
+@Entity
 data class FasciaOraria(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    @PrimaryKey
+    val id: Int? = null,
 
-    @ColumnInfo(name = "oraInizio")
-    val oraInizio: Int,
+    val oraInizio: Int? = null,
 
-    @ColumnInfo(name="oraFine")
-    val oraFine : Int
+    val oraFine: Int? = null
 )

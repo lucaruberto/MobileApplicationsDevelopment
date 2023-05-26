@@ -9,6 +9,7 @@ import java.util.Date
 import kotlin.concurrent.thread
 
 class ShowReservationsViewModel(application: Application) : AndroidViewModel(application) {
+    /*
     private val db = GlobalDatabase.getDatabase(getApplication<Application>().applicationContext)
     private var liveDates = db.reservationDao().loadAllDate()
 
@@ -30,4 +31,6 @@ class ShowReservationsViewModel(application: Application) : AndroidViewModel(app
     fun getRecyclerAdapter(lista:List<Reservation>, date:Date):ReservationRecyclerViewAdapter{
         return ReservationRecyclerViewAdapter(lista.map { x-> ShowReservationModel(x.id,x.discipline,x.playgroundName,x.date,x.time,x.oraInizio,x.oraFine, x.customRequest) },date,this)
     }*/
+    +/
+     */
 }

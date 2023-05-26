@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import it.polito.mad.lab5.MyCalendar
 import it.polito.mad.lab5.db.FasciaOraria
+import it.polito.mad.lab5.db.Reservation
 import it.polito.mad.lab5.rent.RentViewModel
 import it.polito.mad.lab5.rent.ReservationDialog
 import it.polito.mad.lab5.rent.ReservationList
@@ -42,7 +44,8 @@ import java.util.Date
 fun Rent() {
     val viewModel: RentViewModel = viewModel()
     val context = LocalContext.current
-    val sportsList by viewModel.sportsList.observeAsState(initial = emptyList())
+    val sportsList by viewModel.sportsListFlow.collectAsState(initial = emptyList())
+    viewModel.fetchAllSports()
     var selectedSport by remember { mutableStateOf("Sport") }
     val fields by viewModel.getPlaygroundsbyName(selectedSport).observeAsState(initial = emptyList())
     var selectedField by remember { mutableStateOf("Field") }
@@ -176,31 +179,10 @@ fun Rent() {
                 }
 
                 item {
-                    //Spacer(modifier = Modifier.height(8.dp))
                     if (selectedSport != "Sport" && selectedField != "Field") {
                         val fullDates by viewModel.getFullDates(selectedField).observeAsState(initial = emptyList())
                         Text(text = "Select the date:", modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp))
-                        /*com.himanshoe.kalendar.Kalendar(currentDay = Clock.System.todayIn(
-                            TimeZone.currentSystemDefault()
-                        ), kalendarType = KalendarType.Firey,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(350.dp),
-                            onDayClick = { day, events ->
-                                val currentDay = Clock.System.todayIn(TimeZone.currentSystemDefault())
-                                if (selectedSport != "Sport" && selectedField != "Field" && day.compareTo(
-                                        currentDay
-                                    ) >= 0
-                                ) {
-                                    selectedDate = day
-                                } else {
-                                    Toast.makeText(
-                                        context,
-                                        "You can't select a past date",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            })*/
+
                         MyCalendar(
                             selectedDate = selectedDate,
                             setSelectedDate = setSelectedDate,
@@ -215,7 +197,6 @@ fun Rent() {
                                 found},
                             backgroundColor = Color(0xFFe06666)
                         )
-                        //Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
                 if (selectedSport != "Sport" && selectedField != "Field" && selectedDate != null) {
@@ -224,7 +205,7 @@ fun Rent() {
 
                         if (date != null) {
                             Text(text = "Choose the hour:", modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp))
-                            val fasceLibere by viewModel.getFasceOrariLibere(selectedField, date)
+                            val fasceLibere by viewModel.getFasceOrarieLibere(selectedField, date)
                                 .observeAsState(initial = emptyList())
                             if(fasceLibere.isNotEmpty()) {
                                 ReservationList(data = fasceLibere) { chosenTimeSlot ->
@@ -244,14 +225,15 @@ fun Rent() {
                                 onConfirm = { sport, field, date, timeSlot, customRequest ->
                                     runBlocking {
                                         viewModel.saveReservation(
-                                            0,
+                                            Reservation(
+                                            "",
                                             selectedDate.toDate(),
                                             selectedDate.toDate().time.toString(),
                                             sport,
                                             timeSlot?.oraInizio?.toInt() ?: 0,
                                             timeSlot?.oraFine?.toInt() ?: 0,
                                             field,
-                                            customRequest
+                                            customRequest)
                                         )
                                     }
                                     Toast.makeText(context, "Reservation saved", Toast.LENGTH_LONG)
