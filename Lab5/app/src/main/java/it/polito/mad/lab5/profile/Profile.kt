@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package it.polito.mad.lab5.profile
 
 import android.content.Context
@@ -6,17 +8,12 @@ import android.net.Uri
 import android.provider.MediaStore
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.*
-import androidx.compose.ui.graphics.*
-import androidx.compose.ui.res.*
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.gson.Gson
 import it.polito.mad.lab5.db.ProvaUser
 import it.polito.mad.lab5.db.Sports
 import java.io.ByteArrayOutputStream
@@ -29,25 +26,18 @@ fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri{
 }
 
 
-data class UserData(val fullName: String, val nickname: String,val mail: String,val birthdate: String,val sex: String
-                    ,val city: String,val selectedSportsLevel: String,val imageUri : String
-)
-{
-}
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Profile(context: Context, user: UserData) {
+fun Profile(context: Context,userid:String) {
 
     val viewModel: ProfileViewModel = viewModel()
-    val gson = Gson()
-    viewModel.fetchUser("rsL1mFSgvJOkjmMUeHXb");
-    viewModel.fetchUserSports("rsL1mFSgvJOkjmMUeHXb")
+    viewModel.fetchUser(userid)
+    viewModel.fetchUserSports(userid)
     viewModel.fetchAllSports()
     val utente :ProvaUser?= viewModel.user.value
     val chosensport = viewModel.selectedsportlevel
     val allsports =  viewModel.allSports
 
-    if (utente != null && chosensport!= null && allsports != null ){
+    if (utente != null){
 
             val (name,setName) = remember { mutableStateOf(utente.FullName)}
             val (nickname,setNickname) = rememberSaveable { mutableStateOf(utente.Nickname)}
@@ -63,14 +53,12 @@ fun Profile(context: Context, user: UserData) {
             val selectedSportsLevel = remember { mutableStateListOf(*chosensport.toTypedArray())}
             var (showDialog,setShowDialog) = rememberSaveable { mutableStateOf(false) }
 
-            val user = remember {
-                mutableStateOf(UserData(name, nickname ,mail, birthdate, sex, city, gson.toJson(selectedSportsLevel.toList()), imageUri))
-            }
+
 
             Scaffold(
                 topBar = {
                     MyTopBar(
-                        userid ="rsL1mFSgvJOkjmMUeHXb",
+                        userid =userid,
                         editmode = editmode,
                         setEditMode = setEditMode ,
                         viewModel = viewModel,
@@ -80,8 +68,6 @@ fun Profile(context: Context, user: UserData) {
                         birthdate = birthdate,
                         sex = sex,
                         city = city,
-                        user = user.value,
-                        context = context,
                         imageUri = imageUri,
                         selectedSportLevel = selectedSportsLevel
                     )
@@ -164,9 +150,6 @@ fun Profile(context: Context, user: UserData) {
                             SelectSportsDialog(
                                 availableSports = allsports,
                                 selectedSports = selectedSports,
-                                onAddSport = { sport ->
-                                    // Do something when a sport is selected
-                                },
                                 onDismissRequest = {showDialog=false },
                                 setShowDialog =setShowDialog,
                                 selectedSportLevel = selectedSportsLevel

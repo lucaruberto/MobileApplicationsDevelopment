@@ -1,6 +1,5 @@
 package it.polito.mad.lab5.profile
 
-import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
@@ -23,8 +22,6 @@ import it.polito.mad.lab5.db.ProvaUserSports
 fun MyTopBar(
     editmode: Boolean, setEditMode: (Boolean) -> Unit, viewModel: ProfileViewModel
     , name: String, nickname: String, mail: String, birthdate: String, sex: String, city: String,
-    user: UserData,
-    context: Context,
     imageUri: String,
     selectedSportLevel: SnapshotStateList<ProvaUserSports>,
     userid: String
@@ -38,7 +35,7 @@ fun MyTopBar(
             IconButton(onClick = {
                 if(editmode){
                     viewModel.updateUser(userid, ProvaUser(name,nickname,mail,birthdate,sex,city,imageUri))
-                    viewModel.updateUserSports(userid,selectedSportLevel);
+                    viewModel.updateUserSports(userid,selectedSportLevel)
                 }
 
                 setEditMode(!editmode)

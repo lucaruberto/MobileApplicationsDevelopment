@@ -37,7 +37,7 @@ fun ProfileImage(
     val photo=rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()){
         if (it != null) {
             val x= getImageUriFromBitmap(context,it)
-            setImageUri(x.toString());
+            setImageUri(x.toString())
 
         }
     }

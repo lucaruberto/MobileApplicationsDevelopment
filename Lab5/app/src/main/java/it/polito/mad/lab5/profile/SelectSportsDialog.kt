@@ -1,7 +1,6 @@
 package it.polito.mad.lab5.profile
 
 import android.widget.Toast
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,7 +17,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -39,24 +37,15 @@ import it.polito.mad.lab5.db.Sports
 fun SelectSportsDialog(
     availableSports: MutableList<ProvaSports>,
     selectedSports: MutableList<Sports>,
-    onAddSport: (Sports) -> Unit,
     onDismissRequest: () -> Unit,
     setShowDialog: (Boolean) -> Unit,
     selectedSportLevel: SnapshotStateList<ProvaUserSports>,
 ) {
     val filteredSports = remember { mutableStateOf(availableSports.filter {x-> selectedSportLevel.toList().none{x.discipline===it.SportName} }) }
     val searchText = remember { mutableStateOf("") }
-    val selectedLevel = remember { mutableStateOf(1) }
-   /* val oldSportslevel = remember {
-       mutableStateListOf<SportList>()
-    }.apply { addAll(selectedSportLevel) }
-*/
-    val oldSports = remember {
-        mutableStateListOf<Sports>()
-    }.apply { addAll(selectedSports) }
     val context = LocalContext.current
-    println("Sport disponibili:" + availableSports.toString())
-    println("Sport gia scelti:" + selectedSportLevel.toList().toString())
+
+
 
     filteredSports.value = availableSports.filter {
         (it.discipline.contains(searchText.value, ignoreCase = true) &&  selectedSports.none{x-> x.discipline==it.discipline} )
@@ -85,29 +74,16 @@ fun SelectSportsDialog(
                             modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)
                         )
                         Row {
-                            LazyRow() {
+                            LazyRow {
                                 items(selectedSports) { sport ->
                                     val sportLevel =
                                         selectedSportLevel.find { it.SportName == sport.discipline }?.Level
                                             ?: "None"
                                     SportCard(
                                         sport = sport,
-                                        level = sportLevel.toString(),
-                                        onLevelChanged = { level ->
-                                            val updatedSportLevel =
-                                                selectedSportLevel.map { sportList ->
-                                                    if (sportList.SportName == sport.discipline) {
-                                                        sportList.Level=level
-                                                    } else {
-                                                        sportList
-                                                    }
-                                                }
-                                        },
+                                        level = sportLevel,
                                         modifier = Modifier
                                             .padding(8.dp)
-                                            .clickable {
-                                                onAddSport(sport)
-                                            }
                                             .fillMaxWidth(),
                                         selectedSport = selectedSports,
                                         add = false,
@@ -131,29 +107,16 @@ fun SelectSportsDialog(
                             singleLine = true
                         )
                         Row {
-                            LazyRow() {
+                            LazyRow {
                                 items(filteredSports.value) { sport ->
                                     val sportLevel =
                                         selectedSportLevel.find { it.SportName == sport.discipline }?.Level
                                             ?: "None"
                                     SportCard(
                                         sport = Sports(discipline = sport.discipline),
-                                        level = sportLevel.toString(),
-                                        onLevelChanged = { level ->
-                                            val updatedSportLevel =
-                                                selectedSportLevel.map { sportList ->
-                                                    if (sportList.SportName == sport.discipline) {
-                                                        sportList.Level=level
-                                                    } else {
-                                                        sportList
-                                                    }
-                                                }
-                                        },
+                                        level = sportLevel,
                                         modifier = Modifier
                                             .padding(8.dp)
-                                            .clickable {
-                                                onAddSport(Sports(discipline = sport.discipline))
-                                            }
                                             .fillMaxWidth(),
                                         selectedSport = selectedSports,
                                         add = true,

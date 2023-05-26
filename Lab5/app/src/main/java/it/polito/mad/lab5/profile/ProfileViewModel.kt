@@ -7,8 +7,6 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QueryDocumentSnapshot
-import com.google.firebase.firestore.ktx.toObject
 import it.polito.mad.lab5.db.ProvaSports
 import it.polito.mad.lab5.db.ProvaUser
 import it.polito.mad.lab5.db.ProvaUserSports
@@ -20,7 +18,7 @@ import kotlinx.coroutines.tasks.await
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
-    var dbreal = FirebaseFirestore.getInstance()
+    private var dbreal = FirebaseFirestore.getInstance()
     var user: MutableState<ProvaUser?> = mutableStateOf(null)
         private set
 
@@ -35,7 +33,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 user.value = userDocument.toObject(ProvaUser::class.java)
 
             } catch (e: Exception) {
-                println("Exception occurred = " + e.toString())
+                println("Exception occurred = $e")
             }
         }
     }
@@ -43,29 +41,29 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val userSportDocument =
-                    dbreal.collection("Users/"+userId+"/Sports").get().await()
+                    dbreal.collection("Users/$userId/Sports").get().await()
                 selectedsportlevel.clear()
 
                 for (document in userSportDocument){
                     val sport = document.toObject(ProvaUserSports::class.java)
-                    selectedsportlevel.add(sport);
+                    selectedsportlevel.add(sport)
                 }
             } catch (e: Exception) {
-                println("Exception occurred = " + e.toString())
+                println("Exception occurred = $e")
             }
         }
     }
     fun fetchAllSports() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val SportDocuments = dbreal.collection("Sport").get().await()
+                val sportDocuments = dbreal.collection("Sport").get().await()
                 allSports.clear()
-                for (document in SportDocuments){
+                for (document in sportDocuments){
                     val sport = document.toObject(ProvaSports::class.java)
-                    allSports.add(sport);
+                    allSports.add(sport)
                 }
             } catch (e: Exception) {
-                println("Exception occurred = " + e.toString())
+                println("Exception occurred = $e")
             }
         }
     }
@@ -84,11 +82,11 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 ).await()
 
                 val updatedUserDocument = userDocument.get().await()
-                val updatedUser = updatedUserDocument.toObject(ProvaUser::class.java)
+                val newUser = updatedUserDocument.toObject(ProvaUser::class.java)
 
-                user.value = updatedUser
+                user.value = newUser
             } catch (e: Exception) {
-                println("Exception occurred = " + e.toString())
+                println("Exception occurred = $e")
             }
         }
     }
@@ -97,7 +95,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             try {
                 val batch = dbreal.batch()
 
-                val userSports = dbreal.collection("Users/"+userId+"/Sports")
+                val userSports = dbreal.collection("Users/$userId/Sports")
 
                  userSports.get()
                     .addOnSuccessListener { querySnapshot ->
@@ -129,7 +127,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
 
             } catch (e: Exception) {
-                println("Exception occurred = " + e.toString())
+                println("Exception occurred = $e")
             }
         }
     }

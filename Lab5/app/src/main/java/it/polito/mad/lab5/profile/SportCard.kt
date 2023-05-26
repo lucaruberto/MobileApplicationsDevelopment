@@ -34,7 +34,6 @@ import it.polito.mad.lab5.db.Sports
 fun SportCard(
     sport: Sports,
     level: String,
-    onLevelChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
     selectedSport: MutableList<Sports>,
     add: Boolean,
@@ -78,7 +77,7 @@ fun SportCard(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
         )
         ) {
-        Row() {
+        Row {
             Column(
                 modifier = Modifier
                     .padding(16.dp)
@@ -101,17 +100,16 @@ fun SportCard(
                                 text = testo,
                                 modifier = Modifier.clickable { setExpandable(true) },
                                 style = MaterialTheme.typography.bodySmall
-                            );
+                            )
                             DropdownMenu(
                                 expanded = expandable,
                                 onDismissRequest = { setExpandable(false) },
                                 modifier = Modifier.width(110.dp)
                             ) {
-                                (listOf<String>("Beginner","Intermediate","Advanced")).forEach { level ->
+                                (listOf("Beginner","Intermediate","Advanced")).forEach { level ->
                                     DropdownMenuItem(
-                                        text = { Text(text = "$level") }, onClick = {
-                                            setTesto("$level")
-                                            onLevelChanged(level)
+                                        text = { Text(text = level) }, onClick = {
+                                            setTesto(level)
                                             setExpandable(false)
                                         }, enabled = true
                                     )
@@ -123,7 +121,7 @@ fun SportCard(
                     }
                     else
                     {
-                        Text(text ="$level" ,
+                        Text(text = level,
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.weight(1f) )
                     }

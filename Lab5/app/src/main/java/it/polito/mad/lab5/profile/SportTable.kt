@@ -47,9 +47,9 @@ fun SportsTable(
                             modifier = Modifier.weight(0.75f)
                         )
                         if(editmode)
-                        Button(
+                            Button(
                             onClick = { setShowDialog(true) }, modifier = Modifier.weight(0.25f)
-                        ) {
+                            ) {
                             Text(text = "Edit")
                         }
                     }
