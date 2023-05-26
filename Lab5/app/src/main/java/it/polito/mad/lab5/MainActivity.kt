@@ -35,6 +35,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import it.polito.mad.lab5.authentication.MyAuthentication
+import it.polito.mad.lab5.authentication.MyAuthenticationViewModel
 import it.polito.mad.lab5.profile.Profile
 import it.polito.mad.lab5.rate.Rate
 import it.polito.mad.lab5.reservation.Reservation
@@ -43,6 +45,8 @@ import it.polito.mad.lab5.ui.theme.Lab5Theme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        val authVm = MyAuthenticationViewModel { /*vm.startListenerRegistration()*/ }
 
         if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
             checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
@@ -61,7 +65,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Mainscreen()
+                    if(authVm.isLogged.value)
+                        Mainscreen()
+                    else
+                        MyAuthentication(vm = authVm)
                 }
             }
         }
