@@ -1,14 +1,23 @@
 package it.polito.mad.lab5.db
 
-class ProvaUser(FullName:String,Nickname:String,Mail:String,Birthdate:String,Sex:String,City:String,imageUri:String) {
-
+class ProvaUser(name: String,
+                nickname: String,
+                email: String,
+                birthdate: String,
+                sex: String,
+                city: String,
+                imageUri: String) {
 
     constructor() : this ("","","","","","","")
-    val FullName = FullName
-    val Nickname = Nickname
-    val Mail = Mail
-    val Birthdate = Birthdate
-    val Sex = Sex
-    val City = City
+    val name = name
+    val nickname = nickname
+    val email = email
+    val birthdate = birthdate
+    val sex = sex
+    val city = city
     val imageUri = imageUri
+
+    override fun toString(): String{
+        return "$name $email $birthdate"
+    }
 }

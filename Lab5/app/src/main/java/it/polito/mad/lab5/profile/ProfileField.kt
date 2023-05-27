@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun ProfileField(hover: String, text: String, type: String, setText: (String)->Unit, editmode: Boolean) {
+fun ProfileField(hover: String, text: String, type: String, setText: (String)->Unit, editMode: Boolean) {
     Card(modifier = Modifier.padding(bottom = 8.dp), colors = CardDefaults.cardColors(
         containerColor = MaterialTheme.colorScheme.primaryContainer,)
     ) {
@@ -41,7 +41,7 @@ fun ProfileField(hover: String, text: String, type: String, setText: (String)->U
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.secondary,
             )
-            if (editmode)
+            if (editMode)
                 TextField(
                     value = text,
                     onValueChange = { setText(it) },
@@ -54,7 +54,7 @@ fun ProfileField(hover: String, text: String, type: String, setText: (String)->U
                             keyboardType = KeyboardType.Decimal,
                             imeAction = ImeAction.Next
                         )
-                        "mail" -> KeyboardOptions.Default.copy(
+                        "email" -> KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Email,
                             imeAction = ImeAction.Next
                         )

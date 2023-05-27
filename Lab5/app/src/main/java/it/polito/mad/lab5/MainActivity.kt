@@ -2,8 +2,11 @@ package it.polito.mad.lab5
 
 import Rent
 import android.Manifest
+import android.app.Application
+import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -38,6 +41,7 @@ import androidx.navigation.compose.rememberNavController
 import it.polito.mad.lab5.authentication.MyAuthentication
 import it.polito.mad.lab5.authentication.MyAuthenticationViewModel
 import it.polito.mad.lab5.profile.Profile
+import it.polito.mad.lab5.profile.ProfileViewModel
 import it.polito.mad.lab5.rate.Rate
 import it.polito.mad.lab5.reservation.Reservation
 import it.polito.mad.lab5.ui.theme.Lab5Theme
@@ -66,7 +70,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     if(authVm.isLogged.value)
-                        Mainscreen()
+                        MainScreen(application)
                     else
                         MyAuthentication(vm = authVm)
                 }
@@ -77,8 +81,11 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun Mainscreen(){
+fun MainScreen(application: Application) {
+    Log.d(TAG, "Loading main screen")
     val navController = rememberNavController()
+    val profileViewModel = ProfileViewModel(application = application)
+    profileViewModel.fetchInitialData()
     Scaffold(
         bottomBar = {
             BottomAppBar{
@@ -145,7 +152,10 @@ fun Mainscreen(){
     ) {
         Box(Modifier.padding(it)){
             NavHost(navController = navController, startDestination = "ScreenOne"){
-                composable("ScreenOne"){ Profile(LocalContext.current/*,"rsL1mFSgvJOkjmMUeHXb"*/)}
+                composable("ScreenOne"){
+                    Log.d(TAG, "Entering Profile Screen")
+                    Profile(LocalContext.current, profileViewModel)
+                }
                 composable("ScreenTwo"){ Reservation()}
                 composable("ScreenThree"){ Rent()}
                 composable("ScreenFour") {Rate()}

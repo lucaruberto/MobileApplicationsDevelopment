@@ -9,13 +9,10 @@ import android.provider.MediaStore
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.*
 import androidx.compose.ui.unit.*
-import androidx.lifecycle.viewmodel.compose.viewModel
-import it.polito.mad.lab5.db.ProvaUser
-import it.polito.mad.lab5.db.Sports
 import java.io.ByteArrayOutputStream
 
 fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri{
@@ -27,137 +24,118 @@ fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri{
 
 
 @Composable
-fun Profile(context: Context/*,userid:String*/) {
-    val viewModel: ProfileViewModel = viewModel()
-    viewModel.fetchUser()
-    viewModel.fetchUserSports()
-    viewModel.fetchAllSports()
-    val utente :ProvaUser?= viewModel.user.value
-    val chosensport = viewModel.selectedsportlevel
-    val allsports =  viewModel.allSports
+fun Profile(context: Context, viewModel: ProfileViewModel) {
 
-    if (utente != null){
+    //viewModel.fetchInitialData()
+    //val user = viewModel.user.value
+    val selectedSports = viewModel.selectedSports
+    val allSports =  viewModel.allSports
 
-            val (name,setName) = remember { mutableStateOf(utente.FullName)}
-            val (nickname,setNickname) = rememberSaveable { mutableStateOf(utente.Nickname)}
-            val (mail,setMail) = rememberSaveable { mutableStateOf(utente.Mail)}
-            val (birthdate,setBirthdate) = rememberSaveable { mutableStateOf(utente.Birthdate)}
-            val (sex,setSex) = rememberSaveable { mutableStateOf(utente.Sex)}
-            val (city,setCity) = rememberSaveable { mutableStateOf(utente.City)}
-            val (imageUri,setImageUri) = rememberSaveable { mutableStateOf(utente.imageUri)}
-            val (editmode,setEditMode) = rememberSaveable { mutableStateOf(false)}
-            val (changephotoexpanded,setChangePhotoExpanded) = rememberSaveable { mutableStateOf(false)}
-            val valsStringdb = chosensport.map { Sports(discipline = it.SportName) }
-            val selectedSports = remember { mutableStateListOf(*valsStringdb.toTypedArray()) }
-            val selectedSportsLevel = remember { mutableStateListOf(*chosensport.toTypedArray())}
-            var (showDialog,setShowDialog) = rememberSaveable { mutableStateOf(false) }
+    Scaffold(
+        topBar = {
+            MyTopBar(viewModel = viewModel)
+        },
+        content = { it ->
+            //if (user != null){
 
+                val name = viewModel.name.value
+                val nickname = viewModel.nickname.value
+                val email = viewModel.email.value
+                val birthday = viewModel.birthdate.value
+                val sex = viewModel.sex.value
+                val city = viewModel.city.value
+                val imageUri = viewModel.imageUri.value
+                val editMode = viewModel.editMode.value
+                val changePhotoExpanded = viewModel.changePhotoExpanded.value
+                val showDialog = viewModel.showDialog.value
+                /*
+                    val selectedSportsNames = viewModel.selectedSportsNames
+                    val selectedSportsLevel = viewModel.selectedSportsLevels
+        
+                 */
+                Column(modifier = Modifier
+                    .padding(it)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Row {
+                        ProfileImage(
+                            imageUri,
+                            { viewModel.imageUri.value = it },
+                            editMode,
+                            changePhotoExpanded,
+                            { viewModel.changePhotoExpanded.value = it },
+                            context
+                        )
+                    }
 
-
-            Scaffold(
-                topBar = {
-                    MyTopBar(
-                        //userid = Firebase.auth.uid!!,
-                        editmode = editmode,
-                        setEditMode = setEditMode ,
-                        viewModel = viewModel,
-                        name = name,
-                        nickname = nickname,
-                        mail = mail,
-                        birthdate = birthdate,
-                        sex = sex,
-                        city = city,
-                        imageUri = imageUri,
-                        selectedSportLevel = selectedSportsLevel
-                    )
-                },
-                content = {
                     Column(modifier = Modifier
-                        .padding(it)
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState()),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Row {
-                            ProfileImage(
-                                imageUri,
-                                setImageUri,
-                                editmode,
-                                changephotoexpanded,
-                                setChangePhotoExpanded,
-                                context
-                            )
+                        .padding(16.dp)
+                        .fillMaxWidth()) {
+
+                        ProfileField(
+                            hover = "Nickname",
+                            text = nickname,
+                            setText = { viewModel.nickname.value = it },
+                            type = "simple",
+                            editMode = editMode
+                        )
+                        ProfileField(
+                            hover = "FullName",
+                            text = name,
+                            setText = { viewModel.name.value = it },
+                            type = "simple",
+                            editMode = editMode
+                        )
+                        ProfileField(
+                            hover = "Mail",
+                            text = email,
+                            setText = { viewModel.email.value = it },
+                            type = "email",
+                            editMode = editMode
+                        )
+                        ProfileField(
+                            hover = "Birthdate",
+                            text = birthday,
+                            setText = { viewModel.birthdate.value = it },
+                            type = "date",
+                            editMode = editMode
+                        )
+                        ProfileField(
+                            hover = "Sex",
+                            text = sex,
+                            setText = { viewModel.sex.value = it },
+                            type = "simple",
+                            editMode = editMode
+                        )
+                        ProfileField(
+                            hover = "City",
+                            text = city,
+                            setText = { viewModel.city.value = it },
+                            type = "simple-last",
+                            editMode = editMode
+                        )
+                    }
+
+
+                    Row {
+                        Column( modifier = if(editMode) Modifier.weight(0.7f) else Modifier.weight(1f) ) {
+                            SportsTable(selectedSports, { viewModel.showDialog.value = it }, editMode)
                         }
-
-                        Column(modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth()) {
-
-                            ProfileField(
-                                hover = "Nickname",
-                                text = nickname,
-                                setText = setNickname,
-                                type = "simple",
-                                editmode = editmode
-                            )
-                            ProfileField(
-                                hover = "FullName",
-                                text = name,
-                                setText = setName,
-                                type = "simple",
-                                editmode = editmode
-                            )
-                            ProfileField(
-                                hover = "Mail",
-                                text = mail,
-                                setText = setMail,
-                                type = "mail",
-                                editmode = editmode
-                            )
-                            ProfileField(
-                                hover = "Birthdate",
-                                text = birthdate,
-                                setText = setBirthdate,
-                                type = "date",
-                                editmode = editmode
-                            )
-                            ProfileField(
-                                hover = "Sex",
-                                text = sex,
-                                setText = setSex,
-                                type = "simple",
-                                editmode = editmode
-                            )
-                            ProfileField(
-                                hover = "City",
-                                text = city,
-                                setText = setCity,
-                                type = "simple-last",
-                                editmode = editmode
-                            )
-                        }
-
-
-                        Row {
-                            Column( modifier = if(editmode) Modifier.weight(0.7f) else Modifier.weight(1f) ) {
-                                SportsTable(selectedSportsLevel,setShowDialog, editmode)
-                            }
-
-
-                        }
-                        if(showDialog){
-                            SelectSportsDialog(
-                                availableSports = allsports,
-                                selectedSports = selectedSports,
-                                onDismissRequest = {showDialog=false },
-                                setShowDialog =setShowDialog,
-                                selectedSportLevel = selectedSportsLevel
-
-                            )
-                        }
-
+                    }
+                    if(showDialog){
+                        SelectSportsDialog(
+                            allSports = allSports,
+                            selectedSports = selectedSports,
+                            onDismissRequest = { viewModel.showDialog.value = false },
+                            setShowDialog = { viewModel.showDialog.value = it }
+                        )
                     }
                 }
-            )
+            //}
+            //Text(text = ("Add Informations"))
         }
-    }
+    )
+}
+    

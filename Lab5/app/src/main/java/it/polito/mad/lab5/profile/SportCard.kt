@@ -27,17 +27,17 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import it.polito.mad.lab5.db.ProvaUserSports
-import it.polito.mad.lab5.db.Sports
+import it.polito.mad.lab5.db.ProvaSport
+import it.polito.mad.lab5.db.UserSports
 
 @Composable
 fun SportCard(
-    sport: Sports,
+    sportName: String,
     level: String,
     modifier: Modifier = Modifier,
-    selectedSport: MutableList<Sports>,
+    //userSport: UserSports,
     add: Boolean,
-    selectedSportLevel: SnapshotStateList<ProvaUserSports>
+    selectedSports: SnapshotStateList<UserSports>
 ) {
     val context = LocalContext.current
     val (expandable,setExpandable) = remember {mutableStateOf(false)}
@@ -59,16 +59,17 @@ fun SportCard(
                             )
                             .show()
                     } else {
-                        selectedSport.add(sport)
-                        val x = ProvaUserSports(SportName = sport.discipline, Level = testo)
-                        selectedSportLevel.add(x)
+                        //selectedSports.add(sport)
+                        val x = UserSports(sportName = sportName, level = testo)
+                        selectedSports.add(x)
                         setTesto("None")
                     }
                 } else {
-                    selectedSport.remove(sport)
-                    val sportLevelToRemove =
+                    val x = UserSports(sportName = sportName, level = testo)
+                    selectedSports.remove(x)
+                    /*val sportLevelToRemove =
                         selectedSportLevel.firstOrNull { it.SportName == sport.discipline }
-                    sportLevelToRemove?.let { selectedSportLevel.remove(it) }
+                    sportLevelToRemove?.let { selectedSportLevel.remove(it) }*/
                 }
             } ,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -84,7 +85,7 @@ fun SportCard(
                     .weight(0.70f)
             ) {
                     Text(
-                        text = sport.discipline,
+                        text = sportName,
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.weight(1f)
                     )
@@ -125,8 +126,6 @@ fun SportCard(
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.weight(1f) )
                     }
-
-
             }
             Column(modifier = Modifier
                 .weight(0.30f)

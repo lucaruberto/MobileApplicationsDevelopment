@@ -20,14 +20,14 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import it.polito.mad.lab5.db.ProvaUserSports
+import it.polito.mad.lab5.db.UserSports
 
 
 @Composable
 fun SportsTable(
-    selectedSportsLevel: SnapshotStateList<ProvaUserSports>,
+    selectedSports: SnapshotStateList<UserSports>,
     setShowDialog: (Boolean) -> Unit,
-    editmode: Boolean
+    editMode: Boolean
 ) {
             Card(
                 shape = RoundedCornerShape(16.dp),
@@ -46,7 +46,7 @@ fun SportsTable(
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.weight(0.75f)
                         )
-                        if(editmode)
+                        if(editMode)
                             Button(
                             onClick = { setShowDialog(true) }, modifier = Modifier.weight(0.25f)
                             ) {
@@ -73,24 +73,23 @@ fun SportsTable(
 
                     Divider(modifier = Modifier.height(1.dp), color = MaterialTheme.colorScheme.primary)
 
-                    selectedSportsLevel.forEach { sport ->
+                    selectedSports.forEach { sport ->
 
                             Row(modifier = Modifier.fillMaxWidth().padding(top=5.dp)) {
                                 Text(
-                                    text = sport.SportName,
+                                    text = sport.sportName,
                                     modifier = Modifier.weight(1f),
                                     fontFamily = FontFamily.Serif,
                                     textAlign = TextAlign.Center
                                 )
 
                                 Text(
-                                    text = sport.Level,
+                                    text = sport.level,
                                     modifier = Modifier.weight(1f),
                                     fontFamily = FontFamily.Serif,
                                     textAlign = TextAlign.Center
                                 )
                             }
-
                         }
                     }
 
