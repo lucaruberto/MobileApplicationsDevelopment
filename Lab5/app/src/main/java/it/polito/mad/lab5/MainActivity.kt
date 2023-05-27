@@ -145,7 +145,7 @@ fun Mainscreen(){
     ) {
         Box(Modifier.padding(it)){
             NavHost(navController = navController, startDestination = "ScreenOne"){
-                composable("ScreenOne"){ Profile(LocalContext.current,"rsL1mFSgvJOkjmMUeHXb")}
+                composable("ScreenOne"){ Profile(LocalContext.current/*,"rsL1mFSgvJOkjmMUeHXb"*/)}
                 composable("ScreenTwo"){ Reservation()}
                 composable("ScreenThree"){ Rent()}
                 composable("ScreenFour") {Rate()}

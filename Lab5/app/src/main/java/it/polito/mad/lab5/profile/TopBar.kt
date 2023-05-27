@@ -24,7 +24,7 @@ fun MyTopBar(
     , name: String, nickname: String, mail: String, birthdate: String, sex: String, city: String,
     imageUri: String,
     selectedSportLevel: SnapshotStateList<ProvaUserSports>,
-    userid: String
+    //userid: String
 )
 {
     TopAppBar(
@@ -34,8 +34,8 @@ fun MyTopBar(
 
             IconButton(onClick = {
                 if(editmode){
-                    viewModel.updateUser(userid, ProvaUser(name,nickname,mail,birthdate,sex,city,imageUri))
-                    viewModel.updateUserSports(userid,selectedSportLevel)
+                    viewModel.updateUser(/*userid, */ProvaUser(name,nickname,mail,birthdate,sex,city,imageUri))
+                    viewModel.updateUserSports(/*userid,*/selectedSportLevel)
                 }
 
                 setEditMode(!editmode)

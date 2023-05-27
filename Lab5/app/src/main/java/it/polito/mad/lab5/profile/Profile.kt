@@ -27,11 +27,10 @@ fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri{
 
 
 @Composable
-fun Profile(context: Context,userid:String) {
-
+fun Profile(context: Context/*,userid:String*/) {
     val viewModel: ProfileViewModel = viewModel()
-    viewModel.fetchUser(userid)
-    viewModel.fetchUserSports(userid)
+    viewModel.fetchUser()
+    viewModel.fetchUserSports()
     viewModel.fetchAllSports()
     val utente :ProvaUser?= viewModel.user.value
     val chosensport = viewModel.selectedsportlevel
@@ -58,7 +57,7 @@ fun Profile(context: Context,userid:String) {
             Scaffold(
                 topBar = {
                     MyTopBar(
-                        userid =userid,
+                        //userid = Firebase.auth.uid!!,
                         editmode = editmode,
                         setEditMode = setEditMode ,
                         viewModel = viewModel,

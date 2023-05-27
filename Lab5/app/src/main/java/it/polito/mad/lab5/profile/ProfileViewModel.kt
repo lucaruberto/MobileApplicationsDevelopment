@@ -6,7 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import it.polito.mad.lab5.db.ProvaSports
 import it.polito.mad.lab5.db.ProvaUser
 import it.polito.mad.lab5.db.ProvaUserSports
@@ -25,11 +27,13 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     var selectedsportlevel : MutableList<ProvaUserSports> = mutableListOf()
     var allSports : MutableList<ProvaSports> = mutableListOf()
 
-    fun fetchUser(userId: String) {
+
+
+    fun fetchUser(/*userId: String*/) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val userDocument =
-                    dbreal.collection("Users").document(userId).get().await()
+                    dbreal.collection("Users").document(Firebase.auth.uid!!).get().await()
                 user.value = userDocument.toObject(ProvaUser::class.java)
 
             } catch (e: Exception) {
@@ -37,11 +41,11 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             }
         }
     }
-    fun fetchUserSports(userId: String) {
+    fun fetchUserSports(/*userId: String*/) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val userSportDocument =
-                    dbreal.collection("Users/$userId/Sports").get().await()
+                    dbreal.collection("Users/${Firebase.auth.uid}/Sports").get().await()
                 selectedsportlevel.clear()
 
                 for (document in userSportDocument){
@@ -67,10 +71,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             }
         }
     }
-    fun updateUser(userId: String, updatedUser: ProvaUser) {
+    fun updateUser(/*userId: String, */updatedUser: ProvaUser) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val userDocument = dbreal.collection("Users").document(userId)
+                val userDocument = dbreal.collection("Users").document(Firebase.auth.uid!!)
                 userDocument.update(
                     "Birthdate", updatedUser.Birthdate,
                     "City", updatedUser.City,
@@ -90,12 +94,12 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             }
         }
     }
-    fun updateUserSports(userId: String, updateSports: SnapshotStateList<ProvaUserSports>) {
+    fun updateUserSports(/*userId: String, */updateSports: SnapshotStateList<ProvaUserSports>) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val batch = dbreal.batch()
 
-                val userSports = dbreal.collection("Users/$userId/Sports")
+                val userSports = dbreal.collection("Users/${Firebase.auth.uid}/Sports")
 
                  userSports.get()
                     .addOnSuccessListener { querySnapshot ->
