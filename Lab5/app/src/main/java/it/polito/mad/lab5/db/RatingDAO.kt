@@ -9,7 +9,7 @@ import androidx.room.Query
 
 @Dao
 interface RatingDAO {
-    @Query("SELECT * FROM ratings")
+    /*@Query("SELECT * FROM ratings")
     fun getAll(): LiveData<List<Rating>>
 
     @Query("SELECT * FROM ratings WHERE fieldName=:fieldName")
@@ -27,5 +27,5 @@ interface RatingDAO {
     fun saveReview(review: Rating)
 
     @Delete
-    fun deleteReview(review: Rating)
+    fun deleteReview(review: Rating)*/
 }
