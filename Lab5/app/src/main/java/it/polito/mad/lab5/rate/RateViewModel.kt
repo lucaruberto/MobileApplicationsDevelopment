@@ -26,16 +26,14 @@ class RateViewModel(application: Application): AndroidViewModel(application) {
             db.collection("Reviews")
                 .get()
                 .addOnSuccessListener {reviewDocuments ->
-                    reviews.value = reviewDocuments.map{
+                    val reviewsList = reviewDocuments.map{
                         it.toObject(Rating::class.java)
                     }
+                    reviews.postValue(reviewsList)
                 }
                 .addOnFailureListener { ex ->
                     println("Exception while retrieving reviews: $ex")
                 }
-
-
-
         }
         return reviews
     }
@@ -47,27 +45,27 @@ class RateViewModel(application: Application): AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             db.collection("Playground")
                 .get()
-                .addOnSuccessListener {docs ->
-                    docs.forEach {
+                .addOnSuccessListener {docsAll ->
+                    docsAll.forEach {
                         it.getString("playgroundName")?.let { fieldName -> allFields.add(fieldName) }
                     }
-                }
-                .addOnFailureListener { ex ->
-                    println("Exception while retrieving all field names: $ex")
-                }
-
-            db.collection("Reviews")
-                .get()
-                .addOnSuccessListener {docs ->
-                    docs.forEach {
-                        it.getString("Field")?.let { fieldName -> reviewedFields.add(fieldName) }
-                    }
-                }
+                    db.collection("Reviews")
+                        .get()
+                        .addOnSuccessListener {docsRev ->
+                            docsRev.forEach {
+                                it.getString("Field")?.let { fieldName -> reviewedFields.add(fieldName) }
+                            }
+                            //don't add fieldname if it is already reviewed
+                            val fieldsToAdd = allFields.filter { reviewedFields.contains(it) }
+                            fieldsNotRated.postValue(fieldsToAdd)
+                        }
+                        .addOnFailureListener { ex ->
+                            println("Exception while retrieving all field names: $ex")
+                        }
+                        }
                 .addOnFailureListener { ex ->
                     println("Exception while retrieving reviewed field names: $ex")
                 }
-
-            fieldsNotRated.value = allFields.filter { reviewedFields.contains(it) } //don't add fieldname if it is already reviewed
         }
         return fieldsNotRated
     }
@@ -85,13 +83,13 @@ class RateViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun removeReview(review: Rating) {
+    fun removeReview(reviewId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             db.collection("Reviews")
-                .document(review.id)
+                .document(reviewId)
                 .delete()
                 .addOnSuccessListener {
-                    Log.d(ContentValues.TAG, "Review deleted with ID: $review.id")
+                    Log.d(ContentValues.TAG, "Review deleted with ID: $reviewId")
                 }
                 .addOnFailureListener { ex ->
                     Log.w(ContentValues.TAG, "Error deleting review: $ex")

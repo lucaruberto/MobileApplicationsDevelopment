@@ -58,8 +58,8 @@ import it.polito.mad.lab5.db.Rating
 @Composable
 fun Rate() {
     val vmRatings: RateViewModel = viewModel()
-    val ratings by vmRatings.getAllReviews().observeAsState()
-    val fieldsNotRated by vmRatings.getFieldsNotRated().observeAsState()
+    val ratings by vmRatings.fetchAllReviews().observeAsState()
+    val fieldsNotRated by vmRatings.fetchFieldsNotRated().observeAsState()
     val (readMode, setReadMode) = remember { mutableStateOf(true) }
     val (showForm, setShowForm) = remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
@@ -96,7 +96,7 @@ fun Rate() {
                             item {
                                 ReviewComponent(
                                     r.id,
-                                    r.fieldName,
+                                    r.field,
                                     r.reviewText,
                                     vmRatings,
                                     modifier = Modifier.padding(16.dp)
@@ -179,7 +179,7 @@ fun Rate() {
 
 
 @Composable
-fun ReviewComponent(reviewId: Int, fieldName: String, reviewText: String, vm: RateViewModel, modifier: Modifier) {
+fun ReviewComponent(reviewId: String, fieldName: String, reviewText: String, vm: RateViewModel, modifier: Modifier) {
     val (showButtons, setShowButtons) = remember { mutableStateOf(false) }
 
     Column(
@@ -216,7 +216,7 @@ fun ReviewComponent(reviewId: Int, fieldName: String, reviewText: String, vm: Ra
                     .clip(RoundedCornerShape(50))
             ) {
                 IconButton(
-                    onClick = { vm.deleteReview(Rating(reviewId, reviewText, fieldName)) },
+                    onClick = { vm.removeReview(reviewId) },
                     modifier = Modifier
                         .background(Color(0xFFFFCDD2))
                         .size(48.dp),
@@ -266,7 +266,7 @@ fun InsertReviewForm(modifier: Modifier, selectedField: String, vm: RateViewMode
            modifier = Modifier.fillMaxWidth()
        ) {
            Button(onClick = {
-               vm.saveReview( Rating(0,content,selectedField) )
+               vm.addReview( Rating("", selectedField, content, 4, "testuser" ) )
                Toast.makeText(context, "Review saved", Toast.LENGTH_LONG).show()
                onButtonClick(true)
            }) {
