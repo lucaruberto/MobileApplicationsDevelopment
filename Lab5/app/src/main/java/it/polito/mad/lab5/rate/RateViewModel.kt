@@ -27,7 +27,9 @@ class RateViewModel(application: Application): AndroidViewModel(application) {
                 .get()
                 .addOnSuccessListener {reviewDocuments ->
                     val reviewsList = reviewDocuments.map{
-                        it.toObject(RatingFirestore::class.java)
+                        val r = it.toObject(RatingFirestore::class.java)
+                        r.id = it.id
+                        r
                     }
                     reviews.postValue(reviewsList)
                 }
@@ -85,6 +87,7 @@ class RateViewModel(application: Application): AndroidViewModel(application) {
                 .document(reviewId)
                 .delete()
                 .addOnSuccessListener {
+                    fetchAllReviews()
                     Log.d(ContentValues.TAG, "Review deleted with ID: $reviewId")
                 }
                 .addOnFailureListener { ex ->

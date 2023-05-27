@@ -96,9 +96,9 @@ fun Rate() {
                         ratings?.forEach { r ->
                             item {
                                 ReviewComponent(
-                                    r.id,
-                                    r.field,
-                                    r.reviewText,
+                                    r.id!!,
+                                    r.field!!,
+                                    r.reviewText!!,
                                     vmRatings,
                                     modifier = Modifier.padding(16.dp)
                                 )
