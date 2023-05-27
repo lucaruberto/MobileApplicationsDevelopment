@@ -5,8 +5,8 @@ import androidx.room.*
 
 @Dao
 interface PlayGroundsDAO {
-    @Query("SELECT playgroundName FROM playgrounds WHERE sportname LIKE :name")
-    fun getPlayGroundsbySportName(name:String) : LiveData<List<String>>
+
+    //fun getPlayGroundsbySportName(name:String) : LiveData<List<String>>
 
     @Insert
     fun save(playground: PlayGrounds)

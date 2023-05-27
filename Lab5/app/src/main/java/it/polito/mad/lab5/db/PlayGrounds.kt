@@ -4,14 +4,12 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "playgrounds")
+@Entity
 data class PlayGrounds(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    @PrimaryKey()
+    val id: Int ,
 
-    @ColumnInfo(name = "sportname")
     val sportname: String,
 
-    @ColumnInfo(name="playgroundName")
     val playgroundName : String
     )
