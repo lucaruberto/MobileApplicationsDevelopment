@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import it.polito.mad.lab5.db.Rating
+import it.polito.mad.lab5.db.RatingFirestore
 
 
 @Composable
@@ -266,7 +267,7 @@ fun InsertReviewForm(modifier: Modifier, selectedField: String, vm: RateViewMode
            modifier = Modifier.fillMaxWidth()
        ) {
            Button(onClick = {
-               vm.addReview( Rating("", selectedField, content, 4, "testuser" ) )
+               vm.addReview( RatingFirestore("", selectedField, content, 4, "testuser" ) )
                Toast.makeText(context, "Review saved", Toast.LENGTH_LONG).show()
                onButtonClick(true)
            }) {

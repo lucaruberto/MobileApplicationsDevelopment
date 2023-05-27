@@ -10,6 +10,6 @@ data class Rating (
     val id: String,
     val field: String,
     val reviewText: String,
-    val score: Int,
-    val user: String
+    //val score: Int,
+    //val user: String
 )

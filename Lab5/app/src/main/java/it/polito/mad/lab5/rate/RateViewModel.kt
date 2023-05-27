@@ -9,25 +9,25 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.lab5.db.Rating
+import it.polito.mad.lab5.db.RatingFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class RateViewModel(application: Application): AndroidViewModel(application) {
-
     val db = FirebaseFirestore.getInstance()
     //val db = GlobalDatabase.getDatabase(application.applicationContext)
 
     private val fieldsNotRated = MutableLiveData<List<String>>()
-    private var reviews = MutableLiveData<List<Rating>>()
+    private var reviews = MutableLiveData<List<RatingFirestore>>()
     //private var fieldsNotRated: LiveData<List<String>> = db.rateDao().getFieldsWithoutRating()
 
-    fun fetchAllReviews(): LiveData<List<Rating>> {
+    fun fetchAllReviews(): LiveData<List<RatingFirestore>> {
         viewModelScope.launch(Dispatchers.IO){
-            db.collection("Reviews")
+            db.collection("Review")
                 .get()
                 .addOnSuccessListener {reviewDocuments ->
                     val reviewsList = reviewDocuments.map{
-                        it.toObject(Rating::class.java)
+                        it.toObject(RatingFirestore::class.java)
                     }
                     reviews.postValue(reviewsList)
                 }
@@ -39,30 +39,26 @@ class RateViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun fetchFieldsNotRated(): LiveData<List<String>> {
-        val allFields = mutableListOf<String>()
-        val reviewedFields = mutableListOf<String>()
-
         viewModelScope.launch(Dispatchers.IO) {
             db.collection("Playground")
                 .get()
                 .addOnSuccessListener {docsAll ->
-                    docsAll.forEach {
-                        it.getString("playgroundName")?.let { fieldName -> allFields.add(fieldName) }
+                    val allFields = docsAll.map {
+                        it.getString("playgroundName")!!
                     }
-                    db.collection("Reviews")
+                    db.collection("Review")
                         .get()
                         .addOnSuccessListener {docsRev ->
-                            docsRev.forEach {
-                                it.getString("Field")?.let { fieldName -> reviewedFields.add(fieldName) }
+                            val reviewedFields = docsRev.map {
+                                it.getString("field")!!
                             }
-                            //don't add fieldname if it is already reviewed
-                            val fieldsToAdd = allFields.filter { reviewedFields.contains(it) }
+                            val fieldsToAdd = allFields.filter { !reviewedFields.contains(it) }
                             fieldsNotRated.postValue(fieldsToAdd)
                         }
                         .addOnFailureListener { ex ->
                             println("Exception while retrieving all field names: $ex")
                         }
-                        }
+                }
                 .addOnFailureListener { ex ->
                     println("Exception while retrieving reviewed field names: $ex")
                 }
@@ -70,9 +66,9 @@ class RateViewModel(application: Application): AndroidViewModel(application) {
         return fieldsNotRated
     }
 
-    fun addReview(review: Rating) {
+    fun addReview(review: RatingFirestore) {
         viewModelScope.launch(Dispatchers.IO) {
-            db.collection("Reviews")
+            db.collection("Review")
                 .add(review)
                 .addOnSuccessListener { documentReference ->
                     Log.d(ContentValues.TAG, "Review added with ID: ${documentReference.id}")
@@ -85,7 +81,7 @@ class RateViewModel(application: Application): AndroidViewModel(application) {
 
     fun removeReview(reviewId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            db.collection("Reviews")
+            db.collection("Review")
                 .document(reviewId)
                 .delete()
                 .addOnSuccessListener {
