@@ -99,7 +99,8 @@ dependencies {
     implementation "androidx.camera:camera-extensions:1.2.2"
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
     implementation 'com.google.code.gson:gson:2.9.0'
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1" //comment if there are problems
+    //implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1" uncomment if there are problems
     implementation platform('com.google.firebase:firebase-bom:32.0.0')
     // Declare the dependency for the Cloud Firestore library
     // When using the BoM, you don't specify versions in Firebase library dependencies

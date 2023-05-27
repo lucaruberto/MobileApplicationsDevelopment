@@ -6,13 +6,10 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "ratings")
 data class Rating (
-    @PrimaryKey(autoGenerate = true)
-    val id: Int,
-
-    @ColumnInfo(name = "reviewText")
+    @PrimaryKey
+    val id: String,
+    val field: String,
     val reviewText: String,
-
-    @ColumnInfo(name = "fieldName")
-    val fieldName: String
-
+    val score: Int,
+    val user: String
 )
