@@ -50,7 +50,7 @@ import it.polito.mad.lab5.ui.theme.Lab5Theme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        val authVm = MyAuthenticationViewModel { /*vm.startListenerRegistration()*/ }
+        val authVm = MyAuthenticationViewModel()
 
         if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
             checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
