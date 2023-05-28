@@ -8,7 +8,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import it.polito.mad.lab5.db.FasciaOraria
 import it.polito.mad.lab5.db.GlobalDatabase
 import it.polito.mad.lab5.db.Reservation
@@ -53,7 +55,7 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
                             }
                     }
             } catch (e: Exception) {
-                Log.w(TAG, "Exception occurred = " + e.toString())
+                Log.w(TAG, "Exception occurred = $e")
             }
         }
 
@@ -69,7 +71,7 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
                 val sportsNames = sportsDocuments.documents.mapNotNull { it.getString("discipline") }
                 sportsList.postValue(sportsNames)
             } catch (e: Exception) {
-                println("Exception occurred = " + e.toString())
+                println("Exception occurred = $e")
             }
         }
     }
@@ -115,7 +117,7 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
                         Log.w(TAG, "Error getting documents: ", exception)
                     }
             } catch (e: Exception) {
-                Log.w(TAG, "Exception occurred = " + e.toString())
+                Log.w(TAG, "Exception occurred = $e")
             }
         }
 
@@ -130,7 +132,7 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
     fun saveReservation(reservation: Reservation) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                db.collection("Reservation")
+                db.collection("Reservations/${Firebase.auth.uid}")
                     .add(reservation)
                     .addOnSuccessListener { documentReference ->
                         Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
@@ -139,7 +141,7 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
                         Log.w(TAG, "Error adding document", e)
                     }
             } catch (e: Exception) {
-                Log.w(TAG, "Exception occurred = " + e.toString())
+                Log.w(TAG, "Exception occurred = $e")
             }
         }
     }

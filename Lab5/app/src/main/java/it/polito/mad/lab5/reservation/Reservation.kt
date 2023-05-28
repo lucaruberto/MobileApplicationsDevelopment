@@ -40,10 +40,31 @@ import java.time.ZoneOffset
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
 @Composable
-fun Reservation() {
-    /*
+fun Reservation(vm: ShowReservationsViewModel) {
+    val reservations = vm.reservations
+    vm.loadReservations()
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Browse your reservations", textAlign = TextAlign.Center)},
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary, titleContentColor = MaterialTheme.colorScheme.onPrimary)
+            )
+        },
+        content = { it ->
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(it)
+            ) {
+                items(reservations) {
+                    Text(text = it.toString())
+                }
+            }
+        }
+    )
+            /*
     val vm: ShowReservationsViewModel = viewModel()
     val liveDates by vm.getLiveDates().observeAsState(initial = emptyList())
     val (selectedDate, setSelectedDate) = remember { mutableStateOf<LocalDate?>(LocalDate.now()) }
