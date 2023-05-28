@@ -3,7 +3,6 @@ package it.polito.mad.lab5.profile
 import android.app.Application
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -25,7 +24,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     private var dbReal = Firebase.firestore
     //var user = mutableStateOf<ProvaUser?>(null)
-        private set
+        //private set
 
     var selectedSports: SnapshotStateList<UserSports> = mutableStateListOf()
     var allSports : SnapshotStateList<ProvaSport> = mutableStateListOf()
@@ -52,7 +51,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         fetchAllSports()
     }
 
-    fun fetchUser(/*userId: String*/) {
+    private fun fetchUser(/*userId: String*/) {
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -92,7 +91,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
 
     }
-    fun fetchUserSports(/*userId: String*/) {
+    private fun fetchUserSports(/*userId: String*/) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val userSportDocument =
@@ -113,7 +112,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             }
         }
     }
-    fun fetchAllSports() {
+    private fun fetchAllSports() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val sportDocuments = dbReal.collection("Sport").get().await()
