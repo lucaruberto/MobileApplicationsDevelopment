@@ -4,12 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
-data class FasciaOraria(
-    @PrimaryKey
-    val id: Int? = null,
-
-    val oraInizio: Int? = null,
-
-    val oraFine: Int? = null
-)
+//@Entity
+class FasciaOraria(val oraInizio: Int, val oraFine: Int){
+    constructor(): this(-1,-1)
+}

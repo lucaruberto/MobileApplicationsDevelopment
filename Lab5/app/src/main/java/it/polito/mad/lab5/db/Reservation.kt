@@ -1,18 +1,18 @@
 package it.polito.mad.lab5.db
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import java.util.Date
-@Entity
-data class Reservation(
-    @PrimaryKey
-    val id: String,
-    val date: Date,
-    val time: String,
+//@Entity
+class Reservation(
     val discipline: String,
+    val playgroundName : String,
+    val date: Date,
     val oraInizio: Int,
     val oraFine : Int,
-    val playgroundName : String,
-    val customRequest : String
-)
+    val customRequest: String
+){
+    constructor() : this("", "", Date(), -1, -1, "")
+
+    override fun toString(): String {
+        return "$discipline $playgroundName $date $oraInizio-$oraFine $customRequest"
+    }
+}

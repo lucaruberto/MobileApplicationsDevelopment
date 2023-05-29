@@ -43,6 +43,7 @@ import it.polito.mad.lab5.authentication.MyAuthenticationViewModel
 import it.polito.mad.lab5.profile.Profile
 import it.polito.mad.lab5.profile.ProfileViewModel
 import it.polito.mad.lab5.rate.Rate
+import it.polito.mad.lab5.rent.RentViewModel
 import it.polito.mad.lab5.reservation.Reservation
 import it.polito.mad.lab5.reservation.ShowReservationsViewModel
 import it.polito.mad.lab5.ui.theme.Lab5Theme
@@ -86,7 +87,8 @@ fun MainScreen(application: Application) {
     Log.d(TAG, "Loading main screen")
     val navController = rememberNavController()
     val profileViewModel = ProfileViewModel(application = application)
-    val reservationsViewModel = ShowReservationsViewModel(application = application)
+    val showReservationsViewModel = ShowReservationsViewModel(application = application)
+    val rentViewModel = RentViewModel(application = application)
     profileViewModel.fetchInitialData()
     Scaffold(
         bottomBar = {
@@ -112,7 +114,12 @@ fun MainScreen(application: Application) {
                    }
 
                    Column( modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-                       Button(onClick = { navController.navigate("ScreenThree") }, colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer)) {
+                       Button(
+                           onClick = {
+                                rentViewModel.fetchAllSports()
+                                navController.navigate("ScreenThree")
+                                     },
+                           colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer)) {
                            Icon(
                                Icons.Sharp.Search,
                                contentDescription = "Rent",
@@ -125,7 +132,10 @@ fun MainScreen(application: Application) {
                    }
 
                     Column( modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-                        Button(onClick = { navController.navigate("ScreenTwo") }, colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer)  ) {
+                        Button(onClick = {
+                            showReservationsViewModel.loadReservations()
+                            navController.navigate("ScreenTwo")
+                                         }, colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer)  ) {
                             Icon(
                                 Icons.Sharp.DateRange,
                                 contentDescription = "Calendar",
@@ -160,9 +170,9 @@ fun MainScreen(application: Application) {
                 }
                 composable("ScreenTwo"){
                     Log.d(TAG, "Entering Reservations Screen")
-                    Reservation(reservationsViewModel)
+                    Reservation(showReservationsViewModel)
                 }
-                composable("ScreenThree"){ Rent()}
+                composable("ScreenThree"){ Rent(rentViewModel)}
                 composable("ScreenFour") {Rate()}
             }
         }

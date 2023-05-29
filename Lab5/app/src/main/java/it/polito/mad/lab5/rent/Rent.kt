@@ -1,3 +1,5 @@
+import android.content.ContentValues.TAG
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kizitonwose.calendar.core.CalendarDay
 import it.polito.mad.lab5.MyCalendar
 import it.polito.mad.lab5.db.FasciaOraria
 import it.polito.mad.lab5.db.Reservation
@@ -34,16 +37,20 @@ import it.polito.mad.lab5.rent.RentViewModel
 import it.polito.mad.lab5.rent.ReservationDialog
 import it.polito.mad.lab5.rent.ReservationList
 import kotlinx.coroutines.runBlocking
+import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
-fun Rent() {
-    val viewModel: RentViewModel = viewModel()
+fun Rent(vm: RentViewModel) {
     val context = LocalContext.current
+    //vm.resetValues()
+    /*
+    val viewModel: RentViewModel = viewModel()
     val sportsList by viewModel.sportsListFlow.collectAsState(initial = emptyList())
     viewModel.fetchAllSports()
     var selectedSport by remember { mutableStateOf("Sport") }
@@ -56,6 +63,26 @@ fun Rent() {
     var showDialog by remember { mutableStateOf(false) }
     var selectedTimeSlot by remember { mutableStateOf<FasciaOraria?>(null) }
     var customRequest by remember { mutableStateOf("") }
+    */
+
+    val sportsList = vm.sportsList1.toList()
+    val selectedSport = vm.selectedSport.value
+
+    val playgroundsList = vm.playgroundsList.toList()
+    val selectedPlayground = vm.selectedPlayground.value
+
+    val fullDates = vm.fullDates
+    val selectedDate = vm.selectedDate.value
+
+    val freeSlots = vm.freeSlots.toList()
+    val selectedTimeSlot = vm.selectedTimeSlot.value
+
+    val customRequest = vm.customRequest.value
+
+    var expandedSport by remember { mutableStateOf(false) }
+    var expandedField by remember { mutableStateOf(false) }
+    var showFieldsDropDown  by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -92,7 +119,7 @@ fun Rent() {
 
                         DropdownMenu(
                             expanded = expandedSport,
-                            onDismissRequest = { expandedSport = false; setSelectedDate(null) },
+                            onDismissRequest = { expandedSport = false; vm.selectedDate.value = null },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(start = 16.dp, end = 16.dp)
@@ -108,10 +135,11 @@ fun Rent() {
                                         )
                                     },
                                     onClick = {
-                                        selectedSport = item
+                                        vm.selectedSport.value = item
                                         expandedSport = false
                                         showFieldsDropDown = true
-                                        selectedField = "Field"
+                                        vm.loadPlaygrounds()
+                                        vm.selectedPlayground.value = "Playground"
                                     },
                                     modifier = Modifier.fillMaxWidth()
                                 )
@@ -131,7 +159,7 @@ fun Rent() {
                                     .padding(/*top = 16.dp, */start = 16.dp, end = 16.dp)
                             ) {
                                 OutlinedTextField(
-                                    value = selectedField,
+                                    value = selectedPlayground,
                                     onValueChange = {},
                                     readOnly = true,
                                     trailingIcon = {
@@ -147,14 +175,14 @@ fun Rent() {
                                 DropdownMenu(
                                     expanded = expandedField,
                                     onDismissRequest = {
-                                        expandedField = false; setSelectedDate(null)
+                                        expandedField = false; vm.selectedDate.value = null
                                     },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(start = 16.dp, end = 16.dp)
                                 ) {
 
-                                    fields.forEach { item ->
+                                    playgroundsList.forEach { item ->
                                         DropdownMenuItem(
                                             text = {
                                                 Text(
@@ -165,8 +193,11 @@ fun Rent() {
                                                 )
                                             },
                                             onClick = {
-                                                selectedField = item
+                                                vm.selectedPlayground.value = item
                                                 expandedField = false
+                                                vm.selectedDate.value = Date()
+                                                vm.loadFullDates()
+                                                vm.loadFreeSlots()
                                                 //Toast.makeText(context, item, Toast.LENGTH_SHORT).show()
                                             },
                                             modifier = Modifier.fillMaxWidth()
@@ -179,14 +210,24 @@ fun Rent() {
                 }
 
                 item {
-                    if (selectedSport != "Sport" && selectedField != "Field") {
-                        val fullDates by viewModel.getFullDates(selectedField).observeAsState(initial = emptyList())
+                    if (selectedSport != "Sport" && selectedPlayground != "Playground") {
+
+                        //val formatter = SimpleDateFormat("yyyy-MM-dd")
+                        //val date = Date()
+
+                        //val fullDates by viewModel.getFullDates(selectedField).observeAsState(initial = emptyList())
                         Text(text = "Select the date:", modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp))
 
+
+                        //vm.selectedDate.value = Date()//LocalDate.now().toDate()
                         MyCalendar(
-                            selectedDate = selectedDate,
-                            setSelectedDate = setSelectedDate,
-                            isColored = {
+                            selectedDate = vm.selectedDate.value!!.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                            setSelectedDate = { date: LocalDate? ->
+                                vm.selectedDate.value = date.toDate()
+                                Log.d(TAG, "Selected date: ${vm.selectedDate.value} and $selectedDate")
+                                vm.loadFreeSlots()
+                                              },
+                            isColored = { //it: CalendarDay ->
                                 var found = false
                                 for (d in fullDates) {
                                     if (d == Date.from(it.date.atStartOfDay(ZoneOffset.systemDefault()).toInstant())) {
@@ -199,33 +240,31 @@ fun Rent() {
                         )
                     }
                 }
-                if (selectedSport != "Sport" && selectedField != "Field" && selectedDate != null) {
+                if (selectedSport != "Sport" && selectedPlayground != "Field" && selectedDate != null) {
                     item {
-                        val date = selectedDate?.toDate()
-
-                        if (date != null) {
+                        //if (selectedDate != null) {
                             Text(text = "Choose the hour:", modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp))
-                            val fasceLibere by viewModel.getFasceOrarieLibere(selectedField, date)
-                                .observeAsState(initial = emptyList())
-                            if(fasceLibere.isNotEmpty()) {
-                                ReservationList(data = fasceLibere) { chosenTimeSlot ->
+                            //val fasceLibere by viewModel.getFasceOrarieLibere(selectedField, date)
+                                //.observeAsState(initial = emptyList())
+                            if(freeSlots.isNotEmpty()) {
+                                ReservationList(data = freeSlots) { chosenTimeSlot ->
                                     showDialog = true
-                                    selectedTimeSlot = chosenTimeSlot
+                                    vm.selectedTimeSlot.value = chosenTimeSlot
                                 }
                             }
                             else{
                                 Text(text = "No hour available", modifier = Modifier.fillMaxWidth().padding(16.dp), textAlign = TextAlign.Center)
                             }
-                        }
+                        //}
 
 
                         if (showDialog) {
                             ReservationDialog(
                                 onDismiss = { showDialog = false },
-                                onConfirm = { sport, field, date, timeSlot, customRequest ->
+                                onConfirm = { /*sport, field, date, timeSlot, customRequest -> */
                                     runBlocking {
-                                        viewModel.saveReservation(
-                                            Reservation(
+                                        vm.saveReservation(
+                                            /*Reservation(
                                             "",
                                             selectedDate.toDate(),
                                             selectedDate.toDate().time.toString(),
@@ -233,7 +272,7 @@ fun Rent() {
                                             timeSlot?.oraInizio?.toInt() ?: 0,
                                             timeSlot?.oraFine?.toInt() ?: 0,
                                             field,
-                                            customRequest)
+                                            customRequest)*/
                                         )
                                     }
                                     Toast.makeText(context, "Reservation saved", Toast.LENGTH_LONG)
@@ -241,11 +280,11 @@ fun Rent() {
                                     showDialog = false
                                 },
                                 sport = selectedSport,
-                                field = selectedField,
-                                date = selectedDate,
+                                field = selectedPlayground,
+                                date = selectedDate!!.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
                                 timeSlot = selectedTimeSlot,
                                 customRequest = customRequest
-                            ) { customRequest = it }
+                            ) { vm.customRequest.value = it }
                         }
                     }
                 }

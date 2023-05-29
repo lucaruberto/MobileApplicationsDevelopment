@@ -15,12 +15,12 @@ import java.time.LocalDate
 @Composable
 fun ReservationDialog(
     onDismiss: () -> Unit,
-    onConfirm: suspend (
+    onConfirm: suspend (/*
         sport: String,
         field: String,
         date: LocalDate?,
         timeSlot: FasciaOraria?,
-        customRequest: String
+        customRequest: String*/
     )-> Unit,
     sport: String,
     field: String,
@@ -48,7 +48,7 @@ fun ReservationDialog(
             }
         },
         confirmButton = {
-            Button(onClick = { runBlocking{ onConfirm(sport, field, date, timeSlot, customRequest) } }) {
+            Button(onClick = { runBlocking{ onConfirm(/*sport, field, date, timeSlot, customRequest*/) } }) {
                 Text("Yes")
             }
         },
