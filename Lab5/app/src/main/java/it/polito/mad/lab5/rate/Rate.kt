@@ -306,7 +306,7 @@ fun InsertReviewForm(modifier: Modifier, selectedField: String, vm: RateViewMode
            modifier = Modifier.fillMaxWidth()
        ) {
            Button(onClick = {
-               vm.addReview( RatingFirestore("", selectedField, content, 4, "testuser" ) )
+               vm.addReview( RatingFirestore("", selectedField, content, rating, "testuser" ) )
                Toast.makeText(context, "Review saved", Toast.LENGTH_LONG).show()
                onButtonClick(true)
            }) {
