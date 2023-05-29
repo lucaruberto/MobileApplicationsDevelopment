@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,6 +22,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
@@ -27,6 +31,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -39,6 +44,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -75,7 +81,6 @@ fun Rate() {
         },
         content = {
             Column(modifier = Modifier.padding(it)) {
-
                 if(readMode) {
                     if(ratings?.isEmpty() == true) {
                         Spacer(modifier = Modifier.height(32.dp))
@@ -99,6 +104,8 @@ fun Rate() {
                                     r.id!!,
                                     r.field!!,
                                     r.reviewText!!,
+                                    r.score!!,
+                                    r.user!!,
                                     vmRatings,
                                     modifier = Modifier.padding(16.dp)
                                 )
@@ -150,14 +157,18 @@ fun Rate() {
                                 onClick = {
                                     selectedField = field
                                     expanded = false
-                                    setShowForm(true) },
+                                    setShowForm(true)
+                                },
                                 modifier = Modifier.fillMaxWidth()
-                            )
-                            }
+                            )}
                         }
 
                         if (showForm)
-                            InsertReviewForm(modifier = Modifier.padding(24.dp), selectedField, vmRatings) { setReadMode(true) }
+                            InsertReviewForm(modifier = Modifier.padding(24.dp), selectedField, vmRatings) {
+                                setReadMode(true)
+                                selectedField = "Select field"
+                                setShowForm(false)
+                            }
                         Row(
                             horizontalArrangement = Arrangement.Center,
                             modifier = Modifier.fillMaxWidth()
@@ -165,6 +176,7 @@ fun Rate() {
                             Button(onClick = {
                                 setReadMode(true)
                                 setShowForm(false)
+                                selectedField = "Select field"
                             },
                                 colors = ButtonDefaults
                                     .buttonColors(containerColor = MaterialTheme.colorScheme.secondary)) {
@@ -180,8 +192,9 @@ fun Rate() {
 
 
 @Composable
-fun ReviewComponent(reviewId: String, fieldName: String, reviewText: String, vm: RateViewModel, modifier: Modifier) {
-    val (showButtons, setShowButtons) = remember { mutableStateOf(false) }
+fun ReviewComponent(reviewId: String, fieldName: String, reviewText: String, rating: Int, user: String, vm: RateViewModel, modifier: Modifier) {
+    val (expanded, setExpanded) = remember { mutableStateOf(false) }
+    val starsColor = Color(0xFFFFC107)
 
     Column(
         modifier = modifier.then(
@@ -190,16 +203,55 @@ fun ReviewComponent(reviewId: String, fieldName: String, reviewText: String, vm:
                 //.background(Color(0xFFF5F5F5))
         )
     ) {
-        Text(
-            text = fieldName,
-            style = TextStyle(fontSize = 28.sp, textAlign = TextAlign.Center),
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentWidth(align = Alignment.CenterHorizontally)
-                .clickable { setShowButtons(!showButtons) }
-        )
+        Box(
+            modifier = Modifier.align(CenterHorizontally)
+                .clickable { setExpanded(!expanded) }
+        ) {
+            Column(
+                modifier = Modifier.wrapContentSize(align = Alignment.Center)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(align = CenterHorizontally)
+                ) {
+                    for (i in 1..5) {
+                        if (i <= rating) {
+                            Icon(
+                                modifier = Modifier.height(48.dp),
+                                imageVector = Icons.Outlined.Star,
+                                contentDescription = null,
+                                tint = starsColor,
+                            )
 
-        if (showButtons) {
+                        } else {
+                            Icon(
+                                modifier = Modifier.height(48.dp),
+                                imageVector = Icons.Outlined.StarOutline,
+                                contentDescription = null,
+                                tint = starsColor,
+                            )
+                        }
+                    }
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(align = CenterHorizontally)
+                ) {
+                    Text(
+                        text = fieldName,
+                        style = TextStyle(fontSize = 28.sp, textAlign = TextAlign.Center),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentWidth(align = CenterHorizontally)
+                    )
+                }
+            }
+        }
+
+
+        if (expanded) {
             Text(
                 text = reviewText,
                 style = TextStyle(fontSize = 20.sp, textAlign = TextAlign.Center),
@@ -237,6 +289,8 @@ fun ReviewComponent(reviewId: String, fieldName: String, reviewText: String, vm:
 fun InsertReviewForm(modifier: Modifier, selectedField: String, vm: RateViewModel, onButtonClick: (Boolean) -> Unit) {
     val context = LocalContext.current
     var content by remember { mutableStateOf("") }
+    val (rating, setRating) = remember { mutableStateOf(0) }
+    val starsColor = Color(0xFFFFC107)
 
     Column(
         modifier = modifier.then(
@@ -246,10 +300,39 @@ fun InsertReviewForm(modifier: Modifier, selectedField: String, vm: RateViewMode
         horizontalAlignment = Alignment.CenterHorizontally)
     {
         val focusManager = LocalFocusManager.current
-        Text("Insert your review", fontSize = 24.sp)
-        Spacer(modifier = Modifier.height(16.dp))
 
-        TextField(
+        Row(modifier = modifier) {
+            for(i in 1..5 ){
+                if(i <= rating)
+                    IconButton(
+                        modifier = Modifier.width(32.dp),
+                        onClick = {
+                            setRating(i)
+                        }) {
+                        Icon(
+                            modifier = Modifier.height(48.dp),
+                            imageVector = Icons.Outlined.Star,
+                            contentDescription = null,
+                            tint = starsColor,
+                        )
+                    }
+                else
+                    IconButton(
+                        modifier = Modifier.width(32.dp),
+                        onClick = {
+                            setRating(i)
+                        }) {
+                        Icon(
+                            modifier = Modifier.height(48.dp),
+                            imageVector = Icons.Outlined.StarOutline,
+                            contentDescription = null,
+                            tint = starsColor,
+                        )
+                    }
+            }
+        }
+
+        OutlinedTextField(
             value = content,
             onValueChange = { content = it },
             label = { Text("Review...") },
@@ -259,7 +342,7 @@ fun InsertReviewForm(modifier: Modifier, selectedField: String, vm: RateViewMode
                 capitalization = KeyboardCapitalization.Sentences,
                 imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = {focusManager.clearFocus()})
-       )
+        )
 
        Spacer(modifier = Modifier.height(16.dp))
        Row(
@@ -267,7 +350,7 @@ fun InsertReviewForm(modifier: Modifier, selectedField: String, vm: RateViewMode
            modifier = Modifier.fillMaxWidth()
        ) {
            Button(onClick = {
-               vm.addReview( RatingFirestore("", selectedField, content, 4, "testuser" ) )
+               vm.addReview( RatingFirestore("", selectedField, content, rating, "testuser" ) )
                Toast.makeText(context, "Review saved", Toast.LENGTH_LONG).show()
                onButtonClick(true)
            }) {
