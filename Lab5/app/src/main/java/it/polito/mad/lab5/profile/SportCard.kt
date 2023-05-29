@@ -1,5 +1,7 @@
 package it.polito.mad.lab5.profile
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -27,7 +29,6 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import it.polito.mad.lab5.db.ProvaSport
 import it.polito.mad.lab5.db.UserSports
 
 @Composable
@@ -41,9 +42,8 @@ fun SportCard(
 ) {
     val context = LocalContext.current
     val (expandable,setExpandable) = remember {mutableStateOf(false)}
-    val (testo, setTesto) = remember {
-        mutableStateOf("None")
-    }
+    val (testo, setTesto) = remember { mutableStateOf(level) }
+
     Card(
         modifier = modifier
             .height(100.dp)
@@ -65,8 +65,14 @@ fun SportCard(
                         setTesto("None")
                     }
                 } else {
-                    val x = UserSports(sportName = sportName, level = testo)
-                    selectedSports.remove(x)
+                    Log.d(TAG, "UserSports to delete: $sportName $level")
+                    val sportFound = selectedSports.find { it.sportName == sportName }
+                    Log.d(TAG, "UserSports found: ${sportFound?.sportName} ${sportFound?.level}")
+                    val res = selectedSports.remove(sportFound)
+                    Log.d(TAG, "Delete sport res: $res")
+                    /*
+                    Log.d(TAG, "UserSports:")
+                    selectedSports.forEach { Log.d(TAG, it.sportName)}*/
                     /*val sportLevelToRemove =
                         selectedSportLevel.firstOrNull { it.SportName == sport.discipline }
                     sportLevelToRemove?.let { selectedSportLevel.remove(it) }*/

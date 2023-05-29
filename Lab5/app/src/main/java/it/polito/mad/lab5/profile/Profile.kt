@@ -9,7 +9,6 @@ import android.provider.MediaStore
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.unit.*

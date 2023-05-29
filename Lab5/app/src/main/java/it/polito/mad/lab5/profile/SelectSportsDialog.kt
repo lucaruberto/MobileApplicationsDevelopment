@@ -1,5 +1,7 @@
 package it.polito.mad.lab5.profile
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,7 +19,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -30,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import it.polito.mad.lab5.db.ProvaSport
-import it.polito.mad.lab5.db.Sports
 import it.polito.mad.lab5.db.UserSports
 
 
@@ -42,10 +42,16 @@ fun SelectSportsDialog(
     setShowDialog: (Boolean) -> Unit,
 ) {
     //val filteredSports = remember { mutableStateOf(allSports.filter {x-> selectedSports.toList().none{x.discipline===it.sportName} }) }
-    val filteredSports = remember { mutableStateListOf<ProvaSport>() }
-    allSports
+    /*Log.d(TAG, "Selected Sports: ")
+    selectedSports.forEach(){
+        Log.d(TAG, "${it.sportName}")
+    }*/
+    val filteredSports = allSports
         .filter { x-> selectedSports.toList().none{x.discipline==it.sportName} }
-        .forEach { sport -> filteredSports.add(sport) }
+    Log.d(TAG, "Filtered Sports: ")
+    filteredSports.forEach{
+        Log.d(TAG, it.discipline)
+    }
     val searchText = remember { mutableStateOf("") }
     val context = LocalContext.current
 

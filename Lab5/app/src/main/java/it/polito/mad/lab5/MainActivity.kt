@@ -44,13 +44,14 @@ import it.polito.mad.lab5.profile.Profile
 import it.polito.mad.lab5.profile.ProfileViewModel
 import it.polito.mad.lab5.rate.Rate
 import it.polito.mad.lab5.reservation.Reservation
+import it.polito.mad.lab5.reservation.ShowReservationsViewModel
 import it.polito.mad.lab5.ui.theme.Lab5Theme
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        val authVm = MyAuthenticationViewModel { /*vm.startListenerRegistration()*/ }
+        val authVm = MyAuthenticationViewModel()
 
         if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
             checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
@@ -85,6 +86,7 @@ fun MainScreen(application: Application) {
     Log.d(TAG, "Loading main screen")
     val navController = rememberNavController()
     val profileViewModel = ProfileViewModel(application = application)
+    val reservationsViewModel = ShowReservationsViewModel(application = application)
     profileViewModel.fetchInitialData()
     Scaffold(
         bottomBar = {
@@ -156,7 +158,10 @@ fun MainScreen(application: Application) {
                     Log.d(TAG, "Entering Profile Screen")
                     Profile(LocalContext.current, profileViewModel)
                 }
-                composable("ScreenTwo"){ Reservation()}
+                composable("ScreenTwo"){
+                    Log.d(TAG, "Entering Reservations Screen")
+                    Reservation(reservationsViewModel)
+                }
                 composable("ScreenThree"){ Rent()}
                 composable("ScreenFour") {Rate()}
             }
