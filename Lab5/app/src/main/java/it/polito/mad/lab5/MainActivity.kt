@@ -117,6 +117,7 @@ fun MainScreen(application: Application) {
                        Button(
                            onClick = {
                                 rentViewModel.fetchAllSports()
+                               rentViewModel.resetValues()
                                 navController.navigate("ScreenThree")
                                      },
                            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer)) {
