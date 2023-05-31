@@ -102,7 +102,7 @@ fun SportCard(
                         style = MaterialTheme.typography.bodyMedium,
                     )
                     if(add) {
-                        Box(modifier = Modifier.weight(1f)) {
+                        Row(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = testo,
                                 modifier = Modifier.clickable { setExpandable(true) },

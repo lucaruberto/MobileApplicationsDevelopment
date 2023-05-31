@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -36,7 +37,7 @@ fun RegisterScreen(vm: MyAuthenticationViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally) {
 
         //email field
-        TextField(value = vm.email.value,
+        OutlinedTextField(value = vm.email.value,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 32.dp, end = 32.dp, bottom = if (error.isError && error.type == EMAIL) 0.dp else 8.dp),
@@ -54,7 +55,7 @@ fun RegisterScreen(vm: MyAuthenticationViewModel) {
         }
 
         // password field
-        TextField(value = vm.password.value,
+        OutlinedTextField(value = vm.password.value,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 32.dp, end = 32.dp, bottom = if (error.isError && error.type == PASSWORD) 0.dp else 8.dp),
@@ -74,7 +75,7 @@ fun RegisterScreen(vm: MyAuthenticationViewModel) {
         }
 
         // repeat password field
-        TextField(value = vm.repeatPassword.value,
+        OutlinedTextField(value = vm.repeatPassword.value,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 32.dp, end = 32.dp, bottom = if (error.isError && error.type == REPEAT_PASSWORD) 0.dp else 8.dp),
@@ -105,7 +106,7 @@ fun LoginScreen(vm: MyAuthenticationViewModel) {
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally)  {
-        TextField(value = vm.email.value,
+        OutlinedTextField(value = vm.email.value,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 32.dp, end = 32.dp, bottom = if (error.isError && (error.type == EMAIL)) 0.dp else 8.dp),
@@ -121,7 +122,7 @@ fun LoginScreen(vm: MyAuthenticationViewModel) {
             Text(text = error.description, color = Color.Red, modifier = Modifier.padding(bottom = 8.dp))
         }
 
-        TextField(value = vm.password.value,
+        OutlinedTextField(value = vm.password.value,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 32.dp, end = 32.dp, bottom = if (error.isError && (error.type == CREDENTIAL || error.type == PASSWORD)) 0.dp else 8.dp),
