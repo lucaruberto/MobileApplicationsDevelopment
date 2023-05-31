@@ -252,8 +252,6 @@ L
                     .addOnFailureListener { e ->
                         Log.w(TAG, "Error during Sports fetching: ${e.message}")
                     }
-
-
             } catch (e: Exception) {
                 Log.w(TAG, "Exception occurred = $e")
             }
