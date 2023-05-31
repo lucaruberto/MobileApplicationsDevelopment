@@ -89,7 +89,7 @@ fun SelectSportsDialog(
                             modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp).align(CenterHorizontally)
                         )
                         Row {
-                            LazyColumn (modifier = Modifier.height(200.dp)){
+                            LazyColumn (modifier = Modifier.weight(1f)){
                                 items(selectedSports) { sport ->
                                     /*val sportLevel =
                                         selectedSports.find { it.sportName == sport.discipline }?.level
@@ -116,7 +116,7 @@ fun SelectSportsDialog(
                         )
 
                         Row {
-                            LazyColumn (modifier = Modifier.height(200.dp)){
+                            LazyColumn (modifier = Modifier.weight(2f)){
                                 items(filteredSports) { sport ->
                                     /*val sportLevel =
                                         selectedSportLevel.find { it.SportName == sport.discipline }?.Level
