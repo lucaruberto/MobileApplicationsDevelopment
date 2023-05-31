@@ -147,7 +147,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                         .update(
                             "name", name.value,
                             "nickname", nickname.value,
-                            "birthday", birthdate.value,
+                            "birthdate", birthdate.value,
                             "city", city.value,
                             "email", email.value,
                             "sex", sex.value,
