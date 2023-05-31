@@ -36,6 +36,7 @@ fun SelectSportsDialog(
     selectedSports: SnapshotStateList<UserSports>,
     onDismissRequest: () -> Unit,
     setShowDialog: (Boolean) -> Unit,
+    saveSports: () -> Unit
 ) {
 
     val filteredSports = allSports
@@ -129,6 +130,7 @@ fun SelectSportsDialog(
                                 Text(text = "Discard")
                             }
                             Button(onClick = {
+                                saveSports()
                                 Toast.makeText(context, "Sport list saved", Toast.LENGTH_LONG).show()
                                 setShowDialog(false)
                             }) {

@@ -29,7 +29,6 @@ fun MyTopBar(viewModel: ProfileViewModel)
                 onClick = {
                     if(editMode){
                         viewModel.updateUser()
-                        viewModel.updateUserSports()
                     }
                     viewModel.editMode.value = !editMode
                 },
