@@ -1,10 +1,7 @@
 package it.polito.mad.lab5.profile
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -36,7 +33,6 @@ fun SportCard(
     sportName: String,
     level: String,
     modifier: Modifier = Modifier,
-    //userSport: UserSports,
     add: Boolean,
     selectedSports: SnapshotStateList<UserSports>
 ) {
@@ -59,23 +55,13 @@ fun SportCard(
                             )
                             .show()
                     } else {
-                        //selectedSports.add(sport)
                         val x = UserSports(sportName = sportName, level = testo)
                         selectedSports.add(x)
                         setTesto("None")
                     }
                 } else {
-                    Log.d(TAG, "UserSports to delete: $sportName $level")
                     val sportFound = selectedSports.find { it.sportName == sportName }
-                    Log.d(TAG, "UserSports found: ${sportFound?.sportName} ${sportFound?.level}")
-                    val res = selectedSports.remove(sportFound)
-                    Log.d(TAG, "Delete sport res: $res")
-                    /*
-                    Log.d(TAG, "UserSports:")
-                    selectedSports.forEach { Log.d(TAG, it.sportName)}*/
-                    /*val sportLevelToRemove =
-                        selectedSportLevel.firstOrNull { it.SportName == sport.discipline }
-                    sportLevelToRemove?.let { selectedSportLevel.remove(it) }*/
+                    selectedSports.remove(sportFound)
                 }
             } ,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -123,7 +109,6 @@ fun SportCard(
                                 }
                             }
                         }
-
 
                     }
                     else

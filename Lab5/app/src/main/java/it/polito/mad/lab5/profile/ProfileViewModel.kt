@@ -26,12 +26,8 @@ import java.io.File
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
     private var dbReal = Firebase.firestore
-    //var user = mutableStateOf<ProvaUser?>(null)
-    //private set
-
     var selectedSports: SnapshotStateList<UserSports> = mutableStateListOf()
     var allSports : SnapshotStateList<ProvaSport> = mutableStateListOf()
-
     val name = mutableStateOf("")
     val nickname = mutableStateOf("")
     val email = mutableStateOf("")
@@ -39,10 +35,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     val sex = mutableStateOf("")
     val city = mutableStateOf("")
     val imageUri = mutableStateOf("")
-    /*
-    val selectedSportsNames = selectedSports.map{it.sportName}
-    val selectedSportsLevels = selectedSports.map{it.level}
-    */
     val changePhotoExpanded = mutableStateOf(false)
     val editMode = mutableStateOf(false)
     var showDialog = mutableStateOf(false)
@@ -55,11 +47,6 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     }
 
     private fun saveProfileImage(){
-        /*
-        StorageReference storageRef = FirebaseStorage.getInstance().reference().child("folderName/file.jpg");
-        Uri file = Uri.fromFile(new File("path/to/folderName/file.jpg"));
-        UploadTask uploadTask = storageRef.putFile(file);
-        */
 
         val storageReference = FirebaseStorage.getInstance().reference.child("profileImages/${Firebase.auth.uid}.jpg")
         if (imageUri.value.isNotEmpty()) {
@@ -71,17 +58,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     }
 
     private fun loadProfileImage() {
-        /*
-        StorageReference storageRef = FirebaseStorage.getInstance().reference().child("folderName/file.jpg");
-        storageRef
-        .getDownloadUrl()
-        .addOnSuccessListener(new OnSuccessListener() { @Override public void onSuccess(Uri uri) { // Got the download URL for 'users/me/profile.png' } })
-        .addOnFailureListener(new OnFailureListener() { @Override public void onFailure(@NonNull Exception exception) { // Handle any errors } });
-
-L
-         */
         val storageReference = FirebaseStorage.getInstance().getReference("profileImages/${Firebase.auth.uid}.jpg")
-        //reference.child("profileImages/${Firebase.auth.uid}.jpg")
         val localProfileImageFile = File.createTempFile("localProfileImage", ".jpg")
         storageReference
             .getFile(localProfileImageFile)
@@ -95,7 +72,7 @@ L
             }
     }
 
-    private fun fetchUser(/*userId: String*/) {
+    private fun fetchUser() {
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -103,7 +80,7 @@ L
                     dbReal.collection("Users").document(Firebase.auth.uid!!).get().await()
                 val downloadedUser = userDocument.toObject(ProvaUser::class.java)
                 Log.d(TAG, "Downloaded User ${downloadedUser.toString()}")
-                //user.value = downloadedUser
+
                 name.value = downloadedUser!!.name
                 nickname.value = downloadedUser.nickname
                 email.value = downloadedUser.email
@@ -118,16 +95,15 @@ L
                     loadProfileImage()
             } catch (e: Exception) {
                 Log.w(TAG, "Error fetching user: $e")
-                //println("Exception occurred = $e")
+
             }
         }
 
     }
-    private fun fetchUserSports(/*userId: String*/) {
+    private fun fetchUserSports() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val userSportDocument =
-                    dbReal.collection("Users/${Firebase.auth.uid}/Sports").get().await()
+                val userSportDocument = dbReal.collection("Users/${Firebase.auth.uid}/Sports").get().await()
                 selectedSports.clear()
 
                 for (document in userSportDocument){
@@ -140,7 +116,6 @@ L
 
             } catch (e: Exception) {
                 Log.w(TAG, "Error fetching UserSports: $e")
-                //println("Exception occurred = $e")
             }
         }
     }
@@ -156,7 +131,6 @@ L
                 Log.d(TAG, "AllSports fetched successfully")
             } catch (e: Exception) {
                 Log.w(TAG, "Error fetching AllSports: $e")
-                //println("Exception occurred = $e")
             }
         }
     }
@@ -186,14 +160,6 @@ L
                             Log.w(TAG, "Error updating user: $e")
                         }
 
-                    //download newUser
-                    /*userDocument.get()
-                        .addOnSuccessListener {
-                            val newUser = it.toObject(ProvaUser::class.java)
-                            Log.d(TAG, "User downloaded successfully")
-                            user.value = newUser
-                        }*/
-
                 }
                 else {
                     val newUser = ProvaUser(
@@ -207,7 +173,7 @@ L
                     )
                     userDocument
                         .set(newUser)
-                        .addOnSuccessListener(){
+                        .addOnSuccessListener{
                             Log.d(TAG, "User added successfully")
                         }
                         .addOnFailureListener { e ->
@@ -215,12 +181,10 @@ L
                         }
                 }
             }
-
-        //Save profile image
         if(imageUri.value != "")
             saveProfileImage()
     }
-    fun updateUserSports(/*userId: String, *//*updateSports: SnapshotStateList<UserSports>*/) {
+    fun updateUserSports() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val batch = dbReal.batch()
