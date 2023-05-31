@@ -129,8 +129,7 @@ fun SelectSportsDialog(
                                 Text(text = "Discard")
                             }
                             Button(onClick = {
-                                Toast.makeText(context, "Save and go back!", Toast.LENGTH_LONG)
-                                    .show()
+                                Toast.makeText(context, "Sport list saved", Toast.LENGTH_LONG).show()
                                 setShowDialog(false)
                             }) {
                                 Text(text = "Save")
