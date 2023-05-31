@@ -318,7 +318,7 @@ fun LoginScreen(vm: MyAuthenticationViewModel) {
                 .padding(start = 32.dp, end = 32.dp, bottom = 16.dp),
             onClick = { vm.firebaseSignInWithEmailAndPassword() },
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.tertiary
+                containerColor = MaterialTheme.colorScheme.primary
             )
         ) {
             Text(text = "Sign In")

@@ -48,22 +48,6 @@ import java.util.Date
 @Composable
 fun Rent(vm: RentViewModel) {
     val context = LocalContext.current
-    //vm.resetValues()
-    /*
-    val viewModel: RentViewModel = viewModel()
-    val sportsList by viewModel.sportsListFlow.collectAsState(initial = emptyList())
-    viewModel.fetchAllSports()
-    var selectedSport by remember { mutableStateOf("Sport") }
-    val fields by viewModel.getPlaygroundsbyName(selectedSport).observeAsState(initial = emptyList())
-    var selectedField by remember { mutableStateOf("Field") }
-    var expandedSport by remember { mutableStateOf(false) }
-    var expandedField by remember { mutableStateOf(false) }
-    var showFieldsDropDown  by remember { mutableStateOf(false) }
-    val (selectedDate, setSelectedDate) = remember { mutableStateOf<LocalDate?>(null) }
-    var showDialog by remember { mutableStateOf(false) }
-    var selectedTimeSlot by remember { mutableStateOf<FasciaOraria?>(null) }
-    var customRequest by remember { mutableStateOf("") }
-    */
 
     val sportsList = vm.sportsList1.toList()
     val selectedSport = vm.selectedSport.value
@@ -253,14 +237,17 @@ fun Rent(vm: RentViewModel) {
                                 }
                             }
                             else{
-                                Text(text = "No hour available", modifier = Modifier.fillMaxWidth().padding(16.dp), textAlign = TextAlign.Center)
+                                Text(text = "No slots available", modifier = Modifier.fillMaxWidth().padding(16.dp), textAlign = TextAlign.Center)
                             }
                         //}
 
 
                         if (showDialog) {
                             ReservationDialog(
-                                onDismiss = { showDialog = false },
+                                onDismiss = {
+                                    showDialog = false
+                                    vm.customRequest.value = ""
+                                },
                                 onConfirm = { /*sport, field, date, timeSlot, customRequest -> */
                                     runBlocking {
                                         vm.saveReservation(
@@ -278,10 +265,11 @@ fun Rent(vm: RentViewModel) {
                                     Toast.makeText(context, "Reservation saved", Toast.LENGTH_LONG)
                                         .show()
                                     showDialog = false
+                                    vm.customRequest.value = ""
                                 },
                                 sport = selectedSport,
                                 field = selectedPlayground,
-                                date = selectedDate!!.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                                date = selectedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
                                 timeSlot = selectedTimeSlot,
                                 customRequest = customRequest
                             ) { vm.customRequest.value = it }
