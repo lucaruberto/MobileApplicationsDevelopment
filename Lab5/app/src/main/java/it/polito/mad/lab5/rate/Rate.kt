@@ -230,7 +230,7 @@ fun FieldCard(field: PlayGrounds, reviews: List<RatingFirestore>, vm: RateViewMo
                                     when(field.sportName){
                                         "Football" -> R.drawable.football
                                         "Basketball" -> R.drawable.basketball
-                                        "Golf" -> R.drawable.basketball
+                                        "Golf" -> R.drawable.golf
                                         else -> R.drawable.judo
                                     }
                                 ),

@@ -1,36 +1,55 @@
 package it.polito.mad.lab5.authentication
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.paddingFrom
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.Start
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import it.polito.mad.lab5.R
 import it.polito.mad.lab5.authentication.MyAuthenticationViewModel.ErrorType.*
 
 var passwordVisible = mutableStateOf(false)
@@ -50,6 +69,7 @@ fun MyAuthentication(vm: MyAuthenticationViewModel) {
 @Composable
 fun RegisterScreen(vm: MyAuthenticationViewModel) {
     val error = vm.error.value
+    val focusRequester = FocusRequester()
     BackHandler(enabled = true) {
         vm.isRegistered.value = true
     }
@@ -57,13 +77,25 @@ fun RegisterScreen(vm: MyAuthenticationViewModel) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally) {
-
+        horizontalAlignment = CenterHorizontally
+    ) {
+        Text("Register", modifier = Modifier
+            .align(CenterHorizontally)
+            .padding(bottom = 64.dp), fontSize = 32.sp)
         //email field
         OutlinedTextField(value = vm.email.value,
+            shape = RoundedCornerShape(32.dp),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next,keyboardType = KeyboardType.Email ),
+            keyboardActions = KeyboardActions(
+                onNext = { focusRequester.requestFocus() } // Passa al campo di testo successivo
+            ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 32.dp, end = 32.dp, bottom = if (error.isError && error.type == EMAIL) 0.dp else 8.dp),
+                .padding(
+                    start = 32.dp,
+                    end = 32.dp,
+                    bottom = if (error.isError && error.type == EMAIL) 0.dp else 8.dp
+                ),
             label = { Text("Email") },
             onValueChange = {
                 if (error.isError && error.type == EMAIL)
@@ -79,9 +111,15 @@ fun RegisterScreen(vm: MyAuthenticationViewModel) {
 
         // password field
         OutlinedTextField(value = vm.password.value,
+            shape = RoundedCornerShape(32.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 32.dp, end = 32.dp, bottom = if (error.isError && error.type == PASSWORD) 0.dp else 8.dp),
+                .focusRequester(focusRequester)
+                .padding(
+                    start = 32.dp,
+                    end = 32.dp,
+                    bottom = if (error.isError && error.type == PASSWORD) 0.dp else 8.dp
+                ),
             label = { Text("Password") },
             onValueChange = {
                 vm.password.value = it
@@ -116,9 +154,14 @@ fun RegisterScreen(vm: MyAuthenticationViewModel) {
 
         // repeat password field
         OutlinedTextField(value = vm.repeatPassword.value,
+            shape = RoundedCornerShape(32.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 32.dp, end = 32.dp, bottom = if (error.isError && error.type == REPEAT_PASSWORD) 0.dp else 8.dp),
+                .padding(
+                    start = 32.dp,
+                    end = 32.dp,
+                    bottom = if (error.isError && error.type == REPEAT_PASSWORD) 0.dp else 8.dp
+                ),
             label = { Text("Repeat Password") },
             onValueChange = {
                 vm.repeatPassword.value = it
@@ -148,9 +191,20 @@ fun RegisterScreen(vm: MyAuthenticationViewModel) {
             // credential or password error during login
             Text(text = error.description, color = Color.Red, modifier = Modifier.padding(bottom = 8.dp))
         }
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 32.dp, bottom = 32.dp, start = 32.dp, end = 32.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+            Button(onClick = { vm.isRegistered.value = true}, colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondary
+            )) {
+                Text(text = "Back")
+            }
+            Button(
+                onClick = { vm.firebaseSignUpWithEmailAndPassword() },
 
-        Button(onClick = { vm.firebaseSignUpWithEmailAndPassword() }) {
-            Text(text = "Register")
+            ) {
+                Text(text = "Submit")
+            }
         }
     }
 }
@@ -158,44 +212,74 @@ fun RegisterScreen(vm: MyAuthenticationViewModel) {
 @Composable
 fun LoginScreen(vm: MyAuthenticationViewModel) {
     val error = vm.error.value
-    val focusRequester =    FocusRequester()
-    val focusManager = LocalFocusManager.current
+    val focusRequester = FocusRequester()
     Column(
-
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally)  {
+        horizontalAlignment = CenterHorizontally
+    ) {
+        Text(
+            modifier = Modifier
+                .padding(start = 32.dp, end = 32.dp, bottom = 64.dp)
+                .align(CenterHorizontally), text = "SportySpaces", fontSize = 32.sp,
+            textAlign = TextAlign.Center
+        )
+
+        Image(
+                    painter = painterResource(R.mipmap.ic_launcher_foreground),
+                    alignment = Alignment.Center, // Sostituisci con il nome del file dell'immagine scaricata
+                    contentDescription = "Field Icon",
+                    modifier = Modifier.scale(3f)
+        )
+
+        Text( modifier = Modifier
+            .padding(start = 32.dp, bottom = 16.dp, end = 32.dp, top = 64.dp)
+            .align(CenterHorizontally), text = "Please enter your credentials.")
+
+
         OutlinedTextField(value = vm.email.value,
+            shape = RoundedCornerShape(32.dp),
             singleLine = true,
             maxLines = 1,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 32.dp, end = 32.dp, bottom = if (error.isError && (error.type == EMAIL)) 0.dp else 8.dp)
-               ,
-            label = {Text(text = "Email")},
+                .padding(
+                    start = 32.dp,
+                    end = 32.dp,
+                    bottom = if (error.isError && (error.type == EMAIL)) 0.dp else 8.dp
+                ),
+            label = { Text(text = "Email") },
             onValueChange = {
                 if (error.isError && (error.type == CREDENTIAL || error.type == EMAIL))
                     vm.error.value.isError = false
                 vm.email.value = it
             },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next,keyboardType = KeyboardType.Email),
             keyboardActions = KeyboardActions(
                 onNext = { focusRequester.requestFocus() } // Passa al campo di testo successivo
             ))
 
-        if(error.isError && error.type == EMAIL) {
+        if (error.isError && error.type == EMAIL) {
             //  error during login
-            Text(text = error.description, color = Color.Red, modifier = Modifier.padding(bottom = 8.dp))
+            Text(
+                text = error.description,
+                color = Color.Red,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
         }
-
         OutlinedTextField(value = vm.password.value,
+            shape = RoundedCornerShape(32.dp),
             singleLine = true,
             maxLines = 1,
             modifier = Modifier
                 .fillMaxWidth()
                 .focusRequester(focusRequester)
-                .padding(start = 32.dp, end = 32.dp, bottom = if (error.isError && (error.type == CREDENTIAL || error.type == PASSWORD)) 0.dp else 8.dp),
-            label = {Text(text = "Password")},
+                .padding(
+                    start = 32.dp,
+                    end = 32.dp,
+                    bottom = if (error.isError && (error.type == CREDENTIAL || error.type == PASSWORD)) 0.dp else 8.dp
+                ),
+            label = { Text(text = "Password") },
             onValueChange = {
                 if (error.isError && (error.type == CREDENTIAL || error.type == PASSWORD))
                     vm.error.value.isError = false
@@ -209,7 +293,8 @@ fun LoginScreen(vm: MyAuthenticationViewModel) {
                 else Icons.Filled.VisibilityOff
 
                 // Please provide localized description for accessibility services
-                val description = if (passwordVisible.value) "Hide password" else "Show password"
+                val description =
+                    if (passwordVisible.value) "Hide password" else "Show password"
 
                 IconButton(onClick = { passwordVisible.value = !passwordVisible.value }) {
                     Icon(imageVector = image, description)
@@ -217,17 +302,35 @@ fun LoginScreen(vm: MyAuthenticationViewModel) {
                 }
             }
         )
-
-        if(error.isError && (error.type == CREDENTIAL || error.type == PASSWORD)) {
+        if (error.isError && (error.type == CREDENTIAL || error.type == PASSWORD)) {
             // credential or password error during login
-            Text(text = error.description, color = Color.Red, modifier = Modifier.padding(bottom = 8.dp))
+            Text(
+                text = error.description,
+                color = Color.Red,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
         }
 
-        Button(onClick = { vm.firebaseSignInWithEmailAndPassword() }) {
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 32.dp, end = 32.dp, bottom = 16.dp),
+            onClick = { vm.firebaseSignInWithEmailAndPassword() },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            )
+        ) {
             Text(text = "Sign In")
         }
-        TextButton(onClick = { vm.isRegistered.value = false }) {
-            Text(text = "Register")
+        TextButton(modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 32.dp, end = 32.dp, bottom = 16.dp),
+            onClick = { vm.isRegistered.value = false }
+        ) {
+            Text(text = "Don't have an account? Sign Up!")
         }
+
     }
 }
+

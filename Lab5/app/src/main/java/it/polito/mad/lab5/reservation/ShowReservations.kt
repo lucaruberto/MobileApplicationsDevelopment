@@ -119,7 +119,7 @@ fun Reservation(vm: ShowReservationsViewModel) {
                                 )
                                 if (it.customRequest != "") {
                                     Text(
-                                        text = "Custom requests: ${it.customRequest}",
+                                        text = "Custom request: ${it.customRequest}",
                                         fontSize = 16.sp,
                                         modifier = Modifier.padding(
                                             start = 16.dp,

@@ -151,7 +151,7 @@ fun Day(day: CalendarDay, isSelected: Boolean, isColored: Boolean, backgroundCol
             .aspectRatio(1f)
             .clip(CircleShape)
             .background(color = if (isSelected) MaterialTheme.colorScheme.primary
-                else if (isColored && (day.position == DayPosition.MonthDate)) backgroundColor else Color.Transparent)
+                else if (isColored && (day.position == DayPosition.MonthDate)) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent)
             .clickable(
                 enabled = (day.position == DayPosition.MonthDate) && (!day.date.isBefore(LocalDate.now())) ,
                 onClick = { onClick(day) }

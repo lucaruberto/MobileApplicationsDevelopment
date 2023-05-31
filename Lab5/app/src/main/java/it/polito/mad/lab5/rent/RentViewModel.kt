@@ -52,6 +52,7 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
         selectedSport.value = "Sport"
         selectedPlayground.value = "Playground"
         selectedDate.value = null
+        customRequest.value = ""
     }
 
     fun loadFreeSlots(/*playground: String, date: Date*/)/*: LiveData<List<FasciaOraria>> */{
