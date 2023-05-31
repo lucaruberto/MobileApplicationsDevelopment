@@ -117,10 +117,10 @@ fun Profile(context: Context, viewModel: ProfileViewModel) {
                         )
                     }
 
-
-                    Row {
-                        Column( modifier = if(editMode) Modifier.weight(0.7f) else Modifier.weight(1f) ) {
-                            SportsTable(selectedSports, { viewModel.showDialog.value = it }, editMode)
+                    if(!editMode)
+                        Row {
+                        Column( Modifier.weight(1f) ) {
+                            SportsTable(selectedSports, { viewModel.showDialog.value = it })
                         }
                     }
                     if(showDialog){

@@ -62,10 +62,12 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         */
 
         val storageReference = FirebaseStorage.getInstance().reference.child("profileImages/${Firebase.auth.uid}.jpg")
-        storageReference
-            .putFile(Uri.parse(imageUri.value))
-            .addOnSuccessListener { Log.d(TAG, "Profile Image loaded successfully") }
-            .addOnFailureListener { e -> Log.w(TAG, "Profile Image loading error: $e") }
+        if (imageUri.value.isNotEmpty()) {
+            storageReference
+                .putFile(Uri.parse(imageUri.value))
+                .addOnSuccessListener { Log.d(TAG, "Profile Image loaded successfully") }
+                .addOnFailureListener { e -> Log.w(TAG, "Profile Image loading error: $e") }
+        }
     }
 
     private fun loadProfileImage() {

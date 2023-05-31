@@ -26,8 +26,7 @@ import it.polito.mad.lab5.db.UserSports
 @Composable
 fun SportsTable(
     selectedSports: SnapshotStateList<UserSports>,
-    setShowDialog: (Boolean) -> Unit,
-    editMode: Boolean
+    setShowDialog: (Boolean) -> Unit
 ) {
             Card(
                 shape = RoundedCornerShape(16.dp),
@@ -46,7 +45,6 @@ fun SportsTable(
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.weight(0.75f)
                         )
-                        if(editMode)
                             Button(
                             onClick = { setShowDialog(true) }, modifier = Modifier.weight(0.25f)
                             ) {
