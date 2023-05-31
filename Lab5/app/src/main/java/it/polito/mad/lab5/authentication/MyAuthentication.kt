@@ -69,6 +69,7 @@ fun MyAuthentication(vm: MyAuthenticationViewModel) {
 @Composable
 fun RegisterScreen(vm: MyAuthenticationViewModel) {
     val error = vm.error.value
+    val focusRequester = FocusRequester()
     BackHandler(enabled = true) {
         vm.isRegistered.value = true
     }
@@ -84,6 +85,10 @@ fun RegisterScreen(vm: MyAuthenticationViewModel) {
         //email field
         OutlinedTextField(value = vm.email.value,
             shape = RoundedCornerShape(32.dp),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next,keyboardType = KeyboardType.Email ),
+            keyboardActions = KeyboardActions(
+                onNext = { focusRequester.requestFocus() } // Passa al campo di testo successivo
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
@@ -109,6 +114,7 @@ fun RegisterScreen(vm: MyAuthenticationViewModel) {
             shape = RoundedCornerShape(32.dp),
             modifier = Modifier
                 .fillMaxWidth()
+                .focusRequester(focusRequester)
                 .padding(
                     start = 32.dp,
                     end = 32.dp,
@@ -187,7 +193,7 @@ fun RegisterScreen(vm: MyAuthenticationViewModel) {
         }
         Row(modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 32.dp, start = 32.dp, end = 32.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+            .padding(top = 32.dp, bottom = 32.dp, start = 32.dp, end = 32.dp), horizontalArrangement = Arrangement.SpaceBetween) {
             Button(onClick = { vm.isRegistered.value = true}, colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.secondary
             )) {
@@ -207,7 +213,6 @@ fun RegisterScreen(vm: MyAuthenticationViewModel) {
 fun LoginScreen(vm: MyAuthenticationViewModel) {
     val error = vm.error.value
     val focusRequester = FocusRequester()
-    val focusManager = LocalFocusManager.current
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -249,7 +254,7 @@ fun LoginScreen(vm: MyAuthenticationViewModel) {
                     vm.error.value.isError = false
                 vm.email.value = it
             },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next,keyboardType = KeyboardType.Email),
             keyboardActions = KeyboardActions(
                 onNext = { focusRequester.requestFocus() } // Passa al campo di testo successivo
             ))
