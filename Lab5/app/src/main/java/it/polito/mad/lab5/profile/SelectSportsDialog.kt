@@ -8,8 +8,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -22,6 +25,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
@@ -81,10 +86,10 @@ fun SelectSportsDialog(
                             text = "Your sports",
                             fontWeight = FontWeight.Bold,
                             fontSize = 24.sp,
-                            modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)
+                            modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp).align(CenterHorizontally)
                         )
                         Row {
-                            LazyRow {
+                            LazyColumn (modifier = Modifier.height(200.dp)){
                                 items(selectedSports) { sport ->
                                     /*val sportLevel =
                                         selectedSports.find { it.sportName == sport.discipline }?.level
@@ -106,18 +111,12 @@ fun SelectSportsDialog(
                             text = "Add a new sport",
                             fontWeight = FontWeight.Bold,
                             fontSize = 24.sp,
-                            modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)
+                            modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp).align(CenterHorizontally)
+
                         )
-                        OutlinedTextField(
-                            value = searchText.value,
-                            onValueChange = { searchText.value = it },
-                            label = { Text(text = "Search") },
-                            modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp)
-                                .width(150.dp),
-                            singleLine = true
-                        )
+
                         Row {
-                            LazyRow {
+                            LazyColumn (modifier = Modifier.height(200.dp)){
                                 items(filteredSports) { sport ->
                                     /*val sportLevel =
                                         selectedSportLevel.find { it.SportName == sport.discipline }?.Level
