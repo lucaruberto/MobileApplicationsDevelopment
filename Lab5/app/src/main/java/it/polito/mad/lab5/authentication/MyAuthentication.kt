@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -20,7 +21,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -152,20 +158,30 @@ fun RegisterScreen(vm: MyAuthenticationViewModel) {
 @Composable
 fun LoginScreen(vm: MyAuthenticationViewModel) {
     val error = vm.error.value
+    val focusRequester =    FocusRequester()
+    val focusManager = LocalFocusManager.current
     Column(
+
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally)  {
         OutlinedTextField(value = vm.email.value,
+            singleLine = true,
+            maxLines = 1,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 32.dp, end = 32.dp, bottom = if (error.isError && (error.type == EMAIL)) 0.dp else 8.dp),
+                .padding(start = 32.dp, end = 32.dp, bottom = if (error.isError && (error.type == EMAIL)) 0.dp else 8.dp)
+               ,
             label = {Text(text = "Email")},
             onValueChange = {
                 if (error.isError && (error.type == CREDENTIAL || error.type == EMAIL))
                     vm.error.value.isError = false
                 vm.email.value = it
-            })
+            },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions(
+                onNext = { focusRequester.requestFocus() } // Passa al campo di testo successivo
+            ))
 
         if(error.isError && error.type == EMAIL) {
             //  error during login
@@ -173,8 +189,11 @@ fun LoginScreen(vm: MyAuthenticationViewModel) {
         }
 
         OutlinedTextField(value = vm.password.value,
+            singleLine = true,
+            maxLines = 1,
             modifier = Modifier
                 .fillMaxWidth()
+                .focusRequester(focusRequester)
                 .padding(start = 32.dp, end = 32.dp, bottom = if (error.isError && (error.type == CREDENTIAL || error.type == PASSWORD)) 0.dp else 8.dp),
             label = {Text(text = "Password")},
             onValueChange = {
