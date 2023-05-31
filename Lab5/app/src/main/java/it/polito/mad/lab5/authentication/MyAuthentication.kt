@@ -1,5 +1,6 @@
 package it.polito.mad.lab5.authentication
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -42,8 +43,11 @@ fun MyAuthentication(vm: MyAuthenticationViewModel) {
 
 @Composable
 fun RegisterScreen(vm: MyAuthenticationViewModel) {
-
     val error = vm.error.value
+    BackHandler(enabled = true) {
+        vm.isRegistered.value = true
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
