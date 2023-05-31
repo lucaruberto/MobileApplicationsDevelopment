@@ -2,29 +2,32 @@ package it.polito.mad.lab5.profile
 
 import android.app.Application
 import android.content.ContentValues.TAG
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import it.polito.mad.lab5.db.ProvaSport
 import it.polito.mad.lab5.db.ProvaUser
 import it.polito.mad.lab5.db.UserSports
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-
+import java.io.File
 
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
     private var dbReal = Firebase.firestore
     //var user = mutableStateOf<ProvaUser?>(null)
-        //private set
+    //private set
 
     var selectedSports: SnapshotStateList<UserSports> = mutableStateListOf()
     var allSports : SnapshotStateList<ProvaSport> = mutableStateListOf()
@@ -51,6 +54,45 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         fetchAllSports()
     }
 
+    private fun saveProfileImage(){
+        /*
+        StorageReference storageRef = FirebaseStorage.getInstance().reference().child("folderName/file.jpg");
+        Uri file = Uri.fromFile(new File("path/to/folderName/file.jpg"));
+        UploadTask uploadTask = storageRef.putFile(file);
+        */
+
+        val storageReference = FirebaseStorage.getInstance().reference.child("profileImages/${Firebase.auth.uid}.jpg")
+        storageReference
+            .putFile(Uri.parse(imageUri.value))
+            .addOnSuccessListener { Log.d(TAG, "Profile Image loaded successfully") }
+            .addOnFailureListener { e -> Log.w(TAG, "Profile Image loading error: $e") }
+    }
+
+    private fun loadProfileImage() {
+        /*
+        StorageReference storageRef = FirebaseStorage.getInstance().reference().child("folderName/file.jpg");
+        storageRef
+        .getDownloadUrl()
+        .addOnSuccessListener(new OnSuccessListener() { @Override public void onSuccess(Uri uri) { // Got the download URL for 'users/me/profile.png' } })
+        .addOnFailureListener(new OnFailureListener() { @Override public void onFailure(@NonNull Exception exception) { // Handle any errors } });
+
+L
+         */
+        val storageReference = FirebaseStorage.getInstance().getReference("profileImages/${Firebase.auth.uid}.jpg")
+        //reference.child("profileImages/${Firebase.auth.uid}.jpg")
+        val localProfileImageFile = File.createTempFile("localProfileImage", ".jpg")
+        storageReference
+            .getFile(localProfileImageFile)
+            .addOnSuccessListener {
+                Log.d(TAG, "Profile Image downloaded successfully")
+                imageUri.value = localProfileImageFile.toUri().toString()
+                Log.d(TAG, "Profile Image stored to ${imageUri.value}")
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Profile image download error: $e")
+            }
+    }
+
     private fun fetchUser(/*userId: String*/) {
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -69,26 +111,14 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 imageUri.value = downloadedUser.imageUri
 
                 Log.d(TAG, "User fetched successfully")
+
+                if(imageUri.value != "")
+                    loadProfileImage()
             } catch (e: Exception) {
                 Log.w(TAG, "Error fetching user: $e")
                 //println("Exception occurred = $e")
             }
         }
-
-    /*
-        dbReal
-            .collection("Users")
-            .document(Firebase.auth.uid!!)
-            .get()
-            .addOnSuccessListener { result ->
-                user.value = result.toObject(ProvaUser::class.java)
-                Log.d(TAG, "User fetched successfully")
-            }
-            .addOnFailureListener { e ->
-                Log.w(TAG, "Error fetching user: $e")
-            }
-    */
-
 
     }
     private fun fetchUserSports(/*userId: String*/) {
@@ -184,121 +214,50 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 }
             }
 
-    /*viewModelScope.launch(Dispatchers.IO) {
-
-    /*
-    try {
-
-      /*
-        db.collection("texts")
-    .document(Firebase.auth.uid!!)
-    .get()
-    .addOnSuccessListener {document ->
-        if (document.exists()) {
-            // document exists and only have to be updated
-            db.collection("texts")
-                //.add(user)
-                .document(Firebase.auth.uid!!)
-                //.set(textHash)
-                .update("text", FieldValue.arrayUnion(text.value))
-                //.set(textHash, SetOptions.merge())
-                .addOnSuccessListener { /*documentReference ->*/
-                    //Log.d(ContentValues.TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
-                    Log.d(ContentValues.TAG, "Text added")
-                }
-                .addOnFailureListener { e ->
-                    Log.w(ContentValues.TAG, "Error adding text", e)
-                }
-        } else {
-            val textHash = hashMapOf(
-                "text" to listOf(text.value)
-            )
-
-            // document does not exist so must be created
-            db.collection("texts")
-                //.add(user)
-                .document(Firebase.auth.uid!!)
-                .set(textHash)
-                //.update("text", FieldValue.arrayUnion(text.value))
-                //.set(textHash, SetOptions.merge())
-                .addOnSuccessListener { /*documentReference ->*/
-                    //Log.d(ContentValues.TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
-                    Log.d(ContentValues.TAG, "Text created")
-                }
-                .addOnFailureListener { e ->
-                    Log.w(ContentValues.TAG, "Error creating text", e)
-                }
-        }
-
+        //Save profile image
+        if(imageUri.value != "")
+            saveProfileImage()
     }
-         */
+    fun updateUserSports(/*userId: String, *//*updateSports: SnapshotStateList<UserSports>*/) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val batch = dbReal.batch()
 
+                val userSports = dbReal.collection("Users/${Firebase.auth.uid}/Sports")
 
+                userSports.get()
+                    .addOnSuccessListener { querySnapshot ->
 
-        /*userDocument.update(
-            "name", name.value,
-            "nickname", nickname.value,
-            "birthday", birthdate.value,
-            "city", city.value,
-            "email", email.value,
-            "sex", sex.value,
-            "imageUri", imageUri.value
-        ).await()
+                        for (document in querySnapshot) {
+                            batch.delete(document.reference)
+                        }
+                        for(UserSport in selectedSports)
+                        {
+                            val id = userSports.document()
+                            val newDocument = hashMapOf(
+                                "sportName" to UserSport.sportName,
+                                "level" to UserSport.level,
+                            )
+                            batch.set(id,newDocument)
+                        }
 
-        val updatedUserDocument = userDocument.get().await()
-        val newUser = updatedUserDocument.toObject(ProvaUser::class.java)
-        Log.d(TAG, "User updated successfully")
-        user.value = newUser*/
-    } catch (e: Exception) {
-        Log.w(TAG, "Error try-catch updating user: $e")
-        //println("Exception occurred = $e")
-    }
-}
-*/
-
-     */
-
-}
-fun updateUserSports(/*userId: String, *//*updateSports: SnapshotStateList<UserSports>*/) {
-viewModelScope.launch(Dispatchers.IO) {
-    try {
-        val batch = dbReal.batch()
-
-        val userSports = dbReal.collection("Users/${Firebase.auth.uid}/Sports")
-
-         userSports.get()
-            .addOnSuccessListener { querySnapshot ->
-
-                for (document in querySnapshot) {
-                    batch.delete(document.reference)
-                }
-                for(UserSport in selectedSports)
-                {
-                    val id = userSports.document()
-                    val newDocument = hashMapOf(
-                        "sportName" to UserSport.sportName,
-                        "level" to UserSport.level,
-                    )
-                    batch.set(id,newDocument)
-                }
-
-                batch.commit()
-                    .addOnSuccessListener {
-                        Log.d(TAG, "User Sports updated successfully")
+                        batch.commit()
+                            .addOnSuccessListener {
+                                Log.d(TAG, "User Sports updated successfully")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.w(TAG, "Error during Sports update: ${e.message}")
+                            }
                     }
                     .addOnFailureListener { e ->
-                        Log.w(TAG, "Error during Sports update: ${e.message}")
+                        Log.w(TAG, "Error during Sports fetching: ${e.message}")
                     }
-            }
-            .addOnFailureListener { e ->
-                Log.w(TAG, "Error during Sports fetching: ${e.message}")
-            }
 
 
-    } catch (e: Exception) {
-        Log.w(TAG, "Exception occurred = $e")
+            } catch (e: Exception) {
+                Log.w(TAG, "Exception occurred = $e")
+            }
+        }
     }
-}
-}
 
 }
