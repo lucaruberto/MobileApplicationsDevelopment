@@ -8,30 +8,27 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.toObject
 import it.polito.mad.lab5.db.PlayGrounds
 import it.polito.mad.lab5.db.ProvaUser
-import it.polito.mad.lab5.db.RatingFirestore
+import it.polito.mad.lab5.db.Rating
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class RateViewModel(application: Application): AndroidViewModel(application) {
     val db = FirebaseFirestore.getInstance()
-    //val db = GlobalDatabase.getDatabase(application.applicationContext)
 
     private val fieldsNotRated = MutableLiveData<List<String>>()
-    private var reviews = MutableLiveData<List<RatingFirestore>>()
+    private var reviews = MutableLiveData<List<Rating>>()
     private var allFields = MutableLiveData<List<PlayGrounds>>()
-    //private var fieldsNotRated: LiveData<List<String>> = db.rateDao().getFieldsWithoutRating()
 
-    fun fetchAllReviews(): LiveData<List<RatingFirestore>> {
+    fun fetchAllReviews(): LiveData<List<Rating>> {
         viewModelScope.launch(Dispatchers.IO){
             db.collection("Review")
                 .get()
                 .addOnSuccessListener {reviewDocuments ->
                     val reviewsList = reviewDocuments.map{
-                        val r = it.toObject(RatingFirestore::class.java)
+                        val r = it.toObject(Rating::class.java)
                         r.id = it.id
                         r
                     }
@@ -87,7 +84,7 @@ class RateViewModel(application: Application): AndroidViewModel(application) {
         return fieldsNotRated
     }
 
-    fun addReview(review: RatingFirestore) {
+    fun addReview(review: Rating) {
         viewModelScope.launch(Dispatchers.IO) {
             val userDocument = db.collection("Users")
                 .document(review.user!!)
@@ -123,29 +120,4 @@ class RateViewModel(application: Application): AndroidViewModel(application) {
                 }
         }
     }
-
-    /*fun getAllReviews(): LiveData<List<Rating>> {
-        return db.rateDao().getAll()
-    }
-
-    fun getAllReviewsForField(fieldName: String): LiveData<List<Rating>> {
-        return db.rateDao().getAllReviewsForField(fieldName)
-    }
-
-    fun saveReview(review: Rating) {
-        viewModelScope.launch(Dispatchers.IO){
-            db.rateDao().saveReview(review)
-        }
-    }
-
-    fun getFieldsNotRated() : LiveData<List<String>>{
-        fieldsNotRated = db.rateDao().getFieldsWithoutRating()
-        return fieldsNotRated
-    }
-
-    fun deleteReview(review : Rating) {
-        viewModelScope.launch(Dispatchers.IO){
-            db.rateDao().deleteReview(review)
-        }
-    }*/
 }

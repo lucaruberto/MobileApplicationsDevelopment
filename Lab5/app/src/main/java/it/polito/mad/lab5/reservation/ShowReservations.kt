@@ -45,7 +45,6 @@ fun Reservation(vm: ShowReservationsViewModel) {
 
     val selectedDateReservations = reservations
         .filter { it.date == Date.from(selectedDate?.atStartOfDay(ZoneOffset.systemDefault())?.toInstant() ) }
-        //.map { FasciaOraria(it.oraInizio, it.oraFine) }
 
     Scaffold(
         topBar = {
@@ -55,15 +54,6 @@ fun Reservation(vm: ShowReservationsViewModel) {
             )
         },
         content = { it ->
-            /*LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(it)
-            ) {
-                items(reservations) {
-                    Text(text = it.toString())
-                }
-            }*/
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -88,8 +78,7 @@ fun Reservation(vm: ShowReservationsViewModel) {
                     }, Color.Gray)
                 }
 
-                items(items = selectedDateReservations.sortedBy { it.oraInizio }/*, key = { it.oraInizio}*/) {
-                    //Text(text = "${it.oraInizio}:00 - ${it.oraFine}:00")
+                items(items = selectedDateReservations.sortedBy { it.oraInizio }) {
                     Card(
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
@@ -158,109 +147,5 @@ fun Reservation(vm: ShowReservationsViewModel) {
             }
         }
     )
-
-            /*
-    val vm: ShowReservationsViewModel = viewModel()
-    val liveDates by vm.getLiveDates().observeAsState(initial = emptyList())
-    val (selectedDate, setSelectedDate) = remember { mutableStateOf<LocalDate?>(LocalDate.now()) }
-
-    val slots by vm.getReservationFromDate(Date.from(
-        selectedDate?.atStartOfDay(ZoneOffset.systemDefault())?.toInstant()
-    )).observeAsState(initial = emptyList())
-
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Browse your reservations", textAlign = TextAlign.Center)},
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary, titleContentColor = MaterialTheme.colorScheme.onPrimary)
-            )
-        },
-        content = { it ->
-            LazyColumn(modifier = Modifier
-                .fillMaxWidth()
-                .padding(it)) {
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-                item{
-                    MyCalendar(selectedDate, setSelectedDate, {
-                        var found = false
-                        for (d in liveDates) {
-                            if (d == Date.from(it.date.atStartOfDay(ZoneOffset.systemDefault()).toInstant())) {
-                                found = true
-                                break
-                            }
-                        }
-                        found
-                    }, Color.Gray)
-                }
-
-                items(items = slots.sortedBy { it.oraInizio }/*, key = { it.oraInizio}*/){
-                    //Text(text = "${it.oraInizio}:00 - ${it.oraFine}:00")
-                    Card(
-                        shape = RoundedCornerShape(12. dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                    ) {
-                        Row(modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column() {
-                                Text(
-                                    text = "${it.oraInizio}:00 - ${it.oraFine}:00",
-                                    fontSize = 20.sp,
-                                    modifier = Modifier.padding(16.dp)
-                                )
-                                Text(
-                                    text = "${it.discipline} at ${it.playgroundName}",
-                                    fontSize = 16.sp,
-                                    modifier = Modifier.padding(
-                                        start = 16.dp,
-                                        end = 16.dp,
-                                        top = 0.dp,
-                                        bottom = 16.dp)
-                                )
-                                if(it.customRequest != "") {
-                                    Text(
-                                        text = "Custom requests: ${it.customRequest}",
-                                        fontSize = 16.sp,
-                                        modifier = Modifier.padding(
-                                            start = 16.dp,
-                                            end = 16.dp,
-                                            top = 0.dp,
-                                            bottom = 16.dp)
-                                    )
-                                }
-                            }
-                            Column(
-                                horizontalAlignment = Alignment.End,
-                                verticalArrangement = Arrangement.Center,
-                                modifier = Modifier.padding(16.dp)
-                            ) {
-                                Button(onClick = { vm.deleteReservation(
-                                    it.id,
-                                    it.date,
-                                    it.time,
-                                    it.discipline,
-                                    it.oraInizio,
-                                    it.oraFine,
-                                    it.playgroundName,
-                                    it.customRequest) }) {
-
-                                    Icon(Icons.Rounded.Delete, contentDescription = "Delete Reservation")
-
-                                }
-                            }
-                        }
-
-                    }
-                }
-            }
-        }
-    )
-    */
 }
 

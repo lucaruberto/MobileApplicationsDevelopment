@@ -76,15 +76,7 @@ fun MyCalendar(selectedDate: LocalDate?, setSelectedDate: (LocalDate?)->Unit, is
         // Draw the day content gradient.
         monthBody = { _, content ->
             Box(
-                modifier = Modifier.background(/*
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFFB2EBF2),
-                            Color(0xFFB2B8F2)
-                        )
-                    )*/
-                    MaterialTheme.colorScheme.background
-                )
+                modifier = Modifier.background(MaterialTheme.colorScheme.background)
             ) {
                 content() // Render the provided content!
             }

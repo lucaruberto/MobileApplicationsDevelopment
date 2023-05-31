@@ -24,20 +24,6 @@ class ShowReservationsViewModel(application: Application) : AndroidViewModel(app
 
     fun loadReservations() {
         viewModelScope.launch {
-            /*db.collection("Users/${Firebase.auth.uid}/Reservations")
-                .get()
-                .addOnSuccessListener {
-                    reservations.clear()
-                    for (doc in it.documents){
-                        reservations.add(doc.toObject(Reservation::class.java)!!)
-                    }
-                    Log.d(TAG, "Reservations received: ${it.size()}")
-
-                }
-                .addOnFailureListener{
-                    Log.d(TAG, "Error loading reservations: $it")
-                }
-            */
             reservations.clear()
             reg = db.collection("Users/${Firebase.auth.uid}/Reservations")
                 .addSnapshotListener { snapshots, e ->
@@ -94,31 +80,6 @@ class ShowReservationsViewModel(application: Application) : AndroidViewModel(app
                 }
         }
     }
-
-    /*
-    private val db = GlobalDatabase.getDatabase(getApplication<Application>().applicationContext)
-    private var liveDates = db.reservationDao().loadAllDate()
-
-    fun getReservationFromDate(d: Date): LiveData<List<Reservation>> {
-       return db.reservationDao().loadAllByDate(d)
-    }
-
-    fun getLiveDates(): LiveData<List<Date>> {
-        //read again to check for changes instead of using mutable list
-        liveDates = db.reservationDao().loadAllDate()
-        return liveDates
-    }
-
-    fun deleteReservation(id:Int,date:Date,time:String,discipline:String,starthour:Int,endhour:Int,playgroundName:String, customRequest: String) {
-        thread { db.reservationDao().delete(Reservation(id,date,time,discipline, starthour,endhour,playgroundName, customRequest )) }
-
-    }
-/*
-    fun getRecyclerAdapter(lista:List<Reservation>, date:Date):ReservationRecyclerViewAdapter{
-        return ReservationRecyclerViewAdapter(lista.map { x-> ShowReservationModel(x.id,x.discipline,x.playgroundName,x.date,x.time,x.oraInizio,x.oraFine, x.customRequest) },date,this)
-    }*/
-    +/
-     */
 
     override fun onCleared() {
         super.onCleared()

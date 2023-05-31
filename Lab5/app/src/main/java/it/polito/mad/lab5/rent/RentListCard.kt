@@ -22,7 +22,6 @@ import it.polito.mad.lab5.db.FasciaOraria
 @Composable
 fun ReservationList(data : List<FasciaOraria>, onTimeSlotClick: (FasciaOraria) -> Unit) {
     val columns = 4
-    val rows = data.size / columns + if (data.size % columns != 0) 1 else 0
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(columns),

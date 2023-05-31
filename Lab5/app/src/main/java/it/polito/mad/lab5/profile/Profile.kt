@@ -9,9 +9,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.unit.*
 
-
-
-
 @Composable
 fun Profile(context: Context, viewModel: ProfileViewModel) {
 

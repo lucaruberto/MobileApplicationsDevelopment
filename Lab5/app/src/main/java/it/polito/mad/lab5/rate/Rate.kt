@@ -66,7 +66,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import it.polito.mad.lab5.R
 import it.polito.mad.lab5.db.PlayGrounds
-import it.polito.mad.lab5.db.RatingFirestore
+import it.polito.mad.lab5.db.Rating
 
 
 @Composable
@@ -189,7 +189,7 @@ fun Rate() {
 }
 
 @Composable
-fun FieldCard(field: PlayGrounds, reviews: List<RatingFirestore>, vm: RateViewModel) {
+fun FieldCard(field: PlayGrounds, reviews: List<Rating>, vm: RateViewModel) {
     val (showContent, setShowContent) = remember { mutableStateOf(false) }
     Row(
         horizontalArrangement = Arrangement.Center,
@@ -438,7 +438,7 @@ fun InsertReviewForm(modifier: Modifier, selectedField: String, vm: RateViewMode
            modifier = Modifier.fillMaxWidth()
        ) {
            Button(onClick = {
-               vm.addReview( RatingFirestore("", selectedField, content, rating, Firebase.auth.uid) )
+               vm.addReview( Rating("", selectedField, content, rating, Firebase.auth.uid) )
                Toast.makeText(context, "Review saved", Toast.LENGTH_LONG).show()
                onButtonClick(true)
            }) {

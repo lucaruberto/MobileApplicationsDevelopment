@@ -1,7 +1,7 @@
 package it.polito.mad.lab5.db
 
 import java.util.Date
-//@Entity
+
 class Reservation(
     val discipline: String,
     val playgroundName : String,

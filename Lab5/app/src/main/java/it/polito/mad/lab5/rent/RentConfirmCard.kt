@@ -7,7 +7,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import it.polito.mad.lab5.db.FasciaOraria
 import kotlinx.coroutines.runBlocking
@@ -16,13 +15,7 @@ import java.time.LocalDate
 @Composable
 fun ReservationDialog(
     onDismiss: () -> Unit,
-    onConfirm: suspend (/*
-        sport: String,
-        field: String,
-        date: LocalDate?,
-        timeSlot: FasciaOraria?,
-        customRequest: String*/
-    )-> Unit,
+    onConfirm: suspend ()-> Unit,
     sport: String,
     field: String,
     date: LocalDate?,
@@ -49,7 +42,7 @@ fun ReservationDialog(
             }
         },
         confirmButton = {
-            Button(onClick = { runBlocking{ onConfirm(/*sport, field, date, timeSlot, customRequest*/) } }) {
+            Button(onClick = { runBlocking{ onConfirm() } }) {
                 Text("Yes")
             }
         },

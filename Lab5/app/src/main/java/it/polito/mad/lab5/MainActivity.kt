@@ -1,6 +1,5 @@
 package it.polito.mad.lab5
 
-import Rent
 import android.Manifest
 import android.app.Application
 import android.content.ContentValues.TAG
@@ -43,6 +42,7 @@ import it.polito.mad.lab5.authentication.MyAuthenticationViewModel
 import it.polito.mad.lab5.profile.Profile
 import it.polito.mad.lab5.profile.ProfileViewModel
 import it.polito.mad.lab5.rate.Rate
+import it.polito.mad.lab5.rent.Rent
 import it.polito.mad.lab5.rent.RentViewModel
 import it.polito.mad.lab5.reservation.Reservation
 import it.polito.mad.lab5.reservation.ShowReservationsViewModel
@@ -61,7 +61,6 @@ class MainActivity : ComponentActivity() {
                 arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
             requestPermissions(permission, 112)
         }
-
 
         super.onCreate(savedInstanceState)
         setContent {
