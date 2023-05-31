@@ -6,10 +6,6 @@ import androidx.room.PrimaryKey
 
 //@Entity
 data class PlayGrounds(
-    //@PrimaryKey()
-    //val id: Int ,
-
-    val sportname: String,
-
-    val playgroundName : String
+    val sportName: String? = "",
+    val playgroundName : String? = ""
     )

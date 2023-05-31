@@ -1,6 +1,7 @@
 package it.polito.mad.lab5.rate
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -26,6 +28,8 @@ import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -34,7 +38,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -50,6 +53,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -58,15 +62,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import it.polito.mad.lab5.db.Rating
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import it.polito.mad.lab5.R
+import it.polito.mad.lab5.db.PlayGrounds
 import it.polito.mad.lab5.db.RatingFirestore
 
 
 @Composable
 fun Rate() {
     val vmRatings: RateViewModel = viewModel()
+
     val ratings by vmRatings.fetchAllReviews().observeAsState()
     val fieldsNotRated by vmRatings.fetchFieldsNotRated().observeAsState()
+    val allFields by vmRatings.fetchAllFields().observeAsState()
+
     val (readMode, setReadMode) = remember { mutableStateOf(true) }
     val (showForm, setShowForm) = remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
@@ -82,37 +92,9 @@ fun Rate() {
         content = {
             Column(modifier = Modifier.padding(it)) {
                 if(readMode) {
-                    if(ratings?.isEmpty() == true) {
-                        Spacer(modifier = Modifier.height(32.dp))
-                        Row(
-                            horizontalArrangement = Arrangement.Center,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                text = "No reviews yet...",
-                                style = MaterialTheme.typography.titleLarge
-                            )
-                        }
-                    }
                     LazyColumn {
                         item {
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
-                        ratings?.forEach { r ->
-                            item {
-                                ReviewComponent(
-                                    r.id!!,
-                                    r.field!!,
-                                    r.reviewText!!,
-                                    r.score!!,
-                                    r.user!!,
-                                    vmRatings,
-                                    modifier = Modifier.padding(16.dp)
-                                )
-                            }
-                        }
-                        item {
-                            Spacer(modifier = Modifier.height(64.dp))
+                            Spacer(modifier = Modifier.height(24.dp))
                             Row(
                                 horizontalArrangement = Arrangement.Center,
                                 modifier = Modifier.fillMaxWidth()
@@ -121,6 +103,23 @@ fun Rate() {
                                     Text("Add new review")
                                 }
                             }
+                            Spacer(modifier = Modifier.height(24.dp))
+                        }
+
+                        allFields?.forEach { f ->
+                            item {
+                                ratings?.filter { item -> item.field == f.playgroundName }
+                                    ?.let { r ->
+                                        FieldCard(
+                                            field =  f,
+                                            reviews = r,
+                                            vm = vmRatings
+                                        )
+                                    }
+                            }
+                        }
+                        item {
+                            Spacer(modifier = Modifier.height(24.dp))
                         }
                     }
                 }
@@ -189,10 +188,99 @@ fun Rate() {
         })
 }
 
+@Composable
+fun FieldCard(field: PlayGrounds, reviews: List<RatingFirestore>, vm: RateViewModel) {
+    val (showContent, setShowContent) = remember { mutableStateOf(false) }
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
 
+        ){
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.CenterVertically)
+                .background(MaterialTheme.colorScheme.surface),
+            shape = MaterialTheme.shapes.medium,
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+            content = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            setShowContent(!showContent)
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Image(
+                                modifier = Modifier
+                                    .weight(0.4f)
+                                    .clip(shape = CircleShape)
+                                    .size(62.dp),
+                                painter = painterResource(
+                                    when(field.sportName){
+                                        "Football" -> R.drawable.football
+                                        "Basketball" -> R.drawable.basketball
+                                        "Golf" -> R.drawable.basketball
+                                        else -> R.drawable.judo
+                                    }
+                                ),
+                                contentDescription = null,
+                            )
+
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(0.6f),
+                                text = field.playgroundName!!,
+                                fontSize = 24.sp,
+                                textAlign = TextAlign.Center
+                            )
+
+                        }
+                        if(showContent) {
+                            if(reviews.isEmpty()) {
+                                Spacer(modifier = Modifier.height(24.dp))
+                                Row(
+                                    horizontalArrangement = Arrangement.Center,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = "No reviews yet...",
+                                        style = MaterialTheme.typography.titleLarge
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(24.dp))
+                            }
+                            reviews.forEach { r ->
+                                ReviewComponent(
+                                    r.id!!,
+                                    r.reviewText!!,
+                                    r.score!!,
+                                    r.user!!,
+                                    vm,
+                                    modifier = Modifier.padding(16.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        )
+    }
+}
 
 @Composable
-fun ReviewComponent(reviewId: String, fieldName: String, reviewText: String, rating: Int, user: String, vm: RateViewModel, modifier: Modifier) {
+fun ReviewComponent(reviewId: String, reviewText: String, rating: Int, user: String, vm: RateViewModel, modifier: Modifier) {
     val (expanded, setExpanded) = remember { mutableStateOf(false) }
     val starsColor = Color(0xFFFFC107)
 
@@ -200,11 +288,11 @@ fun ReviewComponent(reviewId: String, fieldName: String, reviewText: String, rat
         modifier = modifier.then(
             Modifier
                 .padding(start = 16.dp, end = 16.dp)
-                //.background(Color(0xFFF5F5F5))
         )
     ) {
         Box(
-            modifier = Modifier.align(CenterHorizontally)
+            modifier = Modifier
+                .align(CenterHorizontally)
                 .clickable { setExpanded(!expanded) }
         ) {
             Column(
@@ -240,7 +328,7 @@ fun ReviewComponent(reviewId: String, fieldName: String, reviewText: String, rat
                         .wrapContentWidth(align = CenterHorizontally)
                 ) {
                     Text(
-                        text = fieldName,
+                        text = user,
                         style = TextStyle(fontSize = 28.sp, textAlign = TextAlign.Center),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -257,7 +345,7 @@ fun ReviewComponent(reviewId: String, fieldName: String, reviewText: String, rat
                 style = TextStyle(fontSize = 20.sp, textAlign = TextAlign.Center),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentWidth(align = Alignment.CenterHorizontally)
+                    .wrapContentWidth(align = CenterHorizontally)
                     .padding(16.dp)
             )
             Row(
@@ -350,7 +438,7 @@ fun InsertReviewForm(modifier: Modifier, selectedField: String, vm: RateViewMode
            modifier = Modifier.fillMaxWidth()
        ) {
            Button(onClick = {
-               vm.addReview( RatingFirestore("", selectedField, content, rating, "testuser" ) )
+               vm.addReview( RatingFirestore("", selectedField, content, rating, Firebase.auth.uid) )
                Toast.makeText(context, "Review saved", Toast.LENGTH_LONG).show()
                onButtonClick(true)
            }) {

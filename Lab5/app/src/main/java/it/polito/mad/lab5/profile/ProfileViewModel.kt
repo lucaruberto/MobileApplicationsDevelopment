@@ -90,7 +90,7 @@ L
                 imageUri.value = localProfileImageFile.toUri().toString()
                 Log.d(TAG, "Profile Image stored to ${imageUri.value}")
             }
-            .addOnFailureListener { e ->
+            .addOnFailureListener { e: Exception ->
                 Log.w(TAG, "Profile image download error: $e")
             }
     }
