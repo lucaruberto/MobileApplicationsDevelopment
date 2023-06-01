@@ -75,6 +75,7 @@ fun RegisterScreen(vm: MyAuthenticationViewModel) {
         //email field
         OutlinedTextField(value = vm.email.value,
             shape = RoundedCornerShape(32.dp),
+            singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next,keyboardType = KeyboardType.Email ),
             keyboardActions = KeyboardActions(
                 onNext = { focusRequester.requestFocus() } // Passa al campo di testo successivo
@@ -102,6 +103,7 @@ fun RegisterScreen(vm: MyAuthenticationViewModel) {
         // password field
         OutlinedTextField(value = vm.password.value,
             shape = RoundedCornerShape(32.dp),
+            singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
                 .focusRequester(focusRequester)
@@ -120,7 +122,7 @@ fun RegisterScreen(vm: MyAuthenticationViewModel) {
                         vm.error.value.isError = false
             },
             visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Password),
             trailingIcon = {
                 val image = if (passwordVisible.value)
                     Icons.Filled.Visibility
@@ -145,6 +147,7 @@ fun RegisterScreen(vm: MyAuthenticationViewModel) {
         // repeat password field
         OutlinedTextField(value = vm.repeatPassword.value,
             shape = RoundedCornerShape(32.dp),
+            singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
