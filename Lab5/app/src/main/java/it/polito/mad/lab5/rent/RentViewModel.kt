@@ -58,7 +58,8 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
                 }
 
                 viewModelScope.launch(Dispatchers.IO) {
-                    reg = db.collection("Users/${Firebase.auth.uid}/Reservations")
+                    //reg = db.collection("Users/${Firebase.auth.uid}/Reservations")
+                    reg = db.collection("Reservations")
                         .whereEqualTo("playgroundName", selectedPlayground.value)
                         .whereEqualTo("date", selectedDate.value)
                         .addSnapshotListener { snapshots, e ->
@@ -84,6 +85,7 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
                                             Log.d(TAG, "Removed reservation: ${dc.document.data}")
                                             val res = dc.document.toObject(Reservation::class.java)
                                             freeSlots.add(FasciaOraria(res.oraInizio, res.oraFine))
+                                            freeSlots.sortBy { it.oraInizio }
                                         }
                                     }
                                 }
@@ -134,7 +136,8 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
         datesMap.clear()
         fullDates.clear()
         viewModelScope.launch(Dispatchers.IO) {
-            reg = db.collection("Users/${Firebase.auth.uid}/Reservations")
+            //reg = db.collection("Users/${Firebase.auth.uid}/Reservations")
+            reg = db.collection("Reservations")
                 .whereEqualTo("playgroundName", selectedPlayground.value)
                 .addSnapshotListener { snapshots, e ->
                     if (e != null) {
@@ -170,6 +173,8 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
 
     fun saveReservation(/*reservation: Reservation*/) {
         val reservation = Reservation(
+            reservationId = "",
+            userId = Firebase.auth.uid!!,
             discipline = selectedSport.value,
             playgroundName = selectedPlayground.value,
             date = selectedDate.value!!,
@@ -180,13 +185,23 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                db.collection("Users/${Firebase.auth.uid}/Reservations")
+                db.collection("Reservations")
                     .add(reservation)
-                    .addOnSuccessListener { documentReference ->
-                        Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
+                    .addOnSuccessListener{
+                        reservation.reservationId = it.id   //inside user reservation, save a pointer to the same reservation inside 'Reservations' collection
+
+                        db.collection("Users/${Firebase.auth.uid}/Reservations")
+                            .add(reservation)
+                            .addOnSuccessListener { documentReference ->
+                                Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
+                            }
+                            .addOnFailureListener { e ->
+                                db.collection("Reference").document(it.id).delete()
+                                Log.w(TAG, "Error adding document to 'User/Reservations': $e")
+                            }
                     }
                     .addOnFailureListener { e ->
-                        Log.w(TAG, "Error adding document", e)
+                        Log.w(TAG, "Error adding document to 'Reservations': ", e)
                     }
             } catch (e: Exception) {
                 Log.w(TAG, "Exception occurred = $e")

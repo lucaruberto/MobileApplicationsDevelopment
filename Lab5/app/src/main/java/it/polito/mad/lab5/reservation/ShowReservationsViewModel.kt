@@ -67,16 +67,31 @@ class ShowReservationsViewModel(application: Application) : AndroidViewModel(app
                 .whereEqualTo("playgroundName", playgroundName)
                 .whereEqualTo("oraInizio", startHour)
                 .get()
-                .addOnSuccessListener{ it ->
+                .addOnSuccessListener{ reservationDocuments ->// delete from User/Reservations
+                    val reservationToDelete = reservationDocuments.documents[0].toObject(Reservation::class.java)
+                    val resId = reservationToDelete!!.reservationId
                     db.collection("Users/${Firebase.auth.uid}/Reservations")
-                        .document(it.documents[0].id)
+                        .document(reservationDocuments.documents[0].id)
                         .delete()
                         .addOnSuccessListener {
-                            Log.d(TAG, "Reservation deleted successfully")
+                            // delete from Reservations
+                            db.collection("Reservations").document(resId).delete()
+                                .addOnSuccessListener{
+                                    Log.d(TAG, "Reservation deleted successfully from 'Reservations' and 'User/Reservations'")
+                                }
+                                .addOnFailureListener { e ->
+                                    db.collection("Users/${Firebase.auth.uid}/Reservations")
+                                        .add(reservationToDelete)
+                                    Log.w(TAG, "Error deleting reservation from 'Reservations': $e")
+                                }
                         }
-                        .addOnFailureListener {
-                            Log.w(TAG, "Error deleting reservation: $it")
+                        .addOnFailureListener { e ->
+                            db.collection("Reservations").document(resId).set(reservationToDelete)
+                            Log.w(TAG, "Error deleting reservation from 'User/Reservations': $e")
                         }
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error fetching reservation to delete: $e")
                 }
         }
     }
