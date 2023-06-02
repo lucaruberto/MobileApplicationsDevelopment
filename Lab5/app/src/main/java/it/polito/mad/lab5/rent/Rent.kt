@@ -3,6 +3,7 @@ package it.polito.mad.lab5.rent
 import android.content.ContentValues.TAG
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,7 +37,12 @@ import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Rent(vm: RentViewModel) {
+fun Rent(vm: RentViewModel, setShowRent: (Boolean) -> Unit) {
+
+    BackHandler(enabled = true) {
+        setShowRent(false)
+    }
+
     val context = LocalContext.current
 
     val sportsList = vm.sportsList1.toList()
@@ -227,6 +233,7 @@ fun Rent(vm: RentViewModel) {
                                 onConfirm = {
                                     runBlocking {
                                         vm.saveReservation()
+                                        setShowRent(false)
                                     }
                                     Toast.makeText(context, "Reservation saved", Toast.LENGTH_LONG)
                                         .show()

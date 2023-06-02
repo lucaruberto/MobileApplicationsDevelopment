@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.DateRange
 import androidx.compose.material.icons.sharp.Person
-import androidx.compose.material.icons.sharp.Search
 import androidx.compose.material.icons.sharp.Star
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -30,6 +29,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -86,8 +87,8 @@ fun MainScreen(application: Application) {
     Log.d(TAG, "Loading main screen")
     val navController = rememberNavController()
     val profileViewModel = ProfileViewModel(application = application)
-    val showReservationsViewModel = ShowReservationsViewModel(application = application)
-    val rentViewModel = RentViewModel(application = application)
+    // val showReservationsViewModel = ShowReservationsViewModel(application = application)
+    // val rentViewModel = RentViewModel(application = application)
     profileViewModel.fetchInitialData()
     Scaffold(
         bottomBar = {
@@ -111,7 +112,7 @@ fun MainScreen(application: Application) {
                        Text("Profile", color = MaterialTheme.colorScheme.primary)
 
                    }
-
+                    /*
                    Column( modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
                        Button(
                            onClick = {
@@ -130,10 +131,10 @@ fun MainScreen(application: Application) {
                        Text("Add", color = MaterialTheme.colorScheme.primary)
 
                    }
-
+                    */
                     Column( modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
                         Button(onClick = {
-                            showReservationsViewModel.loadReservations()
+                            //showReservationsViewModel.loadReservations()
                             navController.navigate("ScreenTwo")
                                          }, colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer)  ) {
                             Icon(
@@ -147,7 +148,7 @@ fun MainScreen(application: Application) {
 
                     }
                    Column( modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-                       Button(onClick = { navController.navigate("ScreenFour") }, colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer)) {
+                       Button(onClick = { navController.navigate("ScreenThree") }, colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer)) {
                            Icon(
                                Icons.Sharp.Star,
                                contentDescription = "Rate",
@@ -170,12 +171,29 @@ fun MainScreen(application: Application) {
                 }
                 composable("ScreenTwo"){
                     Log.d(TAG, "Entering Reservations Screen")
-                    Reservation(showReservationsViewModel)
+                    ReservationRent(application)
                 }
-                composable("ScreenThree"){ Rent(rentViewModel)}
-                composable("ScreenFour") {Rate()}
+                //composable("ScreenThree"){ Rent(rentViewModel)}
+                composable("ScreenThree") {Rate()}
             }
         }
     }
 }
 
+@Composable
+fun ReservationRent(application: Application){
+    val (showRent, setShowRent) = remember { mutableStateOf(false) }
+
+    val showReservationsViewModel = ShowReservationsViewModel(application = application)
+    val rentViewModel = RentViewModel(application = application)
+
+    if(showRent){
+        rentViewModel.fetchAllSports()
+        rentViewModel.resetValues()
+        Rent(vm = rentViewModel, setShowRent)
+    }
+    else {
+        showReservationsViewModel.loadReservations()
+        Reservation(vm = showReservationsViewModel, setShowRent)
+    }
+}

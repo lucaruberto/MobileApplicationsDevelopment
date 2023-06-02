@@ -1,20 +1,27 @@
 package it.polito.mad.lab5.reservation
 
+//import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+//import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -27,18 +34,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import it.polito.mad.lab5.MyCalendar
-import it.polito.mad.lab5.db.FasciaOraria
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Reservation(vm: ShowReservationsViewModel) {
+fun Reservation(vm: ShowReservationsViewModel, setShowRent: (Boolean) -> Unit) {
     val reservations = vm.reservations
     val dateList = reservations.map { it.date }
     val (selectedDate, setSelectedDate) = remember { mutableStateOf<LocalDate?>(LocalDate.now()) }
@@ -59,9 +66,6 @@ fun Reservation(vm: ShowReservationsViewModel) {
                     .fillMaxWidth()
                     .padding(it)
             ) {
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
                 item {
                     MyCalendar(selectedDate, setSelectedDate, {
                         var found = false
@@ -144,8 +148,38 @@ fun Reservation(vm: ShowReservationsViewModel) {
 
                     }
                 }
+                item {
+                    // to avoid fab on last reservation trash icon
+                    Spacer(modifier = Modifier.height(100.dp))
+                }
             }
+            FloatingActionButton(setShowRent)
         }
     )
 }
 
+@Composable
+fun FloatingActionButton(setShowRent: (Boolean) -> Unit) {
+    //val ctx = LocalContext.current
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .fillMaxHeight()
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.End
+    ) {
+        FloatingActionButton(
+            onClick = {
+                setShowRent(true)
+                //Toast.makeText(ctx, "Create new reservation", Toast.LENGTH_SHORT).show()
+            },
+            containerColor = MaterialTheme.colorScheme.primary,
+            shape = CircleShape,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Icon(Icons.Filled.Add, "")
+        }
+    }
+}
