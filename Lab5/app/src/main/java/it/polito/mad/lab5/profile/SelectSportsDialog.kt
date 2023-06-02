@@ -55,7 +55,9 @@ fun SelectSportsDialog(
                 shape = RectangleShape
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp).fillMaxWidth()) {
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()) {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
@@ -63,7 +65,8 @@ fun SelectSportsDialog(
                             text = "Your sports",
                             fontWeight = FontWeight.Bold,
                             fontSize = 24.sp,
-                            modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)
+                            modifier = Modifier
+                                .padding(start = 16.dp, top = 16.dp, end = 16.dp)
                                 .align(CenterHorizontally)
                         )
                         Row(modifier = Modifier.weight(3f / 7f)) {
@@ -85,7 +88,8 @@ fun SelectSportsDialog(
                             text = "Add a new sport",
                             fontWeight = FontWeight.Bold,
                             fontSize = 24.sp,
-                            modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)
+                            modifier = Modifier
+                                .padding(start = 16.dp, top = 16.dp, end = 16.dp)
                                 .align(CenterHorizontally)
 
                         )
@@ -101,15 +105,15 @@ fun SelectSportsDialog(
                                             .fillMaxWidth(),
                                         selectedSports = selectedSports,
                                         add = true,
-
-                                        )
+                                    )
                                 }
                             }
                         }
 
 
                         Row(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
                                 .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp)
                                 .weight(1f / 7f),
                             horizontalArrangement = Arrangement.SpaceBetween
