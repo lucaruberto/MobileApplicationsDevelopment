@@ -100,7 +100,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         }
 
     }
-    private fun fetchUserSports() {
+    fun fetchUserSports() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val userSportDocument = dbReal.collection("Users/${Firebase.auth.uid}/Sports").get().await()

@@ -110,7 +110,10 @@ fun Profile(context: Context, viewModel: ProfileViewModel) {
                 SelectSportsDialog(
                     allSports = allSports,
                     selectedSports = selectedSports,
-                    onDismissRequest = { viewModel.showDialog.value = false },
+                    onDismissRequest = {
+                        viewModel.fetchUserSports()
+                        viewModel.showDialog.value = false
+                                       },
                     setShowDialog = { viewModel.showDialog.value = it },
                     saveSports = {viewModel.updateUserSports()}
                 )
