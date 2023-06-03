@@ -170,7 +170,7 @@ fun MainScreen(application: Application) {
                 }
                 composable("ScreenTwo"){
                     Log.d(TAG, "Entering Reservations Screen")
-                    Reservation(showReservationsViewModel)
+                    Reservation(showReservationsViewModel, rentViewModel)
                 }
                 composable("ScreenThree"){ Rent(rentViewModel)}
                 composable("ScreenFour") {Rate()}

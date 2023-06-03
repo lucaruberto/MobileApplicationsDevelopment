@@ -23,6 +23,7 @@ import java.util.Date
 
 
 class RentViewModel(application: Application) : AndroidViewModel(application) {
+    val setReservationEditDialog = mutableStateOf<(Reservation) -> Unit>({})
     var db = FirebaseFirestore.getInstance()
 
     val sportsList1 = mutableStateListOf<String>()
@@ -30,18 +31,21 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
     val fullDates = mutableListOf<Date>()
     val freeSlots = mutableStateListOf<FasciaOraria>()
     val selectedSport = mutableStateOf("Sport")
-    val selectedPlayground = mutableStateOf("Playground")
+    val selectedPlayground = mutableStateOf("")
     val selectedDate = mutableStateOf<Date?>(null)
     val selectedTimeSlot = mutableStateOf<FasciaOraria?>(null)
     val customRequest = mutableStateOf("")
+    val reservationToUpdateId = mutableStateOf("")
 
     private lateinit var reg: ListenerRegistration
     private lateinit var regFullDates: ListenerRegistration
     private val datesMap = mutableMapOf<Date, Int>()
 
+    val isEdit = mutableStateOf(false)
+
     fun resetValues(){
         selectedSport.value = "Sport"
-        selectedPlayground.value = "Playground"
+        selectedPlayground.value = ""
         selectedDate.value = null
         customRequest.value = ""
     }
@@ -73,7 +77,7 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
                                             Log.d(TAG, "New reservation: ${dc.document.data}")
                                             val reservationToDelete = dc.document.toObject(Reservation::class.java)
                                             freeSlots.removeIf {
-                                                it.oraInizio == reservationToDelete.oraInizio
+                                                (it.oraInizio == reservationToDelete.oraInizio) && !(isEdit.value && (it.oraInizio == selectedTimeSlot.value!!.oraInizio))
                                             }
                                         }
 
@@ -182,29 +186,71 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
             oraFine = selectedTimeSlot.value!!.oraFine,
             customRequest = customRequest.value
         )
+        if(!isEdit.value) {
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    db.collection("Reservations")
+                        .add(reservation)
+                        .addOnSuccessListener {
+                            reservation.reservationId =
+                                it.id   //inside user reservation, save a pointer to the same reservation inside 'Reservations' collection
 
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                db.collection("Reservations")
-                    .add(reservation)
-                    .addOnSuccessListener{
-                        reservation.reservationId = it.id   //inside user reservation, save a pointer to the same reservation inside 'Reservations' collection
-
+                            db.collection("Users/${Firebase.auth.uid}/Reservations")
+                                .add(reservation)
+                                .addOnSuccessListener { documentReference ->
+                                    Log.d(
+                                        TAG,
+                                        "DocumentSnapshot written with ID: ${documentReference.id}"
+                                    )
+                                }
+                                .addOnFailureListener { e ->
+                                    db.collection("Reference").document(it.id).delete()
+                                    Log.w(TAG, "Error adding document to 'User/Reservations': $e")
+                                }
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w(TAG, "Error adding document to 'Reservations': ", e)
+                        }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Exception occurred = $e")
+                }
+            }
+        }
+        else {
+            viewModelScope.launch {
+                db.collection("Users/${Firebase.auth.uid}/Reservations")
+                    .whereEqualTo("reservationId", reservationToUpdateId.value)
+                    .get()
+                    .addOnSuccessListener{ reservationDocuments ->// delete from User/Reservations
+                        val reservationToUpdate = reservationDocuments.documents[0].toObject(Reservation::class.java)
+                        val resId = reservationToUpdate!!.reservationId
+                        reservation.reservationId = resId
+                        // update in 'Users/uid/Reservations
                         db.collection("Users/${Firebase.auth.uid}/Reservations")
-                            .add(reservation)
-                            .addOnSuccessListener { documentReference ->
-                                Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
+                            .document(reservationDocuments.documents[0].id)
+                            .set(reservation)
+                            .addOnSuccessListener {
+                                // delete from Reservations
+                                reservation.reservationId = ""
+                                db.collection("Reservations").document(resId).set(reservation)
+                                    .addOnSuccessListener{
+                                        Log.d(TAG, "Reservation updated successfully from 'Reservations' and 'User/Reservations'")
+                                        setReservationEditDialog.value(Reservation())
+                                    }
+                                    .addOnFailureListener { e ->
+                                        db.collection("Users/${Firebase.auth.uid}/Reservations")
+                                            .document(reservationDocuments.documents[0].id)
+                                            .set(reservationToUpdate)
+                                        Log.w(TAG, "Error updating reservation from 'Reservations': $e")
+                                    }
                             }
-                            .addOnFailureListener { e ->
-                                db.collection("Reference").document(it.id).delete()
-                                Log.w(TAG, "Error adding document to 'User/Reservations': $e")
+                            .addOnFailureListener {
+                                Log.w(TAG, "Error updating reservation in 'Users/uid/Reservations")
                             }
                     }
                     .addOnFailureListener { e ->
-                        Log.w(TAG, "Error adding document to 'Reservations': ", e)
+                        Log.w(TAG, "Error fetching reservation to update: $e")
                     }
-            } catch (e: Exception) {
-                Log.w(TAG, "Exception occurred = $e")
             }
         }
     }

@@ -39,6 +39,11 @@ class ShowReservationsViewModel(application: Application) : AndroidViewModel(app
                                 }
 
                                 DocumentChange.Type.MODIFIED -> {
+                                    val updatedRes = dc.document.toObject(Reservation::class.java)
+                                    reservations.removeIf {
+                                        it.reservationId == updatedRes.reservationId
+                                    }
+                                    reservations.add(updatedRes)
                                     Log.d(TAG, "Modified reservation: ${dc.document.data}")
                                 }
 

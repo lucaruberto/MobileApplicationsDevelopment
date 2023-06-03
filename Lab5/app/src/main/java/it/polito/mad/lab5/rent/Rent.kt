@@ -55,13 +55,13 @@ fun Rent(vm: RentViewModel) {
 
     var expandedSport by remember { mutableStateOf(false) }
     var expandedField by remember { mutableStateOf(false) }
-    var showFieldsDropDown  by remember { mutableStateOf(false) }
+    //var showFieldsDropDown  by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Rent a playing field", textAlign = TextAlign.Center)},
+                title = { Text(text = if(!vm.isEdit.value) "Rent a playing field" else "Edit you reservation" , textAlign = TextAlign.Center)},
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary, titleContentColor = MaterialTheme.colorScheme.onPrimary)
             )
         },
@@ -110,7 +110,7 @@ fun Rent(vm: RentViewModel) {
                                     onClick = {
                                         vm.selectedSport.value = item
                                         expandedSport = false
-                                        showFieldsDropDown = true
+                                        //showFieldsDropDown = true
                                         vm.loadPlaygrounds()
                                         vm.selectedPlayground.value = "Playground"
                                     },
@@ -119,7 +119,7 @@ fun Rent(vm: RentViewModel) {
                             }
                         }
                     }
-                    if (showFieldsDropDown) {
+                    if (selectedPlayground != "") {
                         if (selectedSport.isNotEmpty()) {
                             Text(text = "Select the playground:", modifier = Modifier.padding(16.dp))
                             ExposedDropdownMenuBox(
@@ -182,7 +182,7 @@ fun Rent(vm: RentViewModel) {
                 }
 
                 item {
-                    if (selectedSport != "Sport" && selectedPlayground != "Playground") {
+                    if (selectedSport != "Sport" && selectedPlayground != "Playground" && selectedPlayground != "") {
                         Text(text = "Select the date:", modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp))
 
                         MyCalendar(
@@ -201,11 +201,12 @@ fun Rent(vm: RentViewModel) {
                                     }
                                 }
                                 found},
-                            backgroundColor = Color(0xFFe06666)
+                            backgroundColor = Color(0xFFe06666),
+                            isEdit = vm.isEdit.value
                         )
                     }
                 }
-                if (selectedSport != "Sport" && selectedPlayground != "Field" && selectedDate != null) {
+                if (selectedSport != "Sport" && selectedPlayground != "Playground" && selectedPlayground != "" && selectedDate != null) {
                     item {
                         Text(text = "Choose the hour:", modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp))
                         if(freeSlots.isNotEmpty()) {

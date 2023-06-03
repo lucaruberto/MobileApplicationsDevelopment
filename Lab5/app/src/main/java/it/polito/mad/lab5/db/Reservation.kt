@@ -14,6 +14,8 @@ class Reservation(
 ){
     constructor() : this("", "", "", "", Date(), -1, -1, "")
 
+    constructor(res: Reservation): this(res.reservationId, res.userId, res.discipline, res.playgroundName, res.date, res.oraInizio, res.oraFine, res.customRequest)
+
     override fun toString(): String {
         return "$discipline $playgroundName $date $oraInizio-$oraFine $customRequest"
     }

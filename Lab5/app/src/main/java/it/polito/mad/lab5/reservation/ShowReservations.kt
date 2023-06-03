@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,18 +31,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import it.polito.mad.lab5.MyCalendar
 import it.polito.mad.lab5.db.FasciaOraria
+import it.polito.mad.lab5.db.Reservation
+import it.polito.mad.lab5.rent.Rent
+import it.polito.mad.lab5.rent.RentViewModel
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Reservation(vm: ShowReservationsViewModel) {
+fun Reservation(vm: ShowReservationsViewModel, rentVm: RentViewModel) {
     val reservations = vm.reservations
     val dateList = reservations.map { it.date }
     val (selectedDate, setSelectedDate) = remember { mutableStateOf<LocalDate?>(LocalDate.now()) }
+
+    val (reservationToEdit, setReservationToEdit) = remember { mutableStateOf(Reservation()) }
 
     val selectedDateReservations = reservations
         .filter { it.date == Date.from(selectedDate?.atStartOfDay(ZoneOffset.systemDefault())?.toInstant() ) }
@@ -90,7 +97,7 @@ fun Reservation(vm: ShowReservationsViewModel) {
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Column() {
+                            Column {
                                 Text(
                                     text = "${it.oraInizio}:00 - ${it.oraFine}:00",
                                     fontSize = 20.sp,
@@ -124,26 +131,65 @@ fun Reservation(vm: ShowReservationsViewModel) {
                                 verticalArrangement = Arrangement.Center,
                                 modifier = Modifier.padding(16.dp)
                             ) {
-                                Button(onClick = {
-                                    vm.deleteReservation(
-                                        it.date,
-                                        it.discipline,
-                                        it.oraInizio,
-                                        it.playgroundName
-                                    )
-                                }) {
+                                Row {
+                                    Button(
+                                        onClick = {
+                                            setReservationToEdit(it)
+                                            //setShowEditReservation(true)
+                                        },
+                                        modifier = Modifier.padding(end = 8.dp)
+                                    ) {
 
-                                    Icon(
-                                        Icons.Rounded.Delete,
-                                        contentDescription = "Delete Reservation"
-                                    )
+                                        Icon(
+                                            Icons.Rounded.Edit,
+                                            contentDescription = "Edit Reservation"
+                                        )
 
+                                    }
+                                    Button(onClick = {
+                                        vm.deleteReservation(
+                                            it.date,
+                                            it.discipline,
+                                            it.oraInizio,
+                                            it.playgroundName
+                                        )
+                                    }) {
+
+                                        Icon(
+                                            Icons.Rounded.Delete,
+                                            contentDescription = "Delete Reservation"
+                                        )
+                                    }
                                 }
                             }
                         }
-
                     }
                 }
+            }
+            if(reservationToEdit.discipline != ""){
+                Dialog(
+                    //properties = DialogProperties(usePlatformDefaultWidth = false),
+                    onDismissRequest = {
+                        rentVm.isEdit.value = false
+                        setReservationToEdit(Reservation())
+                                       },
+                    content = {
+                        //val rentVm = RentViewModel(vm.getApplication())
+                        rentVm.fetchAllSports()
+                        rentVm.selectedSport.value = reservationToEdit.discipline
+                        rentVm.loadPlaygrounds()
+                        rentVm.selectedPlayground.value = reservationToEdit.playgroundName
+                        rentVm.loadFullDates()
+                        rentVm.selectedDate.value = reservationToEdit.date
+                        rentVm.selectedTimeSlot.value = FasciaOraria(reservationToEdit.oraInizio, reservationToEdit.oraFine)
+                        rentVm.loadFreeSlots()
+                        rentVm.customRequest.value = reservationToEdit.customRequest
+                        rentVm.reservationToUpdateId.value = reservationToEdit.reservationId
+                        rentVm.isEdit.value = true
+                        rentVm.setReservationEditDialog.value = setReservationToEdit
+                        Rent(rentVm)
+                    }
+                )
             }
         }
     )

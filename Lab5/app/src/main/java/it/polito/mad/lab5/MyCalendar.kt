@@ -43,7 +43,7 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
-fun MyCalendar(selectedDate: LocalDate?, setSelectedDate: (LocalDate?)->Unit, isColored: (CalendarDay)->Boolean, backgroundColor: Color = Color.Transparent ) {
+fun MyCalendar(selectedDate: LocalDate?, setSelectedDate: (LocalDate?)->Unit, isColored: (CalendarDay)->Boolean, backgroundColor: Color = Color.Transparent, isEdit:Boolean = false) {
 
     val currentMonth = remember { YearMonth.now() }
     val startMonth = remember { currentMonth.minusMonths(100) } // Adjust as needed
@@ -87,7 +87,7 @@ fun MyCalendar(selectedDate: LocalDate?, setSelectedDate: (LocalDate?)->Unit, is
             val screenWidth = configuration.screenWidthDp.dp
             Box(
                 modifier = Modifier
-                    .width(screenWidth /* * 0.73f*/)
+                    .width(if(!isEdit) screenWidth else screenWidth * 0.82f )
                     .padding(16.dp)
                     .clip(shape = RoundedCornerShape(8.dp))
                     .border(
