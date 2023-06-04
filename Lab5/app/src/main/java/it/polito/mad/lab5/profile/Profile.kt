@@ -10,14 +10,14 @@ import androidx.compose.ui.*
 import androidx.compose.ui.unit.*
 
 @Composable
-fun Profile(context: Context, viewModel: ProfileViewModel) {
+fun Profile(context: Context, viewModel: ProfileViewModel, logout: () -> Unit) {
 
     val selectedSports = viewModel.selectedSports
     val allSports =  viewModel.allSports
 
     Scaffold(
         topBar = {
-            MyTopBar(viewModel = viewModel)
+            MyTopBar(viewModel = viewModel, logout)
         }
     ) { it ->
 
@@ -113,13 +113,12 @@ fun Profile(context: Context, viewModel: ProfileViewModel) {
                     onDismissRequest = {
                         viewModel.fetchUserSports()
                         viewModel.showDialog.value = false
-                                       },
+                    },
                     setShowDialog = { viewModel.showDialog.value = it },
-                    saveSports = {viewModel.updateUserSports()}
+                    saveSports = { viewModel.updateUserSports() }
                 )
             }
         }
-
     }
 }
     

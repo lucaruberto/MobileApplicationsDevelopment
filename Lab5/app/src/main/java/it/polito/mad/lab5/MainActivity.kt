@@ -39,6 +39,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import it.polito.mad.lab5.Friends.Friends
 import it.polito.mad.lab5.Friends.FriendsViewModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import it.polito.mad.lab5.authentication.MyAuthentication
 import it.polito.mad.lab5.authentication.MyAuthenticationViewModel
 import it.polito.mad.lab5.profile.Profile
@@ -73,7 +75,11 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     if(authVm.isLogged.value)
-                        MainScreen(application)
+                        MainScreen(application) {
+                            Firebase.auth.signOut()
+                            authVm.resetCredentials()
+                            authVm.isLogged.value = false
+                        }
                     else
                         MyAuthentication(vm = authVm)
                 }
@@ -84,7 +90,7 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun MainScreen(application: Application) {
+fun MainScreen(application: Application, logout: () -> Unit) {
     Log.d(TAG, "Loading main screen")
     val navController = rememberNavController()
     val profileViewModel = ProfileViewModel(application = application)
@@ -182,7 +188,7 @@ fun MainScreen(application: Application) {
             NavHost(navController = navController, startDestination = "ScreenOne"){
                 composable("ScreenOne"){
                     Log.d(TAG, "Entering Profile Screen")
-                    Profile(LocalContext.current, profileViewModel)
+                    Profile(LocalContext.current, profileViewModel, logout = logout)
                 }
                 composable("ScreenTwo"){
                     Log.d(TAG, "Entering Reservations Screen")

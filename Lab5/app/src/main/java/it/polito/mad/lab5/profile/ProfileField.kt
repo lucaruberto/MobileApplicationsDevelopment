@@ -8,6 +8,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -42,8 +43,9 @@ fun ProfileField(hover: String, text: String, type: String, setText: (String)->U
                 color = MaterialTheme.colorScheme.secondary,
             )
             if (editMode)
-                TextField(
+                OutlinedTextField(
                     value = text,
+                    enabled = (hover != "Mail"),
                     onValueChange = { setText(it) },
                     modifier = Modifier
                         .weight(2f)
@@ -54,10 +56,10 @@ fun ProfileField(hover: String, text: String, type: String, setText: (String)->U
                             keyboardType = KeyboardType.Decimal,
                             imeAction = ImeAction.Next
                         )
-                        "email" -> KeyboardOptions.Default.copy(
+                        /*"email" -> KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Email,
                             imeAction = ImeAction.Next
-                        )
+                        )*/
                         "simple" -> KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Text,
                             capitalization = KeyboardCapitalization.Words,

@@ -66,7 +66,7 @@ fun ProfileImage(
             shape = CircleShape,
             modifier = Modifier
                 .padding(8.dp)
-                .size(100.dp)
+                .size(200.dp)
         ) {
             Image(
                 painter = painter,
