@@ -37,6 +37,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import it.polito.mad.lab5.Friends.Friends
+import it.polito.mad.lab5.Friends.FriendsViewModel
 import it.polito.mad.lab5.authentication.MyAuthentication
 import it.polito.mad.lab5.authentication.MyAuthenticationViewModel
 import it.polito.mad.lab5.profile.Profile
@@ -88,7 +90,9 @@ fun MainScreen(application: Application) {
     val profileViewModel = ProfileViewModel(application = application)
     val showReservationsViewModel = ShowReservationsViewModel(application = application)
     val rentViewModel = RentViewModel(application = application)
+    val friendsViewModel = FriendsViewModel(application = application)
     profileViewModel.fetchInitialData()
+    friendsViewModel.fetchInitialData()
     Scaffold(
         bottomBar = {
             BottomAppBar{
@@ -158,6 +162,18 @@ fun MainScreen(application: Application) {
                        Text("Reviews", color = MaterialTheme.colorScheme.primary)
 
                    }
+                   Column( modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                       Button(onClick = { navController.navigate("ScreenFive") }, colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer)) {
+                           Icon(
+                               Icons.Sharp.Star,
+                               contentDescription = "Friends",
+                               modifier = Modifier.size(ButtonDefaults.IconSize),
+                               tint = Color.Black
+                           )
+                       }
+                       Text("Friends", color = MaterialTheme.colorScheme.primary)
+
+                   }
                 }
             }
         }
@@ -174,6 +190,7 @@ fun MainScreen(application: Application) {
                 }
                 composable("ScreenThree"){ Rent(rentViewModel)}
                 composable("ScreenFour") {Rate()}
+                composable("ScreenFive"){Friends(friendsViewModel)}
             }
         }
     }
