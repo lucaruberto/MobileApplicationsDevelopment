@@ -72,7 +72,6 @@ fun MyTopBar(viewModel: ProfileViewModel, logout: () -> Unit) {
                         DropdownMenuItem(
                             text = { Text("Exit...") },
                             onClick = {
-                                Firebase.auth.signOut()
                                 logout()
                             }
                         )
