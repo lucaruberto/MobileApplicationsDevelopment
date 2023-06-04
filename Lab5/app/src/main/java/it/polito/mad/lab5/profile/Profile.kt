@@ -19,7 +19,7 @@ fun Profile(context: Context, viewModel: ProfileViewModel, logout: () -> Unit) {
 
     Scaffold(
         topBar = {
-            MyTopBar(viewModel = viewModel)
+            MyTopBar(viewModel = viewModel, logout)
         }
     ) { it ->
 
@@ -115,21 +115,12 @@ fun Profile(context: Context, viewModel: ProfileViewModel, logout: () -> Unit) {
                     onDismissRequest = {
                         viewModel.fetchUserSports()
                         viewModel.showDialog.value = false
-                                       },
+                    },
                     setShowDialog = { viewModel.showDialog.value = it },
-                    saveSports = {viewModel.updateUserSports()}
+                    saveSports = { viewModel.updateUserSports() }
                 )
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = { logout() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ){
-                Text(text = "Logout")
-            }
         }
-
     }
 }
     
