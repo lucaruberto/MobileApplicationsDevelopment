@@ -66,11 +66,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import it.polito.mad.lab5.R
 import it.polito.mad.lab5.db.PlayGrounds
-import it.polito.mad.lab5.db.ProvaUser
 import it.polito.mad.lab5.db.Rating
-import it.polito.mad.lab5.profile.ProfileViewModel
 import java.time.LocalDate
-import java.util.Date
 
 
 @Composable
@@ -156,7 +153,7 @@ fun Rate() {
                             fieldsNotRated?.forEach { field -> DropdownMenuItem(
                                 text = { Text(text = field.playgroundName!!, modifier = Modifier
                                     .fillMaxWidth()
-                                    .align(Alignment.CenterHorizontally))},
+                                    .align(CenterHorizontally))},
                                 onClick = {
                                     selectedField = field.playgroundName!!
                                     expanded = false
@@ -404,7 +401,7 @@ fun InsertReviewForm(modifier: Modifier, selectedField: String, vm: RateViewMode
             Modifier
                 .padding(16.dp)
                 .fillMaxWidth()),
-        horizontalAlignment = Alignment.CenterHorizontally)
+        horizontalAlignment = CenterHorizontally)
     {
         val focusManager = LocalFocusManager.current
 

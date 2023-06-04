@@ -17,7 +17,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
-import java.util.Date
 
 class RateViewModel(application: Application): AndroidViewModel(application) {
     val db = FirebaseFirestore.getInstance()
