@@ -16,11 +16,13 @@ import it.polito.mad.lab5.db.Rating
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.time.LocalDate
+import java.util.Date
 
 class RateViewModel(application: Application): AndroidViewModel(application) {
     val db = FirebaseFirestore.getInstance()
 
-    private val fieldsNotRated = MutableLiveData<List<String>>()
+    //private val fieldsNotRated = MutableLiveData<List<String>>()
     private var reviews = MutableLiveData<List<Rating>>()
     private var allFields = MutableLiveData<List<PlayGrounds>>()
     private var loggedUser = MutableLiveData<ProvaUser>()
@@ -59,7 +61,8 @@ class RateViewModel(application: Application): AndroidViewModel(application) {
         return allFields
     }
 
-    fun fetchFieldsNotRated(): LiveData<List<String>> {
+    /* NOT NEEDED ANYMORE: users should be able to rate all fields*/
+    /*fun fetchFieldsNotRated(): LiveData<List<String>> {
         viewModelScope.launch(Dispatchers.IO) {
             db.collection("Playground")
                 .get()
@@ -85,16 +88,16 @@ class RateViewModel(application: Application): AndroidViewModel(application) {
                 }
         }
         return fieldsNotRated
-    }
+    }*/
 
-    fun addReview(field: String, reviewText: String, rating: Int, userId: String) {
+    fun addReview(field: String, reviewText: String, rating: Int, userId: String, date: LocalDate) {
         viewModelScope.launch(Dispatchers.IO) {
             val userDocument = db.collection("Users")
                 .document(userId)
                 .get()
                 .await()
             val user = userDocument.toObject(ProvaUser::class.java)
-            val reviewToAdd = Rating("", field, reviewText, rating, user)
+            val reviewToAdd = Rating("", field, reviewText, rating, user, date.toString())
             db.collection("Review")
                 .add(reviewToAdd)
                 .addOnSuccessListener { documentReference ->

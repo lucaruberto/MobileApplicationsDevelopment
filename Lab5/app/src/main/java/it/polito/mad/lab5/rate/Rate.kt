@@ -69,6 +69,8 @@ import it.polito.mad.lab5.db.PlayGrounds
 import it.polito.mad.lab5.db.ProvaUser
 import it.polito.mad.lab5.db.Rating
 import it.polito.mad.lab5.profile.ProfileViewModel
+import java.time.LocalDate
+import java.util.Date
 
 
 @Composable
@@ -76,7 +78,7 @@ fun Rate() {
     val vmRatings: RateViewModel = viewModel()
 
     val ratings by vmRatings.fetchAllReviews().observeAsState()
-    val fieldsNotRated by vmRatings.fetchFieldsNotRated().observeAsState()
+    val fieldsNotRated by vmRatings.fetchAllFields().observeAsState()
     val allFields by vmRatings.fetchAllFields().observeAsState()
 
     val (readMode, setReadMode) = remember { mutableStateOf(true) }
@@ -152,11 +154,11 @@ fun Rate() {
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             fieldsNotRated?.forEach { field -> DropdownMenuItem(
-                                text = { Text(text = field, modifier = Modifier
+                                text = { Text(text = field.playgroundName!!, modifier = Modifier
                                     .fillMaxWidth()
                                     .align(Alignment.CenterHorizontally))},
                                 onClick = {
-                                    selectedField = field
+                                    selectedField = field.playgroundName!!
                                     expanded = false
                                     setShowForm(true)
                                 },
@@ -265,10 +267,7 @@ fun FieldCard(field: PlayGrounds, reviews: List<Rating>, vm: RateViewModel) {
                             }
                             reviews.forEach { r ->
                                 ReviewComponent(
-                                    r.id!!,
-                                    r.reviewText!!,
-                                    r.score!!,
-                                    r.user!!,
+                                    r,
                                     vm,
                                     modifier = Modifier.padding(16.dp)
                                 )
@@ -282,7 +281,7 @@ fun FieldCard(field: PlayGrounds, reviews: List<Rating>, vm: RateViewModel) {
 }
 
 @Composable
-fun ReviewComponent(reviewId: String, reviewText: String, rating: Int, user: ProvaUser, vm: RateViewModel, modifier: Modifier) {
+fun ReviewComponent(review: Rating, vm: RateViewModel, modifier: Modifier) {
     val (expanded, setExpanded) = remember { mutableStateOf(false) }
     val starsColor = Color(0xFFFFC107)
     val loggedUser = vm.fetchLoggedUser().value
@@ -307,7 +306,7 @@ fun ReviewComponent(reviewId: String, reviewText: String, rating: Int, user: Pro
                         .wrapContentWidth(align = CenterHorizontally)
                 ) {
                     for (i in 1..5) {
-                        if (i <= rating) {
+                        if (i <= review.score!!) {
                             Icon(
                                 modifier = Modifier.height(48.dp),
                                 imageVector = Icons.Outlined.Star,
@@ -331,8 +330,22 @@ fun ReviewComponent(reviewId: String, reviewText: String, rating: Int, user: Pro
                         .wrapContentWidth(align = CenterHorizontally)
                 ) {
                     Text(
-                        text = user.nickname,
-                        style = TextStyle(fontSize = 28.sp, textAlign = TextAlign.Center),
+                        text = review.user!!.nickname,
+                        style = TextStyle(fontSize = 24.sp, textAlign = TextAlign.Center),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentWidth(align = CenterHorizontally)
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(align = CenterHorizontally)
+                        .padding(8.dp)
+                ) {
+                    Text(
+                        text = review.date!!,
+                        style = TextStyle(fontSize = 18.sp, textAlign = TextAlign.Center),
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentWidth(align = CenterHorizontally)
@@ -344,7 +357,7 @@ fun ReviewComponent(reviewId: String, reviewText: String, rating: Int, user: Pro
 
         if (expanded) {
             Text(
-                text = reviewText,
+                text = review.reviewText!!,
                 style = TextStyle(fontSize = 20.sp, textAlign = TextAlign.Center),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -352,7 +365,7 @@ fun ReviewComponent(reviewId: String, reviewText: String, rating: Int, user: Pro
                     .padding(16.dp)
             )
 
-            if(loggedUser?.nickname == user.nickname) {
+            if(loggedUser?.nickname == review.user!!.nickname) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
@@ -362,7 +375,7 @@ fun ReviewComponent(reviewId: String, reviewText: String, rating: Int, user: Pro
                         .clip(RoundedCornerShape(50))
                 ) {
                     IconButton(
-                        onClick = { vm.removeReview(reviewId) },
+                        onClick = { vm.removeReview(review.id!!) },
                         modifier = Modifier
                             .background(Color(0xFFFFCDD2))
                             .size(48.dp),
@@ -444,7 +457,7 @@ fun InsertReviewForm(modifier: Modifier, selectedField: String, vm: RateViewMode
            modifier = Modifier.fillMaxWidth()
        ) {
            Button(onClick = {
-               vm.addReview(selectedField, content, rating, Firebase.auth.uid!!)
+               vm.addReview(selectedField, content, rating, Firebase.auth.uid!!, LocalDate.now())
                Toast.makeText(context, "Review saved", Toast.LENGTH_LONG).show()
                onButtonClick(true)
            }) {
