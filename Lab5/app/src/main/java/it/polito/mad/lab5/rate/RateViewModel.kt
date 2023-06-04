@@ -7,7 +7,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import it.polito.mad.lab5.db.PlayGrounds
 import it.polito.mad.lab5.db.ProvaUser
 import it.polito.mad.lab5.db.Rating
@@ -21,6 +23,7 @@ class RateViewModel(application: Application): AndroidViewModel(application) {
     private val fieldsNotRated = MutableLiveData<List<String>>()
     private var reviews = MutableLiveData<List<Rating>>()
     private var allFields = MutableLiveData<List<PlayGrounds>>()
+    private var loggedUser = MutableLiveData<ProvaUser>()
 
     fun fetchAllReviews(): LiveData<List<Rating>> {
         viewModelScope.launch(Dispatchers.IO){
@@ -84,18 +87,16 @@ class RateViewModel(application: Application): AndroidViewModel(application) {
         return fieldsNotRated
     }
 
-    fun addReview(review: Rating) {
+    fun addReview(field: String, reviewText: String, rating: Int, userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val userDocument = db.collection("Users")
-                .document(review.user!!)
+                .document(userId)
                 .get()
                 .await()
             val user = userDocument.toObject(ProvaUser::class.java)
-            if (user != null) {
-                review.user = user.nickname
-            }
+            val reviewToAdd = Rating("", field, reviewText, rating, user)
             db.collection("Review")
-                .add(review)
+                .add(reviewToAdd)
                 .addOnSuccessListener { documentReference ->
                     Log.d(ContentValues.TAG, "Review added with ID: ${documentReference.id}")
                     fetchAllReviews()
@@ -104,6 +105,18 @@ class RateViewModel(application: Application): AndroidViewModel(application) {
                     Log.w(ContentValues.TAG, "Error adding review: $ex")
                 }
         }
+    }
+
+    fun fetchLoggedUser(): LiveData<ProvaUser> {
+        val userId = Firebase.auth.uid!!
+        viewModelScope.launch(Dispatchers.IO) {
+            val userDocument = db.collection("Users")
+                .document(userId)
+                .get()
+                .await()
+            loggedUser.postValue(userDocument.toObject(ProvaUser::class.java))
+        }
+        return loggedUser
     }
 
     fun removeReview(reviewId: String) {

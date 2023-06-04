@@ -66,7 +66,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import it.polito.mad.lab5.R
 import it.polito.mad.lab5.db.PlayGrounds
+import it.polito.mad.lab5.db.ProvaUser
 import it.polito.mad.lab5.db.Rating
+import it.polito.mad.lab5.profile.ProfileViewModel
 
 
 @Composable
@@ -280,9 +282,10 @@ fun FieldCard(field: PlayGrounds, reviews: List<Rating>, vm: RateViewModel) {
 }
 
 @Composable
-fun ReviewComponent(reviewId: String, reviewText: String, rating: Int, user: String, vm: RateViewModel, modifier: Modifier) {
+fun ReviewComponent(reviewId: String, reviewText: String, rating: Int, user: ProvaUser, vm: RateViewModel, modifier: Modifier) {
     val (expanded, setExpanded) = remember { mutableStateOf(false) }
     val starsColor = Color(0xFFFFC107)
+    val loggedUser = vm.fetchLoggedUser().value
 
     Column(
         modifier = modifier.then(
@@ -328,7 +331,7 @@ fun ReviewComponent(reviewId: String, reviewText: String, rating: Int, user: Str
                         .wrapContentWidth(align = CenterHorizontally)
                 ) {
                     Text(
-                        text = user,
+                        text = user.nickname,
                         style = TextStyle(fontSize = 28.sp, textAlign = TextAlign.Center),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -348,25 +351,28 @@ fun ReviewComponent(reviewId: String, reviewText: String, rating: Int, user: Str
                     .wrapContentWidth(align = CenterHorizontally)
                     .padding(16.dp)
             )
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .clip(RoundedCornerShape(50))
-            ) {
-                IconButton(
-                    onClick = { vm.removeReview(reviewId) },
+
+            if(loggedUser?.nickname == user.nickname) {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .background(Color(0xFFFFCDD2))
-                        .size(48.dp),
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .clip(RoundedCornerShape(50))
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Delete",
-                        modifier = Modifier.size(24.dp)
-                    )
+                    IconButton(
+                        onClick = { vm.removeReview(reviewId) },
+                        modifier = Modifier
+                            .background(Color(0xFFFFCDD2))
+                            .size(48.dp),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete",
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
                 }
             }
         }
@@ -438,7 +444,7 @@ fun InsertReviewForm(modifier: Modifier, selectedField: String, vm: RateViewMode
            modifier = Modifier.fillMaxWidth()
        ) {
            Button(onClick = {
-               vm.addReview( Rating("", selectedField, content, rating, Firebase.auth.uid) )
+               vm.addReview(selectedField, content, rating, Firebase.auth.uid!!)
                Toast.makeText(context, "Review saved", Toast.LENGTH_LONG).show()
                onButtonClick(true)
            }) {
