@@ -30,6 +30,12 @@ class MyAuthenticationViewModel() : ViewModel() {
 
     val error = mutableStateOf( MyError(false, ErrorType.NULL,"") )
 
+    fun resetCredentials(){
+        email.value = ""
+        password.value = ""
+        repeatPassword.value = ""
+    }
+
     fun firebaseSignUpWithEmailAndPassword(/*email: String, password: String*/) {
 
         if (email.value != "" && password.value != "" && password.value.length >= 6 && repeatPassword.value != "" && password.value == repeatPassword.value) {

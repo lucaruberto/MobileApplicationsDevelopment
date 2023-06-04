@@ -10,8 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.unit.*
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 @Composable
 fun Profile(context: Context, viewModel: ProfileViewModel, logout: () -> Unit) {
@@ -123,10 +121,7 @@ fun Profile(context: Context, viewModel: ProfileViewModel, logout: () -> Unit) {
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = {
-                Firebase.auth.signOut()
-                logout()
-                },
+            Button(onClick = { logout() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)

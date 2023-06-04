@@ -37,6 +37,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import it.polito.mad.lab5.authentication.MyAuthentication
 import it.polito.mad.lab5.authentication.MyAuthenticationViewModel
 import it.polito.mad.lab5.profile.Profile
@@ -71,7 +73,11 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     if(authVm.isLogged.value)
-                        MainScreen(application) { authVm.isLogged.value = false }
+                        MainScreen(application) {
+                            Firebase.auth.signOut()
+                            authVm.resetCredentials()
+                            authVm.isLogged.value = false
+                        }
                     else
                         MyAuthentication(vm = authVm)
                 }
