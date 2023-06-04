@@ -353,15 +353,17 @@ fun ReviewComponent(review: Rating, vm: RateViewModel, modifier: Modifier) {
 
 
         if (expanded) {
-            Text(
-                text = review.reviewText!!,
-                style = TextStyle(fontSize = 20.sp, textAlign = TextAlign.Center),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentWidth(align = CenterHorizontally)
-                    .padding(16.dp)
-            )
-
+            if(review.reviewText!! != "") {
+                Text(
+                    text = review.reviewText!!,
+                    style = TextStyle(fontSize = 20.sp, textAlign = TextAlign.Center),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(align = CenterHorizontally)
+                        .padding(16.dp)
+                )
+            }
+            
             if(loggedUser?.nickname == review.user!!.nickname) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
