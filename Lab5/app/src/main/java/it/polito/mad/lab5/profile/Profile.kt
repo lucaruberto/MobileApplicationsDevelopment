@@ -4,13 +4,17 @@ package it.polito.mad.lab5.profile
 import android.content.Context
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.unit.*
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @Composable
-fun Profile(context: Context, viewModel: ProfileViewModel) {
+fun Profile(context: Context, viewModel: ProfileViewModel, logout: () -> Unit) {
 
     val selectedSports = viewModel.selectedSports
     val allSports =  viewModel.allSports
@@ -117,6 +121,17 @@ fun Profile(context: Context, viewModel: ProfileViewModel) {
                     setShowDialog = { viewModel.showDialog.value = it },
                     saveSports = {viewModel.updateUserSports()}
                 )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = {
+                Firebase.auth.signOut()
+                logout()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ){
+                Text(text = "Logout")
             }
         }
 

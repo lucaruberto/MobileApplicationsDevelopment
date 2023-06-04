@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     if(authVm.isLogged.value)
-                        MainScreen(application)
+                        MainScreen(application) { authVm.isLogged.value = false }
                     else
                         MyAuthentication(vm = authVm)
                 }
@@ -82,7 +82,7 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun MainScreen(application: Application) {
+fun MainScreen(application: Application, logout: () -> Unit) {
     Log.d(TAG, "Loading main screen")
     val navController = rememberNavController()
     val profileViewModel = ProfileViewModel(application = application)
@@ -166,7 +166,7 @@ fun MainScreen(application: Application) {
             NavHost(navController = navController, startDestination = "ScreenOne"){
                 composable("ScreenOne"){
                     Log.d(TAG, "Entering Profile Screen")
-                    Profile(LocalContext.current, profileViewModel)
+                    Profile(LocalContext.current, profileViewModel, logout = logout)
                 }
                 composable("ScreenTwo"){
                     Log.d(TAG, "Entering Reservations Screen")
