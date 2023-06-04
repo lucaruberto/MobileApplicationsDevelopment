@@ -44,6 +44,7 @@ fun ProfileField(hover: String, text: String, type: String, setText: (String)->U
             if (editMode)
                 TextField(
                     value = text,
+                    enabled = (hover != "Mail"),
                     onValueChange = { setText(it) },
                     modifier = Modifier
                         .weight(2f)
@@ -54,10 +55,10 @@ fun ProfileField(hover: String, text: String, type: String, setText: (String)->U
                             keyboardType = KeyboardType.Decimal,
                             imeAction = ImeAction.Next
                         )
-                        "email" -> KeyboardOptions.Default.copy(
+                        /*"email" -> KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Email,
                             imeAction = ImeAction.Next
-                        )
+                        )*/
                         "simple" -> KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Text,
                             capitalization = KeyboardCapitalization.Words,
