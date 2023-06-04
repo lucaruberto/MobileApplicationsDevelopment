@@ -87,7 +87,7 @@ fun MyCalendar(selectedDate: LocalDate?, setSelectedDate: (LocalDate?)->Unit, is
             val screenWidth = configuration.screenWidthDp.dp
             Box(
                 modifier = Modifier
-                    .width(if(!isEdit) screenWidth else screenWidth * 0.82f )
+                    .width(if(!isEdit) screenWidth else screenWidth * 0.75f )
                     .padding(16.dp)
                     .clip(shape = RoundedCornerShape(8.dp))
                     .border(
