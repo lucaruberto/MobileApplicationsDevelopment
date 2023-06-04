@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
@@ -92,27 +93,70 @@ fun Reservation(vm: ShowReservationsViewModel, rentVm: RentViewModel) {
                             .fillMaxWidth()
                             .padding(8.dp)
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column {
-                                Text(
-                                    text = "${it.oraInizio}:00 - ${it.oraFine}:00",
-                                    fontSize = 20.sp,
-                                    modifier = Modifier.padding(16.dp)
-                                )
-                                Text(
-                                    text = "${it.discipline} at ${it.playgroundName}",
-                                    fontSize = 16.sp,
-                                    modifier = Modifier.padding(
-                                        start = 16.dp,
-                                        end = 16.dp,
-                                        top = 0.dp,
-                                        bottom = 16.dp
+                        Column{
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Column {
+                                    Text(
+                                        text = "${it.oraInizio}:00 - ${it.oraFine}:00",
+                                        fontSize = 20.sp,
+                                        modifier = Modifier.padding(16.dp)
                                     )
-                                )
+                                    Text(
+                                        text = "${it.discipline} at ${it.playgroundName}",
+                                        fontSize = 16.sp,
+                                        modifier = Modifier.padding(
+                                            start = 16.dp,
+                                            end = 16.dp,
+                                            top = 0.dp,
+                                            bottom = 16.dp
+                                        )
+                                    )
+                                }
+                                Column(
+                                    //horizontalAlignment = Alignment.End,
+                                    verticalArrangement = Arrangement.Center,
+                                    modifier = Modifier.padding(end = 16.dp)
+                                ) {
+                                    Row {
+                                        Button(
+                                            onClick = {
+                                                setReservationToEdit(it)
+                                                //setShowEditReservation(true)
+                                            },
+                                            modifier = Modifier.padding(end = 8.dp),
+                                            shape = CircleShape
+                                        ) {
+
+                                            Icon(
+                                                Icons.Rounded.Edit,
+                                                contentDescription = "Edit Reservation"
+                                            )
+
+                                        }
+                                        Button(onClick = {
+                                            vm.deleteReservation(
+                                                it.date,
+                                                it.discipline,
+                                                it.oraInizio,
+                                                it.playgroundName
+                                            )
+                                        },
+                                            shape = CircleShape
+                                        ) {
+
+                                            Icon(
+                                                Icons.Rounded.Delete,
+                                                contentDescription = "Delete Reservation"
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                            Row {
                                 if (it.customRequest != "") {
                                     Text(
                                         text = "Custom request: ${it.customRequest}",
@@ -124,42 +168,6 @@ fun Reservation(vm: ShowReservationsViewModel, rentVm: RentViewModel) {
                                             bottom = 16.dp
                                         )
                                     )
-                                }
-                            }
-                            Column(
-                                horizontalAlignment = Alignment.End,
-                                verticalArrangement = Arrangement.Center,
-                                modifier = Modifier.padding(16.dp)
-                            ) {
-                                Row {
-                                    Button(
-                                        onClick = {
-                                            setReservationToEdit(it)
-                                            //setShowEditReservation(true)
-                                        },
-                                        modifier = Modifier.padding(end = 8.dp)
-                                    ) {
-
-                                        Icon(
-                                            Icons.Rounded.Edit,
-                                            contentDescription = "Edit Reservation"
-                                        )
-
-                                    }
-                                    Button(onClick = {
-                                        vm.deleteReservation(
-                                            it.date,
-                                            it.discipline,
-                                            it.oraInizio,
-                                            it.playgroundName
-                                        )
-                                    }) {
-
-                                        Icon(
-                                            Icons.Rounded.Delete,
-                                            contentDescription = "Delete Reservation"
-                                        )
-                                    }
                                 }
                             }
                         }
@@ -194,4 +202,3 @@ fun Reservation(vm: ShowReservationsViewModel, rentVm: RentViewModel) {
         }
     )
 }
-

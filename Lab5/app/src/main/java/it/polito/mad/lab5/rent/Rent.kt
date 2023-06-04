@@ -37,6 +37,7 @@ import java.util.Date
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Rent(vm: RentViewModel) {
+    Log.d(TAG, if(vm.isEdit.value) "rent edit mode" else "add rent mode")
     val context = LocalContext.current
 
     val sportsList = vm.sportsList1.toList()
@@ -70,114 +71,150 @@ fun Rent(vm: RentViewModel) {
                 modifier = Modifier.padding(it)
             ) {
                 item {
-                    Text(text = "Choose your sport:", modifier = Modifier.padding(16.dp))
-                    ExposedDropdownMenuBox(
-                        expanded = expandedSport,
-                        onExpandedChange = {
-                            expandedSport = !expandedSport
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp)
-                    ) {
-                        OutlinedTextField(
-                            value = selectedSport,
-                            onValueChange = {},
-                            readOnly = true,
-                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedSport) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .menuAnchor()
-                        )
-
-                        DropdownMenu(
+                    if(!vm.isEdit.value) {
+                        Text(text = "Choose your sport:", modifier = Modifier.padding(16.dp))
+                        ExposedDropdownMenuBox(
                             expanded = expandedSport,
-                            onDismissRequest = { expandedSport = false; vm.selectedDate.value = null },
+                            onExpandedChange = {
+                                expandedSport = !expandedSport
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(start = 16.dp, end = 16.dp)
                         ) {
+                            OutlinedTextField(
+                                value = selectedSport,
+                                onValueChange = {},
+                                readOnly = true,
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedSport) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .menuAnchor()
+                            )
 
-                            sportsList.forEach { item ->
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(
-                                            text = item, modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(start = 16.dp, end = 16.dp)
-                                        )
-                                    },
-                                    onClick = {
-                                        vm.selectedSport.value = item
-                                        expandedSport = false
-                                        //showFieldsDropDown = true
-                                        vm.loadPlaygrounds()
-                                        vm.selectedPlayground.value = "Playground"
-                                    },
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                            }
-                        }
-                    }
-                    if (selectedPlayground != "") {
-                        if (selectedSport.isNotEmpty()) {
-                            Text(text = "Select the playground:", modifier = Modifier.padding(16.dp))
-                            ExposedDropdownMenuBox(
-                                expanded = expandedField,
-                                onExpandedChange = {
-                                    expandedField = !expandedField
+                            DropdownMenu(
+                                expanded = expandedSport,
+                                onDismissRequest = {
+                                    expandedSport = false/*; vm.selectedDate.value = null */
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(/*top = 16.dp, */start = 16.dp, end = 16.dp)
+                                    .padding(start = 16.dp, end = 16.dp)
                             ) {
-                                OutlinedTextField(
-                                    value = selectedPlayground,
-                                    onValueChange = {},
-                                    readOnly = true,
-                                    trailingIcon = {
-                                        ExposedDropdownMenuDefaults.TrailingIcon(
-                                            expanded = expandedField
-                                        )
-                                    },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .menuAnchor()
+
+                                sportsList.forEach { item ->
+                                    DropdownMenuItem(
+                                        text = {
+                                            Text(
+                                                text = item, modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(start = 16.dp, end = 16.dp)
+                                            )
+                                        },
+                                        onClick = {
+                                            vm.selectedSport.value = item
+                                            expandedSport = false
+                                            //showFieldsDropDown = true
+                                            vm.loadPlaygrounds()
+                                            vm.selectedPlayground.value = "Playground"
+                                        },
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                }
+                            }
+                        }
+                        if (selectedPlayground != "") {
+                            if (selectedSport.isNotEmpty()) {
+                                Text(
+                                    text = "Select the playground:",
+                                    modifier = Modifier.padding(16.dp)
                                 )
-
-                                DropdownMenu(
+                                ExposedDropdownMenuBox(
                                     expanded = expandedField,
-                                    onDismissRequest = {
-                                        expandedField = false; vm.selectedDate.value = null
+                                    onExpandedChange = {
+                                        expandedField = !expandedField
                                     },
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(start = 16.dp, end = 16.dp)
+                                        .padding(/*top = 16.dp, */start = 16.dp, end = 16.dp)
                                 ) {
+                                    OutlinedTextField(
+                                        value = selectedPlayground,
+                                        onValueChange = {},
+                                        readOnly = true,
+                                        trailingIcon = {
+                                            ExposedDropdownMenuDefaults.TrailingIcon(
+                                                expanded = expandedField
+                                            )
+                                        },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .menuAnchor()
+                                    )
 
-                                    playgroundsList.forEach { item ->
-                                        DropdownMenuItem(
-                                            text = {
-                                                Text(
-                                                    text = item,
-                                                    modifier = Modifier
-                                                        .fillMaxWidth()
-                                                        .padding(start = 16.dp, end = 16.dp)
-                                                )
-                                            },
-                                            onClick = {
-                                                vm.selectedPlayground.value = item
-                                                expandedField = false
-                                                vm.selectedDate.value = Date()
-                                                vm.loadFullDates()
-                                                vm.loadFreeSlots()
-                                            },
-                                            modifier = Modifier.fillMaxWidth()
-                                        )
+                                    DropdownMenu(
+                                        expanded = expandedField,
+                                        onDismissRequest = {
+                                            expandedField = false
+                                            //vm.selectedDate.value = null
+                                        },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(start = 16.dp, end = 16.dp)
+                                    ) {
+
+                                        playgroundsList.forEach { item ->
+                                            DropdownMenuItem(
+                                                text = {
+                                                    Text(
+                                                        text = item,
+                                                        modifier = Modifier
+                                                            .fillMaxWidth()
+                                                            .padding(start = 16.dp, end = 16.dp)
+                                                    )
+                                                },
+                                                onClick = {
+                                                    vm.selectedPlayground.value = item
+                                                    expandedField = false
+                                                    vm.selectedDate.value = Date()
+                                                    vm.loadFullDates()
+                                                    vm.loadFreeSlots()
+                                                },
+                                                modifier = Modifier.fillMaxWidth()
+                                            )
+                                        }
                                     }
                                 }
                             }
                         }
+                    }
+                    else {
+                        Text(
+                            text = "Selected sport:",
+                            modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 8.dp)
+                        )
+                        OutlinedTextField(
+                            value = selectedSport,
+                            enabled = false,
+                            onValueChange = {},
+                            readOnly = true,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                        )
+                        Text(
+                            text = "Selected playground:",
+                            modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 8.dp)
+                        )
+                        OutlinedTextField(
+                            value = selectedPlayground,
+                            enabled = false,
+                            onValueChange = {},
+                            readOnly = true,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                        )
                     }
                 }
 

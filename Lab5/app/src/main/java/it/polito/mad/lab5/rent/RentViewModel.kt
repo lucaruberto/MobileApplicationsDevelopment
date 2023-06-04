@@ -51,6 +51,12 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun loadFreeSlots() {
+        try {
+            reg.remove()
+        }
+        catch (_: Exception){}
+
+        Log.i(TAG, "reg listener removed")
         db.collection("TimeSlot")
             .orderBy("oraInizio")
             .get()
@@ -63,6 +69,7 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
 
                 viewModelScope.launch(Dispatchers.IO) {
                     //reg = db.collection("Users/${Firebase.auth.uid}/Reservations")
+                    Log.i(TAG, "start freeSlot listener")
                     reg = db.collection("Reservations")
                         .whereEqualTo("playgroundName", selectedPlayground.value)
                         .whereEqualTo("date", selectedDate.value)
@@ -236,6 +243,7 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
                                     .addOnSuccessListener{
                                         Log.d(TAG, "Reservation updated successfully from 'Reservations' and 'User/Reservations'")
                                         setReservationEditDialog.value(Reservation())
+                                        isEdit.value = false
                                     }
                                     .addOnFailureListener { e ->
                                         db.collection("Users/${Firebase.auth.uid}/Reservations")
@@ -258,6 +266,8 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
     override fun onCleared() {
         super.onCleared()
         reg.remove()
+        Log.d(TAG, "reservations listener removed")
         regFullDates.remove()
+        Log.d(TAG, "fullDates listener removed")
     }
 }
