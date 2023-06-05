@@ -376,7 +376,7 @@ fun ReviewComponent(review: Rating, vm: RateViewModel, modifier: Modifier) {
                     IconButton(
                         onClick = { vm.removeReview(review.id!!) },
                         modifier = Modifier
-                            .background(Color(0xFFFFCDD2))
+                            .background(Color(0xFFFF808C))
                             .size(48.dp),
                     ) {
                         Icon(
