@@ -2,6 +2,7 @@ package it.polito.mad.lab5.friends
 
 import android.net.Uri
 import android.os.Build
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -45,6 +46,10 @@ import it.polito.mad.lab5.R
 fun EditFriends(friendsViewModel: FriendsViewModel){
     var text by remember { mutableStateOf("") }
     val searchingfriend = friendsViewModel.searchingFriends
+
+    BackHandler(enabled = true) {
+        friendsViewModel.editFriends.value = false
+    }
 
     Scaffold(
         topBar = { FriendsTopBar(viewModel = friendsViewModel)
