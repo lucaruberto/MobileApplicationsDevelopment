@@ -2,9 +2,11 @@ package it.polito.mad.lab5.Friends
 
 import android.app.Application
 import android.content.ContentValues
+import android.provider.ContactsContract.CommonDataKinds.Nickname
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -27,7 +29,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
     val editFriends = mutableStateOf(false)
     val friends_id : SnapshotStateList<Friend> = mutableStateListOf()
     val pending_id : SnapshotStateList<Pending> = mutableStateListOf()
-    val searching_firends : SnapshotStateList<ProvaUser> = mutableStateListOf()
+    val searching_friends : SnapshotStateList<ProvaUser> = mutableStateListOf()
     val text = mutableStateOf("")
     fun fetchInitialData() {
         loadFriends()
@@ -41,12 +43,23 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
             if (documentSnapshot.exists()) {
                 documentSnapshot.toObject(ProvaUser::class.java)!!
             } else {
-                // Il documento dell'utente non esiste nel database
-                ProvaUser() // Restituisci un oggetto vuoto o un valore predefinito
+                ProvaUser()
             }
         } catch (exception: Exception) {
-            // Gestisci l'errore durante il recupero dei dati dell'utente
-            ProvaUser() // Restituisci un oggetto vuoto o un valore predefinito
+            ProvaUser()
+        }
+    }
+    suspend fun getUserbyNickname(nickname: String) : ProvaUser{
+        val userDocRef = db.collection("Users").document(nickname)
+        return try {
+            val documentSnapshot = userDocRef.get().await()
+            if (documentSnapshot.exists()) {
+                documentSnapshot.toObject(ProvaUser::class.java)!!
+            } else {
+                ProvaUser()
+            }
+        } catch (exception: Exception) {
+            ProvaUser()
         }
     }
     private fun loadFriends(){
@@ -133,7 +146,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
     }
     fun searchFriend(ref:String){
        viewModelScope.launch {
-           searching_firends.clear()
+           searching_friends.clear()
            db.collection("Users").whereEqualTo("nickname",ref)
                .addSnapshotListener { snapshots, e ->
                    if (e != null) {
@@ -146,22 +159,22 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                            when (dc.type) {
                                DocumentChange.Type.ADDED -> {
                                    Log.d(ContentValues.TAG, "New User: ${dc.document.data}")
-                                   searching_firends.add(dc.document.toObject(ProvaUser::class.java))
+                                   searching_friends.add(dc.document.toObject(ProvaUser::class.java))
                                }
 
                                DocumentChange.Type.MODIFIED -> {
                                    val updatedRes = dc.document.toObject(ProvaUser::class.java)
-                                   searching_firends.removeIf {
+                                   searching_friends.removeIf {
                                        it.nickname == updatedRes.nickname
                                    }
-                                   searching_firends.add(updatedRes)
+                                   searching_friends.add(updatedRes)
                                    Log.d(ContentValues.TAG, "Modified User: ${dc.document.data}")
                                }
 
                                DocumentChange.Type.REMOVED -> {
                                    Log.d(ContentValues.TAG, "Removed User: ${dc.document.data}")
                                    val userToDelete = dc.document.toObject(ProvaUser::class.java)
-                                   searching_firends.removeIf {
+                                   searching_friends.removeIf {
                                        it.nickname == userToDelete.nickname
                                    }
                                }
@@ -172,11 +185,9 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
        }
    }
     fun addPending(id: ProvaUser){
-
         val myid= Firebase.auth.uid
         if(myid!= null) {
             viewModelScope.launch {
-
                 db.collection("Users")
                     .whereEqualTo("birthdate", id.birthdate)
                     .whereEqualTo("city", id.city)
@@ -219,7 +230,6 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
         }
     }
     fun deleteFriend(id:String){
-
         viewModelScope.launch {
             db.collection("Users/${Firebase.auth.uid}/Friends")
                 .whereEqualTo("id",id).get()

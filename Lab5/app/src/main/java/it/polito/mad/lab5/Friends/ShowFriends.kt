@@ -88,7 +88,7 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
                                     Uri.parse(user.imageUri)
                             )
                             Card(elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
-                                shape = RoundedCornerShape(16.dp),
+                                shape = RoundedCornerShape(32.dp),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(8.dp),
@@ -122,7 +122,7 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
                                             onClick = { friendsViewModel.deletePending(friend.id) },
                                             shape = RoundedCornerShape(50),
                                             elevation = elevation(16.dp),
-                                            containerColor = MaterialTheme.colorScheme.primary,
+                                            containerColor = MaterialTheme.colorScheme.secondary,
                                             contentColor = Color.Red
                                         ) {
                                             Icon(
@@ -158,6 +158,8 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
                             Uri.parse(user.imageUri)
                     )
                     Card(modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
+                        shape = RoundedCornerShape(32.dp),
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
                         Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
                             Image(painter = painter,contentDescription = "ProfilePicA", modifier = Modifier

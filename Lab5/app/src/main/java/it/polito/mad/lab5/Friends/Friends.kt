@@ -25,9 +25,8 @@ fun Friends(friendsViewModel: FriendsViewModel) {
     val pendingRequests = friendsViewModel.pending_id
 
     if(editfriends){
-        Text(text = "Sei nella editfriends!")
+        //Text(text = "Sei nella editfriends!")
         EditFriends(friendsViewModel = friendsViewModel)
-
     }
     else
     {
