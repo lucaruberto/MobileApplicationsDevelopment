@@ -47,66 +47,75 @@ fun EditFriends(friendsViewModel: FriendsViewModel){
         },
         content = {
             Column(modifier = Modifier.padding(it)) {
-                Row(modifier = Modifier.padding(8.dp, top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
                     OutlinedTextField(
                         shape = RoundedCornerShape(32.dp),
                         singleLine = true,
                         label = { Text("Search") },
                         value = text, onValueChange = { value ->
                             text = value
-                        })
-                    Button(onClick = { friendsViewModel.searchFriend(text) }, modifier = Modifier.padding(start = 8.dp, top = 8.dp).align(
-                        Alignment.CenterVertically)) {
+                        }
+                    )
+                    Button(
+                        onClick = {
+                            friendsViewModel.searchFriend(text)
+                        },
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .align(Alignment.CenterVertically)
+                    ) {
                         Text(text = "Search")
                     }
                 }
 
-                    Spacer(modifier = Modifier.width( 8.dp))
+                Spacer(modifier = Modifier.width( 8.dp))
 
                 searchingfriend.forEach { friend ->
-
                     val painter = rememberAsyncImagePainter(
                         if (friend.imageUri.isEmpty())
                             R.drawable.baseline_person_24
                         else
                             Uri.parse(friend.imageUri)
                     )
-                    Card(modifier = Modifier.fillMaxWidth().padding(8.dp),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
+
+                    Card(
+                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
                         shape = RoundedCornerShape(32.dp),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth().padding(8.dp)
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
                     ) {
-                        Image(
-                            painter = painter,
-                            contentDescription = "ProfilePic",
-                            modifier = Modifier
-                                .weight(2f)
-                                .size(64.dp)
-                                .clip(CircleShape),
-                            contentScale = ContentScale.Crop )
-                        Column(
-                            modifier = Modifier.weight(4f)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth().padding(8.dp)
                         ) {
-                            Text(text = friend.name, fontSize = 20.sp)
-                            Spacer(modifier = Modifier.padding(top = 8.dp))
-                            Text(text = friend.nickname, fontSize = 12.sp)
-                        }
+                            Image(
+                                painter = painter,
+                                contentDescription = "ProfilePic",
+                                modifier = Modifier
+                                    .weight(2f)
+                                    .size(64.dp)
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.Crop )
+                            Column(
+                                modifier = Modifier.weight(4f)
+                            ) {
+                                Text(text = friend.name, fontSize = 20.sp)
+                                Spacer(modifier = Modifier.padding(top = 8.dp))
+                                Text(text = friend.nickname, fontSize = 12.sp)
+                            }
 
-                        Button(
-                            modifier = Modifier.weight(2f),
-                            onClick = { friendsViewModel.addPending(friend) }
-                        ) {
-                            Text(text = "Add");
-                        }
-                        Spacer(modifier = Modifier.width(8.dp))
+                            Button(
+                                modifier = Modifier.weight(2f),
+                                onClick = { friendsViewModel.addPending(friend) }
+                            ) {
+                                Text(text = "Add");
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
 
-                    }
+                        }
                     }
                 }
-
-        }})
-
+            }
+        }
+    )
 }

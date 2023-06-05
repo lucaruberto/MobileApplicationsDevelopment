@@ -2,6 +2,7 @@ package it.polito.mad.lab5.Friends
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddHome
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,10 +31,12 @@ fun FriendsTopBar(viewModel: FriendsViewModel) {
                 },
                 enabled = true
             ) {
-                Text(text = "Search")
                 Icon(
-                    imageVector =
-                    Icons.Default.Search,
+                    imageVector = if(!viewModel.editFriends.value) {
+                        Icons.Default.Search
+                    } else {
+                        Icons.Filled.Close
+                    },
                     contentDescription = null,
                     tint = Color.White
                 )

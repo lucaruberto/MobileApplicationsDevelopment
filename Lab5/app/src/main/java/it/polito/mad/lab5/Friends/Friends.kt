@@ -28,9 +28,8 @@ fun Friends(friendsViewModel: FriendsViewModel) {
         //Text(text = "Sei nella editfriends!")
         EditFriends(friendsViewModel = friendsViewModel)
     }
-    else
-    {
-    ShowFriends(friendsViewModel = friendsViewModel)
+    else {
+        ShowFriends(friendsViewModel = friendsViewModel)
     }
 }
 

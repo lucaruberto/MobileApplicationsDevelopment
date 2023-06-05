@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -64,12 +65,13 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
 
             Column(modifier = Modifier
                 .padding(it)
-                .fillMaxWidth()) {
+                .fillMaxWidth()
+            ) {
                     if(pendingRequests.isNotEmpty()) {
                         Text(
                             text = "Pending Requests",
-                            modifier = Modifier.padding(top = 8.dp, bottom = 8.dp, start = 8.dp),
-                            fontSize = 32.sp
+                            modifier = Modifier.padding(8.dp).align(Alignment.CenterHorizontally),
+                            fontSize = 26.sp
                         )
                         Spacer(modifier = Modifier.width(8.dp))
 
@@ -122,7 +124,7 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
                                             onClick = { friendsViewModel.deletePending(friend.id) },
                                             shape = RoundedCornerShape(50),
                                             elevation = elevation(16.dp),
-                                            containerColor = MaterialTheme.colorScheme.secondary,
+                                            containerColor = Color.LightGray,
                                             contentColor = Color.Red
                                         ) {
                                             Icon(
@@ -135,14 +137,12 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
                             }
                         }
                     }
+                Spacer(modifier = Modifier.height(32.dp))
                     Text(
-                        text = "Accepted Friends",
-                        modifier = Modifier.padding(top = 16.dp, start = 8.dp),
-                        fontSize = 32.sp
+                        text = "Friends",
+                        modifier = Modifier.padding(8.dp).align(Alignment.CenterHorizontally),
+                        fontSize = 26.sp
                     )
-                Spacer(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
-
-
                 acceptedFriends.forEach { friend ->
                     var user by remember(friend.id) {
                         mutableStateOf(ProvaUser())
