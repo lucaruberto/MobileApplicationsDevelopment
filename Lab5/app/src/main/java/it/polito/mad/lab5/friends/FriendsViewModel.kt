@@ -145,21 +145,24 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun deleteInvitation(invitation: Reservation){
-        invitations.removeIf { it.reservationId == invitation.reservationId }
+       invitations.removeIf { it.reservationId == invitation.reservationId }
 
-        db.collection("Users/${Firebase.auth.uid}/Invitation")
+        db.collection("Users/${Firebase.auth.uid}/Invitations")
             .whereEqualTo("reservationId", invitation.reservationId)
             .get()
             .addOnSuccessListener {
-                db.collection("Users/${Firebase.auth.uid}/Invitation")
-                    .document(it.documents[0].id)
-                    .delete()
-                    .addOnSuccessListener {
-                        Log.d(TAG, "Invitation removed successfully")
-                    }
-                    .addOnFailureListener {
-                        Log.w(TAG, "Error removing invitation")
-                    }
+                if(it.documents.size>0) {
+
+                    db.collection("Users/${Firebase.auth.uid}/Invitations")
+                        .document(it.documents[0].id)
+                        .delete()
+                        .addOnSuccessListener {
+                            Log.d(TAG, "Invitation removed successfully")
+                        }
+                        .addOnFailureListener {
+                            Log.w(TAG, "Error removing invitation")
+                        }
+                }
             }
     }
 
@@ -385,7 +388,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                             db.collection("Users/${id}/Pending").whereEqualTo("id",myid).get()
                                 .addOnSuccessListener { it2->
                                     if(it2.documents.size>0)
-                                    db.collection("Users/${id}/Pending").document(it2.documents[0].id).delete()
+                                        db.collection("Users/${id}/Pending").document(it2.documents[0].id).delete()
                                         .addOnSuccessListener {
                                             Log.d(TAG, "Deleted Friend for the main user and the secondary user")
 
@@ -405,7 +408,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                        db.collection("Users/${Firebase.auth.uid}/Pending").whereEqualTo("id",id).get()
                            .addOnSuccessListener {
                                if(it.documents.size>0)
-                               db.collection("Users/${Firebase.auth.uid}/Pending").document(it.documents[0].id).delete()
+                                db.collection("Users/${Firebase.auth.uid}/Pending").document(it.documents[0].id).delete()
                                    .addOnSuccessListener {
                                        Log.d(TAG, "Added Friend for the main user")
 

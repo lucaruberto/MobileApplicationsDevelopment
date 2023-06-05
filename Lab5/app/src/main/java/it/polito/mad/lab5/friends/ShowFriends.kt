@@ -51,158 +51,45 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
     val db = FirebaseFirestore.getInstance()
     val acceptedFriends = friendsViewModel.friendsId
     val pendingRequests = friendsViewModel.pendingId
+    val invitations = friendsViewModel.invitations
 
     Scaffold(
         topBar = { FriendsTopBar(viewModel = friendsViewModel)
-        },
-        content = {it ->
+        }
+    ) { it ->
 
-            Column(modifier = Modifier
+        Column(
+            modifier = Modifier
                 .padding(it)
                 .fillMaxWidth()
-            ) {
-                if(pendingRequests.isNotEmpty()) {
-                    Text(
-                        text = "Pending Requests",
-                        modifier = Modifier.padding(8.dp).align(Alignment.CenterHorizontally),
-                        fontSize = 26.sp
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    pendingRequests.forEach { friend ->
-                        val (user,setUser) = remember(friend.id) {
-                            mutableStateOf(ProvaUser())
-                        }
-                        LaunchedEffect(friend.id) {
-                            friendsViewModel.getUserById(friend.id, setUser)
-                        }
-
-                        /*
-
-
-Image(
-    painter = rememberAsyncImagePainter(R.drawable.cat, imageLoader),
-    contentDescription = null,
-    modifier = Modifier.fillMaxSize()
-)
-                         */
-
-                        val painter = if(user.imageUri != "Loading"){
-                            rememberAsyncImagePainter(
-                                if (user.imageUri.isEmpty())
-                                    R.drawable.baseline_person_24
-                                else
-                                    Uri.parse(user.imageUri)
-                            )
-                        }else {
-                            val imageLoader = ImageLoader.Builder(LocalContext.current)
-                                .components {
-                                    if (SDK_INT >= 28) {
-                                        add(ImageDecoderDecoder.Factory())
-                                    } else {
-                                        add(GifDecoder.Factory())
-                                    }
-                                }
-                                .build()
-                            rememberAsyncImagePainter(R.drawable.loading, imageLoader)
-                        }
-
-                        Card(elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
-                            shape = RoundedCornerShape(32.dp),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp),
-                            colors = if(friend.state == "Sent") CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
-                            else CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)) {
-                            Column {
-                                Card(
-                                    modifier = Modifier.padding(top = 8.dp, start = 16.dp),
-                                    elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
-                                    shape = RoundedCornerShape(32.dp),
-                                    colors = if (friend.state == "Received") CardDefaults.cardColors(
-                                        containerColor = MaterialTheme.colorScheme.primaryContainer
-                                    )
-                                    else CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)
-                                ) {
-                                    Text(
-                                        friend.state,
-                                        modifier = Modifier.padding(8.dp)
-                                    )
-                                }
-                                Row(
-                                    modifier = Modifier.padding(8.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Image(
-                                        painter = painter,
-                                        contentDescription = "ProfilePicA",
-                                        modifier = Modifier
-                                            .size(64.dp)
-                                            .clip(CircleShape),
-                                        contentScale = ContentScale.Crop
-                                    )
-                                    Column(modifier = Modifier.padding(start = 16.dp)) {
-                                        Text(text = user.name, fontSize = 20.sp)
-                                        Spacer(modifier = Modifier.padding(top = 8.dp))
-                                        Text(text = user.nickname, fontSize = 12.sp)
-                                    }
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                    Row(
-                                        horizontalArrangement = Arrangement.End,
-                                        modifier = Modifier.weight(1f)
-                                    ) {
-                                        if (friend.state == "Received") {
-                                            FloatingActionButton(
-                                                onClick = { friendsViewModel.addFriend(friend.id) },
-                                                shape = RoundedCornerShape(50),
-                                                elevation = elevation(16.dp),
-                                                containerColor = MaterialTheme.colorScheme.primary,
-                                                contentColor = Color.Green
-                                            ) {
-                                                Icon(
-                                                    imageVector = Icons.Filled.Check,
-                                                    contentDescription = "Add"
-                                                )
-                                            }
-                                            Spacer(modifier = Modifier.width(8.dp))
-                                        }
-                                        FloatingActionButton(
-                                            onClick = { friendsViewModel.deletePending(friend.id) },
-                                            shape = RoundedCornerShape(50),
-                                            elevation = elevation(16.dp),
-                                            containerColor = MaterialTheme.colorScheme.primary,
-                                            contentColor = Color.Red
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Filled.Close,
-                                                contentDescription = "Remove"
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                Spacer(modifier = Modifier.height(32.dp))
+        ) {
+            if (pendingRequests.isNotEmpty()) {
                 Text(
-                    text = "Friends",
-                    modifier = Modifier.padding(8.dp).align(Alignment.CenterHorizontally),
+                    text = "Pending Requests",
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .align(Alignment.CenterHorizontally),
                     fontSize = 26.sp
                 )
-                acceptedFriends.forEach { friend ->
-                    val (user, setUser) = remember(friend.id) { mutableStateOf(ProvaUser()) }
+                Spacer(modifier = Modifier.width(8.dp))
+
+                pendingRequests.forEach { friend ->
+                    val (user, setUser) = remember(friend.id) {
+                        mutableStateOf(ProvaUser())
+                    }
                     LaunchedEffect(friend.id) {
                         friendsViewModel.getUserById(friend.id, setUser)
                     }
-                    val painter = if(user.imageUri != "Loading"){
+
+
+                    val painter = if (user.imageUri != "Loading") {
                         rememberAsyncImagePainter(
                             if (user.imageUri.isEmpty())
                                 R.drawable.baseline_person_24
                             else
                                 Uri.parse(user.imageUri)
                         )
-                    }else {
+                    } else {
                         val imageLoader = ImageLoader.Builder(LocalContext.current)
                             .components {
                                 if (SDK_INT >= 28) {
@@ -214,30 +101,210 @@ Image(
                             .build()
                         rememberAsyncImagePainter(R.drawable.loading, imageLoader)
                     }
-                    Card(modifier = Modifier.fillMaxWidth().padding(8.dp),
+
+                    Card(
                         elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
                         shape = RoundedCornerShape(32.dp),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
-                        Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                            Image(painter = painter,contentDescription = "ProfilePicA", modifier = Modifier
-                                .size(64.dp)
-                                .clip(CircleShape),
-                                contentScale = ContentScale.Crop )
-                            Column(modifier = Modifier.padding(start = 16.dp)) {
-                                Text(text = user.name, fontSize = 20.sp)
-                                Spacer(modifier = Modifier.padding(top = 8.dp))
-                                Text(text = user.nickname, fontSize = 12.sp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        colors = if (friend.state == "Sent") CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                        else CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)
+                    ) {
+                        Column {
+                            Card(
+                                modifier = Modifier.padding(top = 8.dp, start = 16.dp),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
+                                shape = RoundedCornerShape(32.dp),
+                                colors = if (friend.state == "Received") CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                                )
+                                else CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)
+                            ) {
+                                Text(
+                                    friend.state,
+                                    modifier = Modifier.padding(8.dp)
+                                )
                             }
-                            Row(horizontalArrangement = Arrangement.End, modifier = Modifier.weight(1f)) {
-                                Button(onClick = { friendsViewModel.deleteFriend(friend.id) }) {
-                                    Text(text = "Remove")
+                            Row(
+                                modifier = Modifier.padding(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Image(
+                                    painter = painter,
+                                    contentDescription = "ProfilePicA",
+                                    modifier = Modifier
+                                        .size(64.dp)
+                                        .clip(CircleShape),
+                                    contentScale = ContentScale.Crop
+                                )
+                                Column(modifier = Modifier.padding(start = 16.dp)) {
+                                    Text(text = user.name, fontSize = 20.sp)
+                                    Spacer(modifier = Modifier.padding(top = 8.dp))
+                                    Text(text = user.nickname, fontSize = 12.sp)
+                                }
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Row(
+                                    horizontalArrangement = Arrangement.End,
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    if (friend.state == "Received") {
+                                        FloatingActionButton(
+                                            onClick = { friendsViewModel.addFriend(friend.id) },
+                                            shape = RoundedCornerShape(50),
+                                            elevation = elevation(16.dp),
+                                            containerColor = MaterialTheme.colorScheme.primary,
+                                            contentColor = Color.Green
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Filled.Check,
+                                                contentDescription = "Add"
+                                            )
+                                        }
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                    }
+                                    FloatingActionButton(
+                                        onClick = { friendsViewModel.deletePending(friend.id) },
+                                        shape = RoundedCornerShape(50),
+                                        elevation = elevation(16.dp),
+                                        containerColor = MaterialTheme.colorScheme.primary,
+                                        contentColor = Color.Red
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Close,
+                                            contentDescription = "Remove"
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(32.dp))
+            Text(
+                text = "Friends",
+                modifier = Modifier
+                    .padding(8.dp)
+                    .align(Alignment.CenterHorizontally),
+                fontSize = 26.sp
+            )
+            acceptedFriends.forEach { friend ->
+                val (user, setUser) = remember(friend.id) { mutableStateOf(ProvaUser()) }
+                LaunchedEffect(friend.id) {
+                    friendsViewModel.getUserById(friend.id, setUser)
+                }
+                val painter = if (user.imageUri != "Loading") {
+                    rememberAsyncImagePainter(
+                        if (user.imageUri.isEmpty())
+                            R.drawable.baseline_person_24
+                        else
+                            Uri.parse(user.imageUri)
+                    )
+                } else {
+                    val imageLoader = ImageLoader.Builder(LocalContext.current)
+                        .components {
+                            if (SDK_INT >= 28) {
+                                add(ImageDecoderDecoder.Factory())
+                            } else {
+                                add(GifDecoder.Factory())
+                            }
+                        }
+                        .build()
+                    rememberAsyncImagePainter(R.drawable.loading, imageLoader)
+                }
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
+                    shape = RoundedCornerShape(32.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painter,
+                            contentDescription = "ProfilePicA",
+                            modifier = Modifier
+                                .size(64.dp)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop
+                        )
+                        Column(modifier = Modifier.padding(start = 16.dp)) {
+                            Text(text = user.name, fontSize = 20.sp)
+                            Spacer(modifier = Modifier.padding(top = 8.dp))
+                            Text(text = user.nickname, fontSize = 12.sp)
+                        }
+                        Row(
+                            horizontalArrangement = Arrangement.End,
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Button(onClick = { friendsViewModel.deleteFriend(friend.id) }) {
+                                Text(text = "Remove")
+                            }
+                        }
+                    }
+                }
+            }
 
-        })
+            if(invitations.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(32.dp))
+                Text(
+                    text = "Invitations",
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .align(Alignment.CenterHorizontally),
+                    fontSize = 26.sp
+                )
+
+                invitations.forEach { invite ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
+                        shape = RoundedCornerShape(32.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(modifier = Modifier.padding(start = 16.dp)) {
+                                Text(text = invite.discipline, fontSize = 20.sp)
+                                Spacer(modifier = Modifier.padding(top = 8.dp))
+                                Row() {
+                                    Text(text = invite.oraInizio.toString(), fontSize = 12.sp)
+                                    Text(text = invite.oraFine.toString(), fontSize = 12.sp)
+                                }
+                            }
+                            Row(
+                                horizontalArrangement = Arrangement.End,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Button(onClick = {
+                                    friendsViewModel.addInvitationToReservations(invite)
+                                    friendsViewModel.deleteInvitation(invite)
+                                }) {
+                                    Text(text = "Accept")
+                                }
+                                Button(onClick = { friendsViewModel.deleteInvitation(invite) }) {
+                                    Text(text = "Decline")
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+            }
+
+
+        }
+
+    }
 
 }

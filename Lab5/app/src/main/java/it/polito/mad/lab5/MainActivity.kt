@@ -173,12 +173,12 @@ fun MainScreen(application: Application, logout: () -> Unit) {
                        Button(onClick = { navController.navigate("ScreenFive") }, colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer)) {
                            Icon(
                                Icons.Sharp.People,
-                               contentDescription = "Friends",
+                               contentDescription = "Social",
                                modifier = Modifier.size(ButtonDefaults.IconSize),
                                tint = Color.Black
                            )
                        }
-                       Text("Friends", color = MaterialTheme.colorScheme.primary)
+                       Text("Social", color = MaterialTheme.colorScheme.primary)
 
                    }
                 }

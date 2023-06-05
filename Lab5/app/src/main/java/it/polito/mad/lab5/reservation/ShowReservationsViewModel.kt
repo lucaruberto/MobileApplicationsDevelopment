@@ -42,17 +42,19 @@ class ShowReservationsViewModel(application: Application) : AndroidViewModel(app
                                     //check if it is an invitation reservationUid != uid
                                     if(newReservation.userId != Firebase.auth.uid){
                                         //it's an invitation
-                                        db.collection("Reservations/${newReservation.reservationId}")
+                                        db.collection("Reservations").document("${newReservation.reservationId}")
                                             .get()
                                             .addOnSuccessListener {
                                                 //invitation still exists
-                                                reservations.add(newReservation)
-                                            }
-                                            .addOnFailureListener {
-                                                //reservation doesn't exist anymore, owner has deleted it
-                                                //so I have to delete from my reservations
-                                                db.collection("Users/${Firebase.auth.uid}/Reservations")
-                                                    .document(dc.document.id).delete()
+                                                if(it.exists())
+                                                {
+                                                    reservations.add(newReservation)
+
+                                                }
+                                                else{
+                                                    db.collection("Users/${Firebase.auth.uid}/Reservations")
+                                                        .document(dc.document.id).delete()
+                                                }
                                             }
                                     }
                                     else{
