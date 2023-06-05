@@ -43,6 +43,7 @@ fun Rent(vm: RentViewModel) {
     val sportsList = vm.sportsList1.toList()
     val selectedSport = vm.selectedSport.value
 
+    val playgroundNamesList = vm.playgroundNamesList.toList()
     val playgroundsList = vm.playgroundsList.toList()
     val selectedPlayground = vm.selectedPlayground.value
 
@@ -163,18 +164,19 @@ fun Rent(vm: RentViewModel) {
                                             .padding(start = 16.dp, end = 16.dp)
                                     ) {
 
+                                        //playgroundNamesList.forEach { item ->
                                         playgroundsList.forEach { item ->
                                             DropdownMenuItem(
                                                 text = {
                                                     Text(
-                                                        text = item,
+                                                        text = item.playgroundName!!,
                                                         modifier = Modifier
                                                             .fillMaxWidth()
                                                             .padding(start = 16.dp, end = 16.dp)
                                                     )
                                                 },
                                                 onClick = {
-                                                    vm.selectedPlayground.value = item
+                                                    vm.selectedPlayground.value = item.playgroundName!!
                                                     expandedField = false
                                                     vm.selectedDate.value = Date()
                                                     vm.loadFullDates()
@@ -275,7 +277,8 @@ fun Rent(vm: RentViewModel) {
                                 field = selectedPlayground,
                                 date = selectedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
                                 timeSlot = selectedTimeSlot,
-                                customRequest = customRequest
+                                customRequest = customRequest,
+                                hourlyRate = playgroundsList.filter { it.playgroundName == selectedPlayground }[0].hourlyRate!!
                             ) { vm.customRequest.value = it }
                         }
                     }

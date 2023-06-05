@@ -14,6 +14,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import it.polito.mad.lab5.db.FasciaOraria
+import it.polito.mad.lab5.db.PlayGrounds
 import it.polito.mad.lab5.db.ProvaSport
 import it.polito.mad.lab5.db.Reservation
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +28,8 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
     var db = FirebaseFirestore.getInstance()
 
     val sportsList1 = mutableStateListOf<String>()
-    val playgroundsList = mutableStateListOf<String>()
+    val playgroundNamesList = mutableStateListOf<String>()
+    val playgroundsList = mutableStateListOf<PlayGrounds>()
     val fullDates = mutableListOf<Date>()
     val freeSlots = mutableStateListOf<FasciaOraria>()
     val selectedSport = mutableStateOf("Sport")
@@ -132,10 +134,11 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
             .get()
             .addOnSuccessListener { documents ->
                 //val playgroundsList = mutableListOf<String>()
-                playgroundsList.clear()
+                playgroundNamesList.clear()
                 for (document in documents) {
                     Log.d(TAG, "Document fetched for playground: ${document.data}")
-                    playgroundsList.add(document.getString("playgroundName") ?: "")
+                    playgroundNamesList.add(document.getString("playgroundName") ?: "")
+                    playgroundsList.add(document.toObject(PlayGrounds::class.java))
                 }
             }
             .addOnFailureListener { exception ->

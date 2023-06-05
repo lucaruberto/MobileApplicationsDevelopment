@@ -21,6 +21,7 @@ fun ReservationDialog(
     date: LocalDate?,
     timeSlot: FasciaOraria?,
     customRequest: String,
+    hourlyRate: Int,
     onCustomRequestChange: (String) -> Unit
 ) {
     AlertDialog(
@@ -34,6 +35,7 @@ fun ReservationDialog(
                 timeSlot?.let {
                     Text("Time: ${it.oraInizio} - ${it.oraFine}")
                 }
+                Text("Hour rate: $hourlyRate€")
                 OutlinedTextField(
                     value = customRequest,
                     onValueChange = onCustomRequestChange,

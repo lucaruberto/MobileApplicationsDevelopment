@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 //@Entity
 data class PlayGrounds(
     val sportName: String? = "",
-    val playgroundName : String? = ""
+    val playgroundName : String? = "",
+    val hourlyRate: Int? = 0
     )
