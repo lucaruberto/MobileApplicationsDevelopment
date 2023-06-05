@@ -72,7 +72,7 @@ fun EditFriends(friendsViewModel: FriendsViewModel){
                             text = value
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Ascii,
+                            keyboardType = KeyboardType.Text,
                             imeAction = ImeAction.Search
                         ),
                         keyboardActions = KeyboardActions(
@@ -107,10 +107,11 @@ fun EditFriends(friendsViewModel: FriendsViewModel){
                                 painter = painter,
                                 contentDescription = "ProfilePic",
                                 modifier = Modifier
-                                    .weight(2f)
+                                    .weight(1f)
                                     .size(64.dp)
                                     .clip(CircleShape),
                                 contentScale = ContentScale.Crop )
+                            Spacer(modifier = Modifier.width(16.dp))
                             Column(
                                 modifier = Modifier.weight(4f)
                             ) {
@@ -120,7 +121,7 @@ fun EditFriends(friendsViewModel: FriendsViewModel){
                             }
 
                             Button(
-                                modifier = Modifier.weight(2f),
+                                modifier = Modifier.weight(1.5f),
                                 onClick = { friendsViewModel.addPending(friend) }
                             ) {
                                 Text(text = "Add");
