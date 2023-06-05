@@ -4,13 +4,11 @@ import android.net.Uri
 import android.os.Build
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -29,21 +27,16 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -83,15 +76,12 @@ fun Reservation(vm: ShowReservationsViewModel, rentVm: RentViewModel,friendVM : 
     val (reservationToAddFriend,setReservationToAddFriend) = remember {
         mutableStateOf(Reservation())
     }
-    val showDialog = vm.showDialog.value
+    //val showDialog = vm.showDialog.value
     val selectedDateReservations = reservations
         .filter { it.date == Date.from(selectedDate?.atStartOfDay(ZoneOffset.systemDefault())?.toInstant() ) }
-    val invitationSentList = remember { mutableStateListOf<Boolean>() }
+
     val acceptedFriends = friendVM.friendsId
-    LaunchedEffect(acceptedFriends) {
-        invitationSentList.clear()
-        invitationSentList.addAll(List(acceptedFriends.size) { false })
-    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -139,7 +129,7 @@ fun Reservation(vm: ShowReservationsViewModel, rentVm: RentViewModel,friendVM : 
                                 .fillMaxWidth()
                                 .padding(16.dp)
                                 .clickable { setExpanded(!expanded) },
-                                //.align(Alignment.CenterHorizontally)
+                            //.align(Alignment.CenterHorizontally)
                         ){
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -187,7 +177,7 @@ fun Reservation(vm: ShowReservationsViewModel, rentVm: RentViewModel,friendVM : 
                                 ) {
                                     Button(
                                         onClick = {
-                                                  setReservationToAddFriend(it)
+                                            setReservationToAddFriend(it)
                                             //TODO invite to reservation mechanism
                                         },
                                         modifier = Modifier.padding(8.dp),
@@ -251,7 +241,7 @@ fun Reservation(vm: ShowReservationsViewModel, rentVm: RentViewModel,friendVM : 
                     onDismissRequest = {
                         rentVm.isEdit.value = false
                         setReservationToEdit(Reservation())
-                                       },
+                    },
                     content = {
                         //val rentVm = RentViewModel(vm.getApplication())
                         rentVm.fetchAllSports()
@@ -271,112 +261,117 @@ fun Reservation(vm: ShowReservationsViewModel, rentVm: RentViewModel,friendVM : 
                 )
             }
             if(reservationToAddFriend.discipline!=""){
+                vm.loadInvitationsList(reservationToAddFriend.reservationId)
                 Dialog(
                     properties = DialogProperties(usePlatformDefaultWidth = false),
                     onDismissRequest = { setReservationToAddFriend(Reservation()) },
-                content = {
-                    Surface(
-                        modifier = Modifier
-                            .padding(16.dp),
-                        shape = RectangleShape
-                    ) {
+                    content = {
+                        Surface(
+                            modifier = Modifier
+                                .padding(16.dp),
+                            shape = RectangleShape
+                        ) {
 
-                        println(invitationSentList)
-                        if (acceptedFriends.isEmpty()) {
-                            Text(text = "Nessun amico disponibile")
-                        }
-                        else{
-                        LazyColumn {
+                            //println(invitationSentList)
+                            if (acceptedFriends.isEmpty()) {
+                                Text(text = "Nessun amico disponibile")
+                            }
+                            else{
+                                val uidAlreadySent = vm.uidAlreadySent
+                                LazyColumn {
 
-                                acceptedFriends.forEachIndexed { index, friend ->
-                                    item {
-                                       val invitationSent = invitationSentList[index]
-                                        val (user, setUser) = remember(friend.id) {
-                                            mutableStateOf(
-                                                ProvaUser()
-                                            )
-                                        }
-                                        LaunchedEffect(friend.id) {
-                                            friendVM.getUserById(friend.id, setUser)
-                                        }
-                                        val painter = if (user.imageUri != "Loading") {
-                                            rememberAsyncImagePainter(
-                                                if (user.imageUri.isEmpty())
-                                                    R.drawable.baseline_person_24
-                                                else
-                                                    Uri.parse(user.imageUri)
-                                            )
-                                        } else {
-                                            val imageLoader =
-                                                ImageLoader.Builder(LocalContext.current)
-                                                    .components {
-                                                        if (Build.VERSION.SDK_INT >= 28) {
-                                                            add(ImageDecoderDecoder.Factory())
-                                                        } else {
-                                                            add(GifDecoder.Factory())
+                                    acceptedFriends.forEachIndexed { index, friend ->
+                                        item {
+                                            //val invitationSent = invitationSentList[index]
+                                            val (user, setUser) = remember(friend.id) {
+                                                mutableStateOf(
+                                                    ProvaUser()
+                                                )
+                                            }
+                                            LaunchedEffect(friend.id) {
+                                                friendVM.getUserById(friend.id, setUser)
+                                            }
+                                            val painter = if (user.imageUri != "Loading") {
+                                                rememberAsyncImagePainter(
+                                                    if (user.imageUri.isEmpty())
+                                                        R.drawable.baseline_person_24
+                                                    else
+                                                        Uri.parse(user.imageUri)
+                                                )
+                                            } else {
+                                                val imageLoader =
+                                                    ImageLoader.Builder(LocalContext.current)
+                                                        .components {
+                                                            if (Build.VERSION.SDK_INT >= 28) {
+                                                                add(ImageDecoderDecoder.Factory())
+                                                            } else {
+                                                                add(GifDecoder.Factory())
+                                                            }
+                                                        }
+                                                        .build()
+                                                rememberAsyncImagePainter(
+                                                    R.drawable.loading,
+                                                    imageLoader
+                                                )
+                                            }
+
+                                            Card(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(8.dp),
+                                                elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
+                                                shape = RoundedCornerShape(32.dp),
+                                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                                            ) {
+                                                Row(
+                                                    modifier = Modifier.padding(8.dp),
+                                                    verticalAlignment = Alignment.CenterVertically
+                                                ) {
+                                                    Image(
+                                                        painter = painter,
+                                                        contentDescription = "ProfilePicA",
+                                                        modifier = Modifier
+                                                            .size(64.dp)
+                                                            .clip(CircleShape),
+                                                        contentScale = ContentScale.Crop
+                                                    )
+                                                    Column(modifier = Modifier.padding(start = 16.dp)) {
+                                                        Text(text = user.name, fontSize = 20.sp)
+                                                        Spacer(modifier = Modifier.padding(top = 8.dp))
+                                                        Text(text = user.nickname, fontSize = 12.sp)
+                                                    }
+                                                    Row(
+                                                        horizontalArrangement = Arrangement.End,
+                                                        modifier = Modifier.weight(1f)
+                                                    ) {
+                                                        if (uidAlreadySent.contains(friend.id)) {
+                                                            Button(onClick = { },
+                                                                    enabled = false) {
+                                                                Text(text = "Sent")
+                                                            }
+                                                        }
+                                                        else {
+                                                            Button(onClick = {
+                                                                vm.sendInvitation(
+                                                                    reservationToAddFriend,
+                                                                    friend.id
+                                                                )
+                                                                //invitationSentList[index] = true
+                                                            }) {
+                                                                Text(text = "Invite")
+                                                            }
                                                         }
                                                     }
-                                                    .build()
-                                            rememberAsyncImagePainter(
-                                                R.drawable.loading,
-                                                imageLoader
-                                            )
-                                        }
-
-                                        Card(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(8.dp),
-                                            elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
-                                            shape = RoundedCornerShape(32.dp),
-                                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
-                                        ) {
-                                            Row(
-                                                modifier = Modifier.padding(8.dp),
-                                                verticalAlignment = Alignment.CenterVertically
-                                            ) {
-                                                Image(
-                                                    painter = painter,
-                                                    contentDescription = "ProfilePicA",
-                                                    modifier = Modifier
-                                                        .size(64.dp)
-                                                        .clip(CircleShape),
-                                                    contentScale = ContentScale.Crop
-                                                )
-                                                Column(modifier = Modifier.padding(start = 16.dp)) {
-                                                    Text(text = user.name, fontSize = 20.sp)
-                                                    Spacer(modifier = Modifier.padding(top = 8.dp))
-                                                    Text(text = user.nickname, fontSize = 12.sp)
-                                                }
-                                                Row(
-                                                    horizontalArrangement = Arrangement.End,
-                                                    modifier = Modifier.weight(1f)
-                                                ) {
-                                                    if (!invitationSent)
-                                                        Button(onClick = {
-                                                            vm.sendInvitation(
-                                                                reservationToAddFriend,
-                                                                friend.id
-                                                            )
-                                                            invitationSentList[index] = true
-                                                        }) {
-                                                            Text(text = "Invite")
-                                                        }
-                                                    else
-                                                        Card {
-                                                            Text("Sent")
-                                                        }
                                                 }
                                             }
                                         }
                                     }
                                 }
-                            }
 
-                        }
+                            }
                         }
                     })
-                }
+            }
 
         }
     )

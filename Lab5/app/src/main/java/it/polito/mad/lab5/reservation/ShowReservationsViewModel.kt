@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.ktx.auth
@@ -20,9 +19,12 @@ class ShowReservationsViewModel(application: Application) : AndroidViewModel(app
     val db = Firebase.firestore
 
     val reservations = mutableStateListOf<Reservation>()
-    var showDialog = mutableStateOf(false)
+    //var showDialog = mutableStateOf(false)
+
+    val uidAlreadySent = mutableStateListOf<String>()
 
     private lateinit var reg: ListenerRegistration
+    private lateinit var alreadySentReg: ListenerRegistration
 
     fun loadReservations() {
         viewModelScope.launch {
@@ -42,7 +44,7 @@ class ShowReservationsViewModel(application: Application) : AndroidViewModel(app
                                     //check if it is an invitation reservationUid != uid
                                     if(newReservation.userId != Firebase.auth.uid){
                                         //it's an invitation
-                                        db.collection("Reservations").document("${newReservation.reservationId}")
+                                        db.collection("Reservations").document(newReservation.reservationId)
                                             .get()
                                             .addOnSuccessListener {
                                                 //invitation still exists
@@ -96,9 +98,74 @@ class ShowReservationsViewModel(application: Application) : AndroidViewModel(app
                 .add(reservationToSend)
                 .addOnSuccessListener {
                     Log.d(TAG, "Invitation sent to $userIdToSend for reservation ${reservationToSend.reservationId}")
+
+                    // save the userId to the invitation list of the Reservation
+                    db.collection("Users/${Firebase.auth.uid}/Reservations")
+                        .whereEqualTo("reservationId", reservationToSend.reservationId)
+                        .get()
+                        .addOnSuccessListener {
+                            val uidHash = hashMapOf(
+                                "uid" to userIdToSend
+                            )
+                            db.collection("Users/${Firebase.auth.uid}/Reservations/${it.documents[0].id}/UidAlreadySent")
+                                .add(uidHash)
+                                .addOnSuccessListener {
+                                    Log.d(TAG, "user id added to invitation list")
+                                }
+                                .addOnFailureListener {
+                                    Log.w(TAG, "Error adding uid to invitation list: $it")
+                                }
+                        }
+                        .addOnFailureListener {
+                            Log.w(TAG, "Reservation not found: $it")
+                        }
                 }
                 .addOnFailureListener {
                     Log.w(TAG, "Error sending invitation to $userIdToSend for reservation ${reservationToSend.reservationId}")
+                }
+        }
+    }
+
+    fun loadInvitationsList(reservationId: String) {
+        viewModelScope.launch {
+            db.collection("Users/${Firebase.auth.uid}/Reservations")
+                .whereEqualTo("reservationId", reservationId)
+                .get()
+                .addOnSuccessListener { it ->
+                    uidAlreadySent.clear()
+                    alreadySentReg = db.collection("Users/${Firebase.auth.uid}/Reservations/${it.documents[0].id}/UidAlreadySent")
+                        .addSnapshotListener { snapshots, error ->
+                            if (error != null) {
+                                Log.w(TAG, "listen:error", error)
+                            }
+                            if(snapshots != null) {
+                                for (dc in snapshots.documentChanges) {
+                                    when (dc.type) {
+                                        DocumentChange.Type.ADDED -> {
+                                            val newUid = dc.document.data["uid"].toString()
+                                            uidAlreadySent.add(newUid)
+                                            Log.d(TAG, "$newUid added to already sent")
+                                        }
+
+                                        DocumentChange.Type.MODIFIED -> {
+                                            val updatedUid = dc.document.data["uid"].toString()
+                                            Log.d(TAG, "$updatedUid added to already sent")
+                                        }
+
+                                        DocumentChange.Type.REMOVED -> {
+                                            val deleteUid = dc.document.data["uid"].toString()
+                                            uidAlreadySent.removeIf {
+                                                it == deleteUid
+                                            }
+                                            Log.d(TAG, "$deleteUid deleted from already sent")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                }
+                .addOnFailureListener {
+                    Log.w(TAG, "Reservation not found: $it")
                 }
         }
     }
@@ -148,5 +215,6 @@ class ShowReservationsViewModel(application: Application) : AndroidViewModel(app
     override fun onCleared() {
         super.onCleared()
         reg.remove()
+        alreadySentReg.remove()
     }
 }
