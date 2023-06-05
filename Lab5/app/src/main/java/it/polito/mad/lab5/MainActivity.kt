@@ -38,8 +38,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import it.polito.mad.lab5.Friends.Friends
-import it.polito.mad.lab5.Friends.FriendsViewModel
+import it.polito.mad.lab5.friends.Friends
+import it.polito.mad.lab5.friends.FriendsViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import it.polito.mad.lab5.authentication.MyAuthentication

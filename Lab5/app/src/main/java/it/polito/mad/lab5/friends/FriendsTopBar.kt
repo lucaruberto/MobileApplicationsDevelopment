@@ -1,7 +1,6 @@
-package it.polito.mad.lab5.Friends
+package it.polito.mad.lab5.friends
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddHome
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
@@ -13,7 +12,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import it.polito.mad.lab5.profile.ProfileViewModel
 
 
 @Composable

@@ -1,7 +1,7 @@
-package it.polito.mad.lab5.Friends
+package it.polito.mad.lab5.friends
 
-import android.annotation.SuppressLint
 import android.net.Uri
+import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,39 +15,33 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import it.polito.mad.lab5.db.Friend
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults.elevation
-import androidx.compose.material3.FloatingActionButtonElevation
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
 import it.polito.mad.lab5.db.ProvaUser
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.lab5.R
@@ -76,19 +70,43 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
                         Spacer(modifier = Modifier.width(8.dp))
 
                         pendingRequests.forEach { friend ->
-                            var user by remember(friend.id) {
+                            val (user,setUser) = remember(friend.id) {
                                 mutableStateOf(ProvaUser())
                             }
                             LaunchedEffect(friend.id) {
-                                val retrievedUser = friendsViewModel.getUserbyId(friend.id)
-                                user = retrievedUser
+                                friendsViewModel.getUserById(friend.id, setUser)
                             }
-                            val painter = rememberAsyncImagePainter(
-                                if (user.imageUri.isEmpty())
-                                    R.drawable.baseline_person_24
-                                else
-                                    Uri.parse(user.imageUri)
-                            )
+
+                            /*
+
+
+    Image(
+        painter = rememberAsyncImagePainter(R.drawable.cat, imageLoader),
+        contentDescription = null,
+        modifier = Modifier.fillMaxSize()
+    )
+                             */
+
+                            val painter = if(user.imageUri != "Loading"){
+                                rememberAsyncImagePainter(
+                                    if (user.imageUri.isEmpty())
+                                        R.drawable.baseline_person_24
+                                    else
+                                        Uri.parse(user.imageUri)
+                                )
+                            }else {
+                                val imageLoader = ImageLoader.Builder(LocalContext.current)
+                                    .components {
+                                        if (SDK_INT >= 28) {
+                                            add(ImageDecoderDecoder.Factory())
+                                        } else {
+                                            add(GifDecoder.Factory())
+                                        }
+                                    }
+                                    .build()
+                                rememberAsyncImagePainter(R.drawable.loading, imageLoader)
+                            }
+
                             Card(elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
                                 shape = RoundedCornerShape(32.dp),
                             modifier = Modifier
@@ -100,7 +118,7 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
                                         .size(64.dp)
                                         .clip(CircleShape),
                                         contentScale = ContentScale.Crop )
-                                    Column {
+                                    Column (modifier = Modifier.padding(start = 16.dp)){
                                         Text(text = user.name, fontSize = 20.sp)
                                         Spacer(modifier = Modifier.padding(top = 8.dp))
                                         Text(text = user.nickname, fontSize = 12.sp)
@@ -144,19 +162,29 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
                         fontSize = 26.sp
                     )
                 acceptedFriends.forEach { friend ->
-                    var user by remember(friend.id) {
-                        mutableStateOf(ProvaUser())
-                    }
+                    val (user, setUser) = remember(friend.id) { mutableStateOf(ProvaUser()) }
                     LaunchedEffect(friend.id) {
-                        val retrievedUser = friendsViewModel.getUserbyId(friend.id)
-                        user = retrievedUser
+                        friendsViewModel.getUserById(friend.id, setUser)
                     }
-                    val painter = rememberAsyncImagePainter(
-                        if (user.imageUri.isEmpty())
-                            R.drawable.baseline_person_24
-                        else
-                            Uri.parse(user.imageUri)
-                    )
+                    val painter = if(user.imageUri != "Loading"){
+                        rememberAsyncImagePainter(
+                            if (user.imageUri.isEmpty())
+                                R.drawable.baseline_person_24
+                            else
+                                Uri.parse(user.imageUri)
+                        )
+                    }else {
+                        val imageLoader = ImageLoader.Builder(LocalContext.current)
+                            .components {
+                                if (SDK_INT >= 28) {
+                                    add(ImageDecoderDecoder.Factory())
+                                } else {
+                                    add(GifDecoder.Factory())
+                                }
+                            }
+                            .build()
+                        rememberAsyncImagePainter(R.drawable.loading, imageLoader)
+                    }
                     Card(modifier = Modifier.fillMaxWidth().padding(8.dp),
                         elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
                         shape = RoundedCornerShape(32.dp),
@@ -166,7 +194,7 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
                                 .size(64.dp)
                                 .clip(CircleShape),
                                 contentScale = ContentScale.Crop )
-                            Column() {
+                            Column(modifier = Modifier.padding(start = 16.dp)) {
                                 Text(text = user.name, fontSize = 20.sp)
                                 Spacer(modifier = Modifier.padding(top = 8.dp))
                                 Text(text = user.nickname, fontSize = 12.sp)

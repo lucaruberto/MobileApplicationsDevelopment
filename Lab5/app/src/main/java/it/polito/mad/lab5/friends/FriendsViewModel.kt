@@ -1,26 +1,25 @@
-package it.polito.mad.lab5.Friends
+package it.polito.mad.lab5.friends
 
 import android.app.Application
 import android.content.ContentValues
-import android.provider.ContactsContract.CommonDataKinds.Nickname
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import it.polito.mad.lab5.db.Friend
 import it.polito.mad.lab5.db.Pending
 import it.polito.mad.lab5.db.ProvaUser
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.io.File
 
 class FriendsViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -36,18 +35,48 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
         loadPending()
     }
 
-    suspend fun getUserbyId(id : String) : ProvaUser{
+    suspend fun getUserById(id : String, setUser: (ProvaUser) -> Unit) {
         val userDocRef = db.collection("Users").document(id)
         return try {
             val documentSnapshot = userDocRef.get().await()
             if (documentSnapshot.exists()) {
-                documentSnapshot.toObject(ProvaUser::class.java)!!
+                val retrievedUser = documentSnapshot.toObject(ProvaUser::class.java)!!
+                if(retrievedUser.imageUri != ""){
+                    loadUserProfileImage(id, retrievedUser, setUser)
+                    retrievedUser.imageUri = "Loading"
+                }
+                setUser(retrievedUser)
             } else {
-                ProvaUser()
+                setUser(ProvaUser())
             }
         } catch (exception: Exception) {
-            ProvaUser()
+            setUser(ProvaUser())
         }
+    }
+
+    private fun loadUserProfileImage(id: String, user: ProvaUser, setUser: (ProvaUser) -> Unit){
+        val storageReference = FirebaseStorage.getInstance().getReference("profileImages/$id.jpg")
+        val localProfileImageFile = File.createTempFile("localProfileImage", ".jpg")
+        Log.d(ContentValues.TAG, "Start downloading Friend Profile Image")
+        storageReference
+            .getFile(localProfileImageFile)
+            .addOnSuccessListener {
+                Log.d(ContentValues.TAG, "Friend Profile Image downloaded successfully")
+                val userWithImage = ProvaUser(
+                    user.name,
+                    user.nickname,
+                    user.email,
+                    user.birthdate,
+                    user.sex,
+                    user.city,
+                    localProfileImageFile.toUri().toString()
+                )
+                Log.d(ContentValues.TAG, "Profile Image stored to ${userWithImage.imageUri}")
+                setUser(userWithImage)
+            }
+            .addOnFailureListener { e: Exception ->
+                Log.w(ContentValues.TAG, "Profile image download error: $e")
+            }
     }
     suspend fun getUserbyNickname(nickname: String) : ProvaUser{
         val userDocRef = db.collection("Users").document(nickname)

@@ -15,7 +15,7 @@ class ProvaUser(name: String,
     val birthdate = birthdate
     val sex = sex
     val city = city
-    val imageUri = imageUri
+    var imageUri = imageUri
 
     override fun toString(): String{
         return "$name $email $birthdate"
