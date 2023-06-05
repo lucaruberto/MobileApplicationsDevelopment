@@ -35,7 +35,28 @@ class ShowReservationsViewModel(application: Application) : AndroidViewModel(app
                             when (dc.type) {
                                 DocumentChange.Type.ADDED -> {
                                     Log.d(TAG, "New reservation: ${dc.document.data}")
-                                    reservations.add(dc.document.toObject(Reservation::class.java))
+                                    val newReservation = dc.document.toObject(Reservation::class.java)
+
+                                    //check if it is an invitation reservationUid != uid
+                                    if(newReservation.userId != Firebase.auth.uid){
+                                        //it's an invitation
+                                        db.collection("Reservations/${newReservation.reservationId}")
+                                            .get()
+                                            .addOnSuccessListener {
+                                                //invitation still exists
+                                                reservations.add(newReservation)
+                                            }
+                                            .addOnFailureListener {
+                                                //reservation doesn't exist anymore, owner has deleted it
+                                                //so I have to delete from my reservations
+                                                db.collection("Users/${Firebase.auth.uid}/Reservations")
+                                                    .document(dc.document.id).delete()
+                                            }
+                                    }
+                                    else{
+                                        // not an invitation, is one of my reservations
+                                        reservations.add(newReservation)
+                                    }
                                 }
 
                                 DocumentChange.Type.MODIFIED -> {
@@ -52,14 +73,28 @@ class ShowReservationsViewModel(application: Application) : AndroidViewModel(app
                                     val reservationToDelete = dc.document.toObject(Reservation::class.java)
                                     reservations.removeIf {
                                         it.date == reservationToDelete.date &&
-                                        it.oraInizio == reservationToDelete.oraInizio &&
-                                        it.playgroundName == reservationToDelete.playgroundName &&
-                                        it.discipline == reservationToDelete.discipline
+                                                it.oraInizio == reservationToDelete.oraInizio &&
+                                                it.playgroundName == reservationToDelete.playgroundName &&
+                                                it.discipline == reservationToDelete.discipline
                                     }
                                 }
                             }
                         }
                     }
+                }
+        }
+    }
+
+    fun sendInvitation(reservationToSend: Reservation, userIdToSend: String){
+        viewModelScope.launch {
+            db.collection("Users/$userIdToSend/Invitations")
+                //add to userIdToSend Invitations collections an invitations for my reservation
+                .add(reservationToSend)
+                .addOnSuccessListener {
+                    Log.d(TAG, "Invitation sent to $userIdToSend for reservation ${reservationToSend.reservationId}")
+                }
+                .addOnFailureListener {
+                    Log.w(TAG, "Error sending invitation to $userIdToSend for reservation ${reservationToSend.reservationId}")
                 }
         }
     }
@@ -79,21 +114,26 @@ class ShowReservationsViewModel(application: Application) : AndroidViewModel(app
                         .document(reservationDocuments.documents[0].id)
                         .delete()
                         .addOnSuccessListener {
-                            // delete from Reservations
-                            db.collection("Reservations").document(resId).delete()
-                                .addOnSuccessListener{
-                                    Log.d(TAG, "Reservation deleted successfully from 'Reservations' and 'User/Reservations'")
-                                }
-                                .addOnFailureListener { e ->
-                                    db.collection("Users/${Firebase.auth.uid}/Reservations")
-                                        .add(reservationToDelete)
-                                    Log.w(TAG, "Error deleting reservation from 'Reservations': $e")
-                                }
+
+                            //check if it's one of my reservations
+                            if(reservationToDelete.userId == Firebase.auth.uid){
+                                //one of my reservations, must delete also from 'Reservations' collection
+                                db.collection("Reservations").document(resId).delete()
+                                    .addOnSuccessListener{
+                                        Log.d(TAG, "Reservation deleted successfully from 'Reservations' and 'User/Reservations'")
+                                    }
+                                    .addOnFailureListener { e ->
+                                        db.collection("Users/${Firebase.auth.uid}/Reservations")
+                                            .add(reservationToDelete)
+                                        Log.w(TAG, "Error deleting reservation from 'Reservations': $e")
+                                    }
+                            }
                         }
                         .addOnFailureListener { e ->
                             db.collection("Reservations").document(resId).set(reservationToDelete)
                             Log.w(TAG, "Error deleting reservation from 'User/Reservations': $e")
                         }
+
                 }
                 .addOnFailureListener { e ->
                     Log.w(TAG, "Error fetching reservation to delete: $e")
