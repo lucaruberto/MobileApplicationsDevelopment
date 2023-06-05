@@ -1,12 +1,12 @@
 package it.polito.mad.lab5.db
 
-class ProvaUser(name: String,
-                nickname: String,
-                email: String,
-                birthdate: String,
-                sex: String,
-                city: String,
-                imageUri: String) {
+class User(name: String,
+           nickname: String,
+           email: String,
+           birthdate: String,
+           sex: String,
+           city: String,
+           imageUri: String) {
 
     constructor() : this ("","","","","","","")
     val name = name

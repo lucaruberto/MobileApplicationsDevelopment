@@ -53,8 +53,8 @@ import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import it.polito.mad.lab5.MyCalendar
 import it.polito.mad.lab5.R
-import it.polito.mad.lab5.db.FasciaOraria
-import it.polito.mad.lab5.db.ProvaUser
+import it.polito.mad.lab5.db.TimeSlot
+import it.polito.mad.lab5.db.User
 import it.polito.mad.lab5.db.Reservation
 import it.polito.mad.lab5.friends.FriendsViewModel
 import it.polito.mad.lab5.rent.Rent
@@ -250,7 +250,7 @@ fun Reservation(vm: ShowReservationsViewModel, rentVm: RentViewModel,friendVM : 
                         rentVm.selectedPlayground.value = reservationToEdit.playgroundName
                         rentVm.loadFullDates()
                         rentVm.selectedDate.value = reservationToEdit.date
-                        rentVm.selectedTimeSlot.value = FasciaOraria(reservationToEdit.oraInizio, reservationToEdit.oraFine)
+                        rentVm.selectedTimeSlot.value = TimeSlot(reservationToEdit.oraInizio, reservationToEdit.oraFine)
                         rentVm.loadFreeSlots()
                         rentVm.customRequest.value = reservationToEdit.customRequest
                         rentVm.reservationToUpdateId.value = reservationToEdit.reservationId
@@ -285,7 +285,7 @@ fun Reservation(vm: ShowReservationsViewModel, rentVm: RentViewModel,friendVM : 
                                             //val invitationSent = invitationSentList[index]
                                             val (user, setUser) = remember(friend.id) {
                                                 mutableStateOf(
-                                                    ProvaUser()
+                                                    User()
                                                 )
                                             }
                                             LaunchedEffect(friend.id) {

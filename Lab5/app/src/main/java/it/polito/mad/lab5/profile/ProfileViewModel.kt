@@ -14,8 +14,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import it.polito.mad.lab5.db.ProvaSport
-import it.polito.mad.lab5.db.ProvaUser
+import it.polito.mad.lab5.db.Sport
+import it.polito.mad.lab5.db.User
 import it.polito.mad.lab5.db.UserSports
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,7 +27,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
     private var dbReal = Firebase.firestore
     var selectedSports: SnapshotStateList<UserSports> = mutableStateListOf()
-    var allSports : SnapshotStateList<ProvaSport> = mutableStateListOf()
+    var allSports : SnapshotStateList<Sport> = mutableStateListOf()
     val name = mutableStateOf("")
     val nickname = mutableStateOf("")
     val email = mutableStateOf(Firebase.auth.currentUser!!.email!!)
@@ -78,7 +78,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             try {
                 val userDocument =
                     dbReal.collection("Users").document(Firebase.auth.uid!!).get().await()
-                val downloadedUser = userDocument.toObject(ProvaUser::class.java)
+                val downloadedUser = userDocument.toObject(User::class.java)
                 Log.d(TAG, "Downloaded User ${downloadedUser.toString()}")
 
                 name.value = downloadedUser!!.name
@@ -125,7 +125,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
                 val sportDocuments = dbReal.collection("Sport").get().await()
                 allSports.clear()
                 for (document in sportDocuments){
-                    val sport = document.toObject(ProvaSport::class.java)
+                    val sport = document.toObject(Sport::class.java)
                     allSports.add(sport)
                 }
                 Log.d(TAG, "AllSports fetched successfully")
@@ -162,7 +162,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
 
                 }
                 else {
-                    val newUser = ProvaUser(
+                    val newUser = User(
                         name = name.value,
                         nickname = nickname.value,
                         email = email.value,

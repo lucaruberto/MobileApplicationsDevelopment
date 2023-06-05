@@ -17,10 +17,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import it.polito.mad.lab5.db.FasciaOraria
+import it.polito.mad.lab5.db.TimeSlot
 
 @Composable
-fun ReservationList(data : List<FasciaOraria>, onTimeSlotClick: (FasciaOraria) -> Unit) {
+fun ReservationList(data : List<TimeSlot>, onTimeSlotClick: (TimeSlot) -> Unit) {
     val columns = 4
 
     LazyVerticalGrid(
@@ -34,7 +34,7 @@ fun ReservationList(data : List<FasciaOraria>, onTimeSlotClick: (FasciaOraria) -
 }
 
 @Composable
-fun ReservationCard(rent : FasciaOraria, onClick: () -> Unit) {
+fun ReservationCard(rent : TimeSlot, onClick: () -> Unit) {
     Card(
        shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),

@@ -16,7 +16,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import it.polito.mad.lab5.db.Friend
 import it.polito.mad.lab5.db.Pending
-import it.polito.mad.lab5.db.ProvaUser
+import it.polito.mad.lab5.db.User
 import it.polito.mad.lab5.db.Reservation
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -29,7 +29,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
     val editFriends = mutableStateOf(false)
     val friendsId : SnapshotStateList<Friend> = mutableStateListOf()
     val pendingId : SnapshotStateList<Pending> = mutableStateListOf()
-    val searchingFriends : SnapshotStateList<ProvaUser> = mutableStateListOf()
+    val searchingFriends : SnapshotStateList<User> = mutableStateListOf()
 
     val invitations: SnapshotStateList<Reservation> = mutableStateListOf()
 
@@ -40,26 +40,26 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
         loadInvitations()
     }
 
-    suspend fun getUserById(id : String, setUser: (ProvaUser) -> Unit) {
+    suspend fun getUserById(id : String, setUser: (User) -> Unit) {
         val userDocRef = db.collection("Users").document(id)
         return try {
             val documentSnapshot = userDocRef.get().await()
             if (documentSnapshot.exists()) {
-                val retrievedUser = documentSnapshot.toObject(ProvaUser::class.java)!!
+                val retrievedUser = documentSnapshot.toObject(User::class.java)!!
                 if(retrievedUser.imageUri != ""){
                     loadUserProfileImage(id, retrievedUser, setUser)
                     retrievedUser.imageUri = "Loading"
                 }
                 setUser(retrievedUser)
             } else {
-                setUser(ProvaUser())
+                setUser(User())
             }
         } catch (exception: Exception) {
-            setUser(ProvaUser())
+            setUser(User())
         }
     }
 
-    private fun loadUserProfileImage(id: String, user: ProvaUser, setUser: (ProvaUser) -> Unit){
+    private fun loadUserProfileImage(id: String, user: User, setUser: (User) -> Unit){
         val storageReference = FirebaseStorage.getInstance().getReference("profileImages/$id.jpg")
         val localProfileImageFile = File.createTempFile("localProfileImage", ".jpg")
         Log.d(TAG, "Start downloading Friend Profile Image")
@@ -67,7 +67,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
             .getFile(localProfileImageFile)
             .addOnSuccessListener {
                 Log.d(TAG, "Friend Profile Image downloaded successfully")
-                val userWithImage = ProvaUser(
+                val userWithImage = User(
                     user.name,
                     user.nickname,
                     user.email,
@@ -263,11 +263,11 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                            when (dc.type) {
                                DocumentChange.Type.ADDED -> {
                                    Log.d(TAG, "New User: ${dc.document.data}")
-                                   searchingFriends.add(dc.document.toObject(ProvaUser::class.java))
+                                   searchingFriends.add(dc.document.toObject(User::class.java))
                                }
 
                                DocumentChange.Type.MODIFIED -> {
-                                   val updatedRes = dc.document.toObject(ProvaUser::class.java)
+                                   val updatedRes = dc.document.toObject(User::class.java)
                                    searchingFriends.removeIf {
                                        it.nickname == updatedRes.nickname
                                    }
@@ -277,7 +277,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
 
                                DocumentChange.Type.REMOVED -> {
                                    Log.d(TAG, "Removed User: ${dc.document.data}")
-                                   val userToDelete = dc.document.toObject(ProvaUser::class.java)
+                                   val userToDelete = dc.document.toObject(User::class.java)
                                    searchingFriends.removeIf {
                                        it.nickname == userToDelete.nickname
                                    }
@@ -288,7 +288,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                }
        }
    }
-    fun addPending(id: ProvaUser){
+    fun addPending(id: User){
         val myid= Firebase.auth.uid
         if(myid!= null) {
             viewModelScope.launch {
@@ -423,12 +423,14 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                    .addOnSuccessListener {
                       db.collection("Users/${id}/Pending").whereEqualTo("id",myid).get()
                           .addOnSuccessListener {
-                              if(it.documents.size>0)
-                              db.collection("Users/${id}/Pending").document(it.documents[0].id).delete()
-                                  .addOnSuccessListener {
-                                      Log.d(TAG, "Added Friend for the secondary user")
+                              if(it.documents.size>0) {
+                                  db.collection("Users/${id}/Pending").document(it.documents[0].id)
+                                      .delete()
+                                      .addOnSuccessListener {
+                                          Log.d(TAG, "Added Friend for the secondary user")
 
-                                  }
+                                      }
+                              }
                           }
                    }
            }

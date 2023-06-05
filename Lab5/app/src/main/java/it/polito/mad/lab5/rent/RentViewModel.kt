@@ -13,9 +13,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import it.polito.mad.lab5.db.FasciaOraria
+import it.polito.mad.lab5.db.TimeSlot
 import it.polito.mad.lab5.db.PlayGrounds
-import it.polito.mad.lab5.db.ProvaSport
+import it.polito.mad.lab5.db.Sport
 import it.polito.mad.lab5.db.Reservation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,11 +31,11 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
     val playgroundNamesList = mutableStateListOf<String>()
     val playgroundsList = mutableStateListOf<PlayGrounds>()
     val fullDates = mutableListOf<Date>()
-    val freeSlots = mutableStateListOf<FasciaOraria>()
+    val freeSlots = mutableStateListOf<TimeSlot>()
     val selectedSport = mutableStateOf("Sport")
     val selectedPlayground = mutableStateOf("")
     val selectedDate = mutableStateOf<Date?>(null)
-    val selectedTimeSlot = mutableStateOf<FasciaOraria?>(null)
+    val selectedTimeSlot = mutableStateOf<TimeSlot?>(null)
     val customRequest = mutableStateOf("")
     val reservationToUpdateId = mutableStateOf("")
 
@@ -65,8 +65,8 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
             .addOnSuccessListener { timeSlotDocument ->
                 freeSlots.clear()
                 for (tsd in timeSlotDocument){
-                    val timeSlot = tsd.toObject<FasciaOraria>()
-                    freeSlots.add(FasciaOraria(timeSlot.oraInizio,timeSlot.oraFine))
+                    val timeSlot = tsd.toObject<TimeSlot>()
+                    freeSlots.add(TimeSlot(timeSlot.oraInizio,timeSlot.oraFine))
                 }
 
                 viewModelScope.launch(Dispatchers.IO) {
@@ -97,7 +97,7 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
                                         DocumentChange.Type.REMOVED -> {
                                             Log.d(TAG, "Removed reservation: ${dc.document.data}")
                                             val res = dc.document.toObject(Reservation::class.java)
-                                            freeSlots.add(FasciaOraria(res.oraInizio, res.oraFine))
+                                            freeSlots.add(TimeSlot(res.oraInizio, res.oraFine))
                                             freeSlots.sortBy { it.oraInizio }
                                         }
                                     }
@@ -119,7 +119,7 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
                 val sportsDocuments = db.collection("Sport").get().await()
                 sportsList1.clear()
                 for (sportDoc in sportsDocuments){
-                    val sportName = sportDoc.toObject<ProvaSport>().discipline
+                    val sportName = sportDoc.toObject<Sport>().discipline
                     sportsList1.add(sportName)
                 }
             } catch (e: Exception) {

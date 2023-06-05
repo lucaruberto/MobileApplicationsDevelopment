@@ -26,13 +26,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import it.polito.mad.lab5.db.ProvaSport
+import it.polito.mad.lab5.db.Sport
 import it.polito.mad.lab5.db.UserSports
 
 
 @Composable
 fun SelectSportsDialog(
-    allSports: MutableList<ProvaSport>,
+    allSports: MutableList<Sport>,
     selectedSports: SnapshotStateList<UserSports>,
     onDismissRequest: () -> Unit,
     setShowDialog: (Boolean) -> Unit,

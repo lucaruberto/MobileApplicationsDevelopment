@@ -20,7 +20,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -45,13 +44,13 @@ import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
-import it.polito.mad.lab5.db.ProvaUser
+import it.polito.mad.lab5.db.User
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.lab5.R
 
 @Composable
 fun ShowFriends(friendsViewModel: FriendsViewModel){
-    val db = FirebaseFirestore.getInstance()
+    // val db = FirebaseFirestore.getInstance()
     val acceptedFriends = friendsViewModel.friendsId
     val pendingRequests = friendsViewModel.pendingId
     val invitations = friendsViewModel.invitations
@@ -78,7 +77,7 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
 
                 pendingRequests.forEach { friend ->
                     val (user, setUser) = remember(friend.id) {
-                        mutableStateOf(ProvaUser())
+                        mutableStateOf(User())
                     }
                     LaunchedEffect(friend.id) {
                         friendsViewModel.getUserById(friend.id, setUser)
@@ -191,7 +190,7 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
                 fontSize = 26.sp
             )
             acceptedFriends.forEach { friend ->
-                val (user, setUser) = remember(friend.id) { mutableStateOf(ProvaUser()) }
+                val (user, setUser) = remember(friend.id) { mutableStateOf(User()) }
                 LaunchedEffect(friend.id) {
                     friendsViewModel.getUserById(friend.id, setUser)
                 }

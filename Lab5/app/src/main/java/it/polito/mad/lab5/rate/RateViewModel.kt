@@ -11,7 +11,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import it.polito.mad.lab5.db.PlayGrounds
-import it.polito.mad.lab5.db.ProvaUser
+import it.polito.mad.lab5.db.User
 import it.polito.mad.lab5.db.Rating
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,7 +24,7 @@ class RateViewModel(application: Application): AndroidViewModel(application) {
     //private val fieldsNotRated = MutableLiveData<List<String>>()
     private var reviews = MutableLiveData<List<Rating>>()
     private var allFields = MutableLiveData<List<PlayGrounds>>()
-    private var loggedUser = MutableLiveData<ProvaUser>()
+    private var loggedUser = MutableLiveData<User>()
 
     fun fetchAllReviews(): LiveData<List<Rating>> {
         viewModelScope.launch(Dispatchers.IO){
@@ -95,7 +95,7 @@ class RateViewModel(application: Application): AndroidViewModel(application) {
                 .document(userId)
                 .get()
                 .await()
-            val user = userDocument.toObject(ProvaUser::class.java)
+            val user = userDocument.toObject(User::class.java)
             val reviewToAdd = Rating("", field, reviewText, rating, user, date.toString())
             db.collection("Review")
                 .add(reviewToAdd)
@@ -109,14 +109,14 @@ class RateViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun fetchLoggedUser(): LiveData<ProvaUser> {
+    fun fetchLoggedUser(): LiveData<User> {
         val userId = Firebase.auth.uid!!
         viewModelScope.launch(Dispatchers.IO) {
             val userDocument = db.collection("Users")
                 .document(userId)
                 .get()
                 .await()
-            loggedUser.postValue(userDocument.toObject(ProvaUser::class.java))
+            loggedUser.postValue(userDocument.toObject(User::class.java))
         }
         return loggedUser
     }

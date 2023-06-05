@@ -1,6 +1,6 @@
 package it.polito.mad.lab5.db
 
-class ProvaSport(val discipline: String) {
+class Sport(val discipline: String) {
     constructor(): this("")
     //val discipline = discipline
 }
