@@ -53,9 +53,9 @@ fun Profile(context: Context, viewModel: ProfileViewModel, logout: () -> Unit) {
             Column(
                 modifier = Modifier
                     .padding(16.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-
                 ProfileField(
                     hover = "Nickname",
                     text = nickname,
