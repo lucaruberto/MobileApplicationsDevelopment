@@ -34,6 +34,21 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
         loadPending()
     }
 
+    suspend fun getUserbyId(id : String) : ProvaUser{
+        val userDocRef = db.collection("Users").document(id)
+        return try {
+            val documentSnapshot = userDocRef.get().await()
+            if (documentSnapshot.exists()) {
+                documentSnapshot.toObject(ProvaUser::class.java)!!
+            } else {
+                // Il documento dell'utente non esiste nel database
+                ProvaUser() // Restituisci un oggetto vuoto o un valore predefinito
+            }
+        } catch (exception: Exception) {
+            // Gestisci l'errore durante il recupero dei dati dell'utente
+            ProvaUser() // Restituisci un oggetto vuoto o un valore predefinito
+        }
+    }
     private fun loadFriends(){
             viewModelScope.launch (){
                     friends_id.clear()
