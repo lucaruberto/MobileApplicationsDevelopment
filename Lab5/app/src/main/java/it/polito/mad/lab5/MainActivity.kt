@@ -197,7 +197,7 @@ fun MainScreen(application: Application, logout: () -> Unit) {
                 }
                 composable("ScreenThree"){ Rent(rentViewModel)}
                 composable("ScreenFour") {Rate()}
-                composable("ScreenFive"){Friends(friendsViewModel)}
+                composable("ScreenFive"){Friends(friendsViewModel, profileViewModel )}
             }
         }
     }

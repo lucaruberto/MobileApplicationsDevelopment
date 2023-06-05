@@ -2,6 +2,8 @@ package it.polito.mad.lab5.friends
 
 import android.net.Uri
 import android.os.Build
+import android.widget.Toast
+import android.widget.Toast.makeText
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -41,12 +43,17 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import it.polito.mad.lab5.R
+import it.polito.mad.lab5.profile.ProfileViewModel
 
 @Composable
-fun EditFriends(friendsViewModel: FriendsViewModel){
+fun EditFriends(friendsViewModel: FriendsViewModel, profileViewModel: ProfileViewModel){
     var text by remember { mutableStateOf("") }
     val searchingfriend = friendsViewModel.searchingFriends
-
+    val nick = profileViewModel.nickname.value
+    val acceptedFriends = friendsViewModel.friendsId
+    val pendingRequests = friendsViewModel.pendingId
+    var searchId by remember { mutableStateOf("") }
+    val context = LocalContext.current
     BackHandler(enabled = true) {
         friendsViewModel.editFriends.value = false
     }
@@ -56,7 +63,9 @@ fun EditFriends(friendsViewModel: FriendsViewModel){
         },
         content = { it ->
             Column(
-                modifier = Modifier.fillMaxWidth().padding(it),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(it),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
@@ -77,6 +86,7 @@ fun EditFriends(friendsViewModel: FriendsViewModel){
                         keyboardActions = KeyboardActions(
                             onSearch = {
                                 friendsViewModel.searchFriend(text)
+                                searchId = text
                             }
                         )
                     )
@@ -85,6 +95,14 @@ fun EditFriends(friendsViewModel: FriendsViewModel){
                 Spacer(modifier = Modifier.width( 8.dp))
 
                 searchingfriend.forEach { friend ->
+                    println("Pending:" + pendingRequests)
+                    println("Pending:" + acceptedFriends)
+                    var isFriend by remember { mutableStateOf(false) }
+                    var isPending by remember { mutableStateOf(false) }
+                    friendsViewModel.getUserIdByNickname(friend.nickname) { userId ->
+                        isFriend = acceptedFriends.any { it.id == userId }
+                        isPending = pendingRequests.any { it.id == userId }
+                    }
                     val painter = if(friend.imageUri != "Loading"){
                         rememberAsyncImagePainter(
                             if (friend.imageUri.isEmpty())
@@ -106,14 +124,18 @@ fun EditFriends(friendsViewModel: FriendsViewModel){
                     }
 
                     Card(
-                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
                         elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
                         shape = RoundedCornerShape(32.dp),
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth().padding(8.dp)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
                         ) {
                             Image(
                                 painter = painter,
@@ -122,7 +144,8 @@ fun EditFriends(friendsViewModel: FriendsViewModel){
                                     .weight(1f)
                                     .size(64.dp)
                                     .clip(CircleShape),
-                                contentScale = ContentScale.Crop )
+                                contentScale = ContentScale.Crop
+                            )
                             Spacer(modifier = Modifier.width(16.dp))
                             Column(
                                 modifier = Modifier.weight(4f)
@@ -131,19 +154,36 @@ fun EditFriends(friendsViewModel: FriendsViewModel){
                                 Spacer(modifier = Modifier.padding(top = 8.dp))
                                 Text(text = friend.nickname, fontSize = 12.sp)
                             }
-
-                            Button(
-                                modifier = Modifier.weight(1.5f),
-                                onClick = { friendsViewModel.addPending(friend) }
-                            ) {
-                                Text(text = "Add")
+                            if (friend.nickname != nick && !isFriend && !isPending)
+                                Button(
+                                    modifier = Modifier.weight(1.5f),
+                                    onClick = { friendsViewModel.addPending(friend)
+                                        makeText(context, "Friend request sent", Toast.LENGTH_LONG).show()
+                                        isFriend = true
+                                        isPending = true},
+                                    enabled = !isFriend && !isPending
+                                ) {
+                                    Text(text = "Add")
+                                }
+                            else if (isPending) {
+                                Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)) {
+                                    Text(text = "Pending...", modifier = Modifier.padding(8.dp))
+                                }
+                            } else if (isFriend) {
+                                Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)) {
+                                    Text(text = "Friend", modifier = Modifier.padding(8.dp))
+                                }
                             }
-                            Spacer(modifier = Modifier.width(8.dp))
-
+                            else{
+                                Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)) {
+                                    Text(text = "You", modifier = Modifier.padding(8.dp))
+                                }
+                            }
                         }
                     }
                 }
             }
+
         }
     )
 }

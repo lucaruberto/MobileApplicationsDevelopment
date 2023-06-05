@@ -83,17 +83,20 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                 Log.w(TAG, "Profile image download error: $e")
             }
     }
-    suspend fun getUserbyNickname(nickname: String) : ProvaUser{
-        val userDocRef = db.collection("Users").document(nickname)
-        return try {
-            val documentSnapshot = userDocRef.get().await()
-            if (documentSnapshot.exists()) {
-                documentSnapshot.toObject(ProvaUser::class.java)!!
+
+    fun getUserIdByNickname(nickname: String, callback: (String?) -> Unit) {
+        val query = db.collection("Users").whereEqualTo("nickname", nickname).limit(1)
+        query.get().addOnSuccessListener { querySnapshot ->
+            if (!querySnapshot.isEmpty) {
+                val document = querySnapshot.documents[0]
+                val userId = document.id
+                callback(userId)
             } else {
-                ProvaUser()
+                callback(null)
             }
-        } catch (exception: Exception) {
-            ProvaUser()
+        }.addOnFailureListener { exception ->
+            Log.e("Firestore", "Error getting user ID by nickname: $exception")
+            callback(null)
         }
     }
 
