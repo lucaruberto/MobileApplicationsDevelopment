@@ -2,6 +2,7 @@ package it.polito.mad.lab5.friends
 
 import android.net.Uri
 import android.os.Build.VERSION.SDK_INT
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,12 +13,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -108,18 +111,16 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp),
-                        colors = if (friend.state == "Sent") CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
-                        else CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
                     ) {
                         Column {
                             Card(
                                 modifier = Modifier.padding(top = 8.dp, start = 16.dp),
                                 elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
                                 shape = RoundedCornerShape(32.dp),
-                                colors = if (friend.state == "Received") CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.tertiary
                                 )
-                                else CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)
                             ) {
                                 Text(
                                     friend.state,
@@ -148,32 +149,32 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
                                     horizontalArrangement = Arrangement.End,
                                     modifier = Modifier.weight(1f)
                                 ) {
+                                    FloatingActionButton(
+                                        onClick = { friendsViewModel.deletePending(friend.id) },
+                                        shape = RoundedCornerShape(50),
+                                        elevation = elevation(16.dp),
+                                        containerColor = Color.LightGray,
+                                        //contentColor = Color.Red
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Close,
+                                            contentDescription = "Remove"
+                                        )
+                                    }
                                     if (friend.state == "Received") {
+                                        Spacer(modifier = Modifier.width(8.dp))
                                         FloatingActionButton(
                                             onClick = { friendsViewModel.addFriend(friend.id) },
                                             shape = RoundedCornerShape(50),
                                             elevation = elevation(16.dp),
                                             containerColor = MaterialTheme.colorScheme.primary,
-                                            contentColor = Color.Green
+                                            //contentColor = Color.Green
                                         ) {
                                             Icon(
                                                 imageVector = Icons.Filled.Check,
                                                 contentDescription = "Add"
                                             )
                                         }
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                    }
-                                    FloatingActionButton(
-                                        onClick = { friendsViewModel.deletePending(friend.id) },
-                                        shape = RoundedCornerShape(50),
-                                        elevation = elevation(16.dp),
-                                        containerColor = MaterialTheme.colorScheme.primary,
-                                        contentColor = Color.Red
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Close,
-                                            contentDescription = "Remove"
-                                        )
                                     }
                                 }
                             }
@@ -269,30 +270,52 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
                         shape = RoundedCornerShape(32.dp),
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
                     ) {
+                        val context = LocalContext.current
                         Row(
-                            modifier = Modifier.padding(8.dp),
+                            modifier = Modifier.padding(8.dp).wrapContentHeight(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Column(modifier = Modifier.padding(start = 16.dp)) {
-                                Text(text = invite.discipline, fontSize = 20.sp)
-                                Spacer(modifier = Modifier.padding(top = 8.dp))
-                                Row() {
-                                    Text(text = invite.oraInizio.toString(), fontSize = 12.sp)
-                                    Text(text = invite.oraFine.toString(), fontSize = 12.sp)
-                                }
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Column(modifier = Modifier.padding(8.dp)) {
+                                Text(text = "${invite.discipline} at ${invite.playgroundName}", fontSize = 20.sp)
+                                //Spacer(modifier = Modifier.height(8.dp))
+                                Text(text = "Time: ${invite.oraInizio} - ${invite.oraFine}", fontSize = 16.sp)
                             }
                             Row(
                                 horizontalArrangement = Arrangement.End,
                                 modifier = Modifier.weight(1f)
                             ) {
-                                Button(onClick = {
-                                    friendsViewModel.addInvitationToReservations(invite)
-                                    friendsViewModel.deleteInvitation(invite)
-                                }) {
-                                    Text(text = "Accept")
+                                FloatingActionButton(
+                                    onClick = {
+                                        friendsViewModel.deleteInvitation(invite)
+                                        Toast.makeText(context, "Invite accepted!", Toast.LENGTH_SHORT).show()
+                                    },
+                                    shape = RoundedCornerShape(50),
+                                    elevation = elevation(16.dp),
+                                    containerColor = Color.LightGray,
+                                    //contentColor = Color.Red
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Close,
+                                        contentDescription = "Remove"
+                                    )
                                 }
-                                Button(onClick = { friendsViewModel.deleteInvitation(invite) }) {
-                                    Text(text = "Decline")
+                                Spacer(modifier = Modifier.width(8.dp))
+                                FloatingActionButton(
+                                    onClick = {
+                                        friendsViewModel.addInvitationToReservations(invite)
+                                        friendsViewModel.deleteInvitation(invite)
+                                        Toast.makeText(context, "Invite accepted!", Toast.LENGTH_SHORT).show()
+                                    },
+                                    shape = RoundedCornerShape(50),
+                                    elevation = elevation(16.dp),
+                                    containerColor = MaterialTheme.colorScheme.primary,
+                                    //contentColor = Color.Green
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Check,
+                                        contentDescription = "Add"
+                                    )
                                 }
                             }
                         }
