@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.ktx.auth
@@ -19,6 +20,7 @@ class ShowReservationsViewModel(application: Application) : AndroidViewModel(app
     val db = Firebase.firestore
 
     val reservations = mutableStateListOf<Reservation>()
+    var showDialog = mutableStateOf(false)
 
     private lateinit var reg: ListenerRegistration
 
