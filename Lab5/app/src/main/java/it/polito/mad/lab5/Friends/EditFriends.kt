@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.PersonSearch
@@ -37,6 +39,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.Role.Companion.Image
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
@@ -51,39 +55,33 @@ fun EditFriends(friendsViewModel: FriendsViewModel){
     Scaffold(
         topBar = { FriendsTopBar(viewModel = friendsViewModel)
         },
-        content = {
+        content = { it ->
             Column(
-                modifier = Modifier.padding(it),
+                modifier = Modifier.fillMaxWidth().padding(it),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp)
+                    modifier = Modifier.padding(16.dp)
                 ) {
                     OutlinedTextField(
                         shape = RoundedCornerShape(32.dp),
                         singleLine = true,
-                        label = { Text("Insert nickname...") },
+                        label = { Text("Search a friend...") },
                         value = text,
                         onValueChange = { value ->
                             text = value
                         },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Ascii,
+                            imeAction = ImeAction.Search
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onSearch = {
+                                friendsViewModel.searchFriend(text)
+                            }
+                        )
                     )
                 }
-                Row(
-                    modifier = Modifier.wrapContentSize()
-                ) {
-                    Button(
-                        onClick = {
-                            friendsViewModel.searchFriend(text)
-                        },
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .align(Alignment.CenterVertically)
-                    ) {
-                        Text(text = "Search")
-                    }
-                }
-
 
                 Spacer(modifier = Modifier.width( 8.dp))
 
