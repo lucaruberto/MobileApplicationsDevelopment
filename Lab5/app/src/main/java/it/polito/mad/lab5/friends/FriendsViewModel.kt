@@ -312,6 +312,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                             .addOnSuccessListener {
                             db.collection("Users/${id}/Pending").whereEqualTo("id",myid).get()
                                 .addOnSuccessListener { it2->
+                                    if(it2.documents.size>0)
                                     db.collection("Users/${id}/Pending").document(it2.documents[0].id).delete()
                                         .addOnSuccessListener {
                                             Log.d(ContentValues.TAG, "Deleted Friend for the main user and the secondary user")
@@ -331,6 +332,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                    .addOnSuccessListener {
                        db.collection("Users/${Firebase.auth.uid}/Pending").whereEqualTo("id",id).get()
                            .addOnSuccessListener {
+                               if(it.documents.size>0)
                                db.collection("Users/${Firebase.auth.uid}/Pending").document(it.documents[0].id).delete()
                                    .addOnSuccessListener {
                                        Log.d(ContentValues.TAG, "Added Friend for the main user")
@@ -346,6 +348,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                    .addOnSuccessListener {
                       db.collection("Users/${id}/Pending").whereEqualTo("id",myid).get()
                           .addOnSuccessListener {
+                              if(it.documents.size>0)
                               db.collection("Users/${id}/Pending").document(it.documents[0].id).delete()
                                   .addOnSuccessListener {
                                       Log.d(ContentValues.TAG, "Added Friend for the secondary user")

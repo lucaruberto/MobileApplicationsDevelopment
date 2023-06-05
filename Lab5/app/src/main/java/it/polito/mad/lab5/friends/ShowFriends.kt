@@ -61,88 +61,116 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
                 .padding(it)
                 .fillMaxWidth()
             ) {
-                    if(pendingRequests.isNotEmpty()) {
-                        Text(
-                            text = "Pending Requests",
-                            modifier = Modifier.padding(8.dp).align(Alignment.CenterHorizontally),
-                            fontSize = 26.sp
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
+                if(pendingRequests.isNotEmpty()) {
+                    Text(
+                        text = "Pending Requests",
+                        modifier = Modifier.padding(8.dp).align(Alignment.CenterHorizontally),
+                        fontSize = 26.sp
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
 
-                        pendingRequests.forEach { friend ->
-                            val (user,setUser) = remember(friend.id) {
-                                mutableStateOf(ProvaUser())
-                            }
-                            LaunchedEffect(friend.id) {
-                                friendsViewModel.getUserById(friend.id, setUser)
-                            }
+                    pendingRequests.forEach { friend ->
+                        val (user,setUser) = remember(friend.id) {
+                            mutableStateOf(ProvaUser())
+                        }
+                        LaunchedEffect(friend.id) {
+                            friendsViewModel.getUserById(friend.id, setUser)
+                        }
 
-                            /*
+                        /*
 
 
-    Image(
-        painter = rememberAsyncImagePainter(R.drawable.cat, imageLoader),
-        contentDescription = null,
-        modifier = Modifier.fillMaxSize()
-    )
-                             */
+Image(
+    painter = rememberAsyncImagePainter(R.drawable.cat, imageLoader),
+    contentDescription = null,
+    modifier = Modifier.fillMaxSize()
+)
+                         */
 
-                            val painter = if(user.imageUri != "Loading"){
-                                rememberAsyncImagePainter(
-                                    if (user.imageUri.isEmpty())
-                                        R.drawable.baseline_person_24
-                                    else
-                                        Uri.parse(user.imageUri)
-                                )
-                            }else {
-                                val imageLoader = ImageLoader.Builder(LocalContext.current)
-                                    .components {
-                                        if (SDK_INT >= 28) {
-                                            add(ImageDecoderDecoder.Factory())
-                                        } else {
-                                            add(GifDecoder.Factory())
-                                        }
+                        val painter = if(user.imageUri != "Loading"){
+                            rememberAsyncImagePainter(
+                                if (user.imageUri.isEmpty())
+                                    R.drawable.baseline_person_24
+                                else
+                                    Uri.parse(user.imageUri)
+                            )
+                        }else {
+                            val imageLoader = ImageLoader.Builder(LocalContext.current)
+                                .components {
+                                    if (SDK_INT >= 28) {
+                                        add(ImageDecoderDecoder.Factory())
+                                    } else {
+                                        add(GifDecoder.Factory())
                                     }
-                                    .build()
-                                rememberAsyncImagePainter(R.drawable.loading, imageLoader)
-                            }
+                                }
+                                .build()
+                            rememberAsyncImagePainter(R.drawable.loading, imageLoader)
+                        }
 
-                            Card(elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
-                                shape = RoundedCornerShape(32.dp),
+                        Card(elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
+                            shape = RoundedCornerShape(32.dp),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(8.dp),
-                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
-                                Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                                    Image(painter = painter,contentDescription = "ProfilePicA", modifier = Modifier
-                                        .size(64.dp)
-                                        .clip(CircleShape),
-                                        contentScale = ContentScale.Crop )
-                                    Column (modifier = Modifier.padding(start = 16.dp)){
+                            colors = if(friend.state == "Sent") CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                            else CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)) {
+                            Column {
+                                Card(
+                                    modifier = Modifier.padding(top = 8.dp, start = 16.dp),
+                                    elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
+                                    shape = RoundedCornerShape(32.dp),
+                                    colors = if (friend.state == "Received") CardDefaults.cardColors(
+                                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                                    )
+                                    else CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)
+                                ) {
+                                    Text(
+                                        friend.state,
+                                        modifier = Modifier.padding(8.dp)
+                                    )
+                                }
+                                Row(
+                                    modifier = Modifier.padding(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Image(
+                                        painter = painter,
+                                        contentDescription = "ProfilePicA",
+                                        modifier = Modifier
+                                            .size(64.dp)
+                                            .clip(CircleShape),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                    Column(modifier = Modifier.padding(start = 16.dp)) {
                                         Text(text = user.name, fontSize = 20.sp)
                                         Spacer(modifier = Modifier.padding(top = 8.dp))
                                         Text(text = user.nickname, fontSize = 12.sp)
                                     }
                                     Spacer(modifier = Modifier.width(4.dp))
-                                    Row(horizontalArrangement = Arrangement.End, modifier = Modifier.weight(1f)) {
-                                        FloatingActionButton(
-                                            onClick = { friendsViewModel.addFriend(friend.id) },
-                                            shape = RoundedCornerShape(50),
-                                            elevation = elevation(16.dp),
-                                            containerColor = MaterialTheme.colorScheme.primary,
-                                            contentColor = Color.Green
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Filled.Check,
-                                                contentDescription = "Add"
-                                            )
+                                    Row(
+                                        horizontalArrangement = Arrangement.End,
+                                        modifier = Modifier.weight(1f)
+                                    ) {
+                                        if (friend.state == "Received") {
+                                            FloatingActionButton(
+                                                onClick = { friendsViewModel.addFriend(friend.id) },
+                                                shape = RoundedCornerShape(50),
+                                                elevation = elevation(16.dp),
+                                                containerColor = MaterialTheme.colorScheme.primary,
+                                                contentColor = Color.Green
+                                            ) {
+                                                Icon(
+                                                    imageVector = Icons.Filled.Check,
+                                                    contentDescription = "Add"
+                                                )
+                                            }
+                                            Spacer(modifier = Modifier.width(8.dp))
                                         }
-                                        Spacer(modifier = Modifier.width(8.dp))
                                         FloatingActionButton(
                                             onClick = { friendsViewModel.deletePending(friend.id) },
                                             shape = RoundedCornerShape(50),
                                             elevation = elevation(16.dp),
-                                            containerColor = Color.LightGray,
+                                            containerColor = MaterialTheme.colorScheme.primary,
                                             contentColor = Color.Red
                                         ) {
                                             Icon(
@@ -155,12 +183,13 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
                             }
                         }
                     }
+                }
                 Spacer(modifier = Modifier.height(32.dp))
-                    Text(
-                        text = "Friends",
-                        modifier = Modifier.padding(8.dp).align(Alignment.CenterHorizontally),
-                        fontSize = 26.sp
-                    )
+                Text(
+                    text = "Friends",
+                    modifier = Modifier.padding(8.dp).align(Alignment.CenterHorizontally),
+                    fontSize = 26.sp
+                )
                 acceptedFriends.forEach { friend ->
                     val (user, setUser) = remember(friend.id) { mutableStateOf(ProvaUser()) }
                     LaunchedEffect(friend.id) {
