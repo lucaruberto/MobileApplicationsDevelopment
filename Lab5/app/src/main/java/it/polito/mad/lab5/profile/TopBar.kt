@@ -66,7 +66,7 @@ fun MyTopBar(viewModel: ProfileViewModel, logout: () -> Unit) {
                         )
                         Divider()
                         DropdownMenuItem(
-                            text = { Text("Exit...") },
+                            text = { Text("Logout") },
                             onClick = {
                                 logout()
                             }
