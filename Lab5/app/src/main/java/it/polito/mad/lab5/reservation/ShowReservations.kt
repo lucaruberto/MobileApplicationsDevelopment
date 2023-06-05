@@ -273,57 +273,63 @@ fun Reservation(vm: ShowReservationsViewModel, rentVm: RentViewModel,friendVM : 
                             .padding(16.dp),
                         shape = RectangleShape
                     ) {
+                        LazyColumn {
+                            acceptedFriends.forEach { friend ->
+                                item {
+                                    val (user, setUser) = remember(friend.id) { mutableStateOf(ProvaUser()) }
+                                    LaunchedEffect(friend.id) {
+                                        friendVM.getUserById(friend.id, setUser)
+                                    }
+                                    val painter = if(user.imageUri != "Loading"){
+                                        rememberAsyncImagePainter(
+                                            if (user.imageUri.isEmpty())
+                                                R.drawable.baseline_person_24
+                                            else
+                                                Uri.parse(user.imageUri)
+                                        )
+                                    }else {
+                                        val imageLoader = ImageLoader.Builder(LocalContext.current)
+                                            .components {
+                                                if (Build.VERSION.SDK_INT >= 28) {
+                                                    add(ImageDecoderDecoder.Factory())
+                                                } else {
+                                                    add(GifDecoder.Factory())
+                                                }
+                                            }
+                                            .build()
+                                        rememberAsyncImagePainter(R.drawable.loading, imageLoader)
+                                    }
 
-                        acceptedFriends.forEach { friend ->
-                            val (user, setUser) = remember(friend.id) { mutableStateOf(ProvaUser()) }
-                            LaunchedEffect(friend.id) {
-                                friendVM.getUserById(friend.id, setUser)
-                            }
-                            val painter = if(user.imageUri != "Loading"){
-                                rememberAsyncImagePainter(
-                                    if (user.imageUri.isEmpty())
-                                        R.drawable.baseline_person_24
-                                    else
-                                        Uri.parse(user.imageUri)
-                                )
-                            }else {
-                                val imageLoader = ImageLoader.Builder(LocalContext.current)
-                                    .components {
-                                        if (Build.VERSION.SDK_INT >= 28) {
-                                            add(ImageDecoderDecoder.Factory())
-                                        } else {
-                                            add(GifDecoder.Factory())
-                                        }
-                                    }
-                                    .build()
-                                rememberAsyncImagePainter(R.drawable.loading, imageLoader)
-                            }
-                            Card(modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp),
-                                elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
-                                shape = RoundedCornerShape(32.dp),
-                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
-                                Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                                    Image(painter = painter,contentDescription = "ProfilePicA", modifier = Modifier
-                                        .size(64.dp)
-                                        .clip(CircleShape),
-                                        contentScale = ContentScale.Crop )
-                                    Column(modifier = Modifier.padding(start = 16.dp)) {
-                                        Text(text = user.name, fontSize = 20.sp)
-                                        Spacer(modifier = Modifier.padding(top = 8.dp))
-                                        Text(text = user.nickname, fontSize = 12.sp)
-                                    }
-                                    Row(horizontalArrangement = Arrangement.End, modifier = Modifier.weight(1f)) {
-                                        Button(onClick = {
-                                            vm.sendInvitation(reservationToAddFriend,friend.id)
-                                        }) {
-                                            Text(text = "Invite")
+                                    Card(modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(8.dp),
+                                        elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
+                                        shape = RoundedCornerShape(32.dp),
+                                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
+                                        Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                                            Image(painter = painter,contentDescription = "ProfilePicA", modifier = Modifier
+                                                .size(64.dp)
+                                                .clip(CircleShape),
+                                                contentScale = ContentScale.Crop )
+                                            Column(modifier = Modifier.padding(start = 16.dp)) {
+                                                Text(text = user.name, fontSize = 20.sp)
+                                                Spacer(modifier = Modifier.padding(top = 8.dp))
+                                                Text(text = user.nickname, fontSize = 12.sp)
+                                            }
+                                            Row(horizontalArrangement = Arrangement.End, modifier = Modifier.weight(1f)) {
+                                                Button(onClick = {
+                                                    vm.sendInvitation(reservationToAddFriend,friend.id)
+                                                }) {
+                                                    Text(text = "Invite")
+                                                }
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
+
+
                         }
                     })
                 }
