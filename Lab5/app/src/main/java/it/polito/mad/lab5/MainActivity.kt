@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.DateRange
+import androidx.compose.material.icons.sharp.People
 import androidx.compose.material.icons.sharp.Person
 import androidx.compose.material.icons.sharp.Search
 import androidx.compose.material.icons.sharp.Star
@@ -171,7 +172,7 @@ fun MainScreen(application: Application, logout: () -> Unit) {
                    Column( modifier = Modifier.weight(1f), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
                        Button(onClick = { navController.navigate("ScreenFive") }, colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondaryContainer)) {
                            Icon(
-                               Icons.Sharp.Star,
+                               Icons.Sharp.People,
                                contentDescription = "Friends",
                                modifier = Modifier.size(ButtonDefaults.IconSize),
                                tint = Color.Black

@@ -77,22 +77,32 @@ fun EditFriends(friendsViewModel: FriendsViewModel){
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(bottom = 8.dp, top = 8.dp)
+                        modifier = Modifier.fillMaxWidth().padding(8.dp)
                     ) {
-                        Image(painter = painter,contentDescription = "ProfilePicA", modifier = Modifier
-                            .size(64.dp)
-                            .clip(CircleShape),
+                        Image(
+                            painter = painter,
+                            contentDescription = "ProfilePic",
+                            modifier = Modifier
+                                .weight(2f)
+                                .size(64.dp)
+                                .clip(CircleShape),
                             contentScale = ContentScale.Crop )
-                        Column() {
+                        Column(
+                            modifier = Modifier.weight(4f)
+                        ) {
                             Text(text = friend.name, fontSize = 20.sp)
                             Spacer(modifier = Modifier.padding(top = 8.dp))
                             Text(text = friend.nickname, fontSize = 12.sp)
                         }
-                        Row(horizontalArrangement = Arrangement.End, modifier = Modifier.weight(1f)) {
-                            Button(onClick = { friendsViewModel.addPending(friend) }) {
-                                Text(text = "Add");
-                            }
+
+                        Button(
+                            modifier = Modifier.weight(2f),
+                            onClick = { friendsViewModel.addPending(friend) }
+                        ) {
+                            Text(text = "Add");
                         }
+                        Spacer(modifier = Modifier.width(8.dp))
+
                     }
                     }
                 }
