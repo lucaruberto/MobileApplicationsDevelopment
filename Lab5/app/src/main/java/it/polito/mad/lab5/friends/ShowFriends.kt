@@ -49,8 +49,8 @@ import it.polito.mad.lab5.R
 @Composable
 fun ShowFriends(friendsViewModel: FriendsViewModel){
     val db = FirebaseFirestore.getInstance()
-    val acceptedFriends = friendsViewModel.friends_id
-    val pendingRequests = friendsViewModel.pending_id
+    val acceptedFriends = friendsViewModel.friendsId
+    val pendingRequests = friendsViewModel.pendingId
 
     Scaffold(
         topBar = { FriendsTopBar(viewModel = friendsViewModel)

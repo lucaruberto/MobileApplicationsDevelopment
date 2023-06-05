@@ -26,9 +26,9 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
     private var db = Firebase.firestore
 
     val editFriends = mutableStateOf(false)
-    val friends_id : SnapshotStateList<Friend> = mutableStateListOf()
-    val pending_id : SnapshotStateList<Pending> = mutableStateListOf()
-    val searching_friends : SnapshotStateList<ProvaUser> = mutableStateListOf()
+    val friendsId : SnapshotStateList<Friend> = mutableStateListOf()
+    val pendingId : SnapshotStateList<Pending> = mutableStateListOf()
+    val searchingFriends : SnapshotStateList<ProvaUser> = mutableStateListOf()
     val text = mutableStateOf("")
     fun fetchInitialData() {
         loadFriends()
@@ -92,8 +92,8 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
         }
     }
     private fun loadFriends(){
-            viewModelScope.launch (){
-                    friends_id.clear()
+            viewModelScope.launch(){
+                    friendsId.clear()
                     db.collection("Users/${Firebase.auth.uid}/Friends")
                        .addSnapshotListener { snapshots, e ->
                            if (e != null) {
@@ -104,22 +104,22 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                                    when (dc.type) {
                                        DocumentChange.Type.ADDED -> {
                                            Log.d(ContentValues.TAG, "New Friend: ${dc.document.data}")
-                                           friends_id.add(dc.document.toObject(Friend::class.java))
+                                           friendsId.add(dc.document.toObject(Friend::class.java))
                                        }
 
                                        DocumentChange.Type.MODIFIED -> {
                                            val updatedRes = dc.document.toObject(Friend::class.java)
-                                           friends_id.removeIf {
+                                           friendsId.removeIf {
                                                it.id == updatedRes.id
                                            }
-                                           friends_id.add(updatedRes)
+                                           friendsId.add(updatedRes)
                                            Log.d(ContentValues.TAG, "Modified Friend: ${dc.document.data}")
                                        }
 
                                        DocumentChange.Type.REMOVED -> {
                                            Log.d(ContentValues.TAG, "Removed Friend: ${dc.document.data}")
                                            val friendToDelete = dc.document.toObject(Friend::class.java)
-                                           friends_id.removeIf {
+                                           friendsId.removeIf {
                                                        it.id == friendToDelete.id
                                            }
                                        }
@@ -134,7 +134,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
     }
     private fun loadPending(){
         viewModelScope.launch (){
-            friends_id.clear()
+            friendsId.clear()
             db.collection("Users/${Firebase.auth.uid}/Pending")
                 .addSnapshotListener { snapshots, e ->
                     if (e != null) {
@@ -145,22 +145,22 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                             when (dc.type) {
                                 DocumentChange.Type.ADDED -> {
                                     Log.d(ContentValues.TAG, "New Pending: ${dc.document.data}")
-                                    pending_id.add(dc.document.toObject(Pending::class.java))
+                                    pendingId.add(dc.document.toObject(Pending::class.java))
                                 }
 
                                 DocumentChange.Type.MODIFIED -> {
                                     val updatedRes = dc.document.toObject(Pending::class.java)
-                                    pending_id.removeIf {
+                                    pendingId.removeIf {
                                         it.id == updatedRes.id
                                     }
-                                    pending_id.add(updatedRes)
+                                    pendingId.add(updatedRes)
                                     Log.d(ContentValues.TAG, "Modified Pending: ${dc.document.data}")
                                 }
 
                                 DocumentChange.Type.REMOVED -> {
                                     Log.d(ContentValues.TAG, "Removed Pending: ${dc.document.data}")
                                     val pendingToDelete = dc.document.toObject(Pending::class.java)
-                                    pending_id.removeIf {
+                                    pendingId.removeIf {
                                         it.id == pendingToDelete.id
                                     }
                                 }
@@ -175,7 +175,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
     }
     fun searchFriend(ref:String){
        viewModelScope.launch {
-           searching_friends.clear()
+           searchingFriends.clear()
            db.collection("Users").whereEqualTo("nickname",ref)
                .addSnapshotListener { snapshots, e ->
                    if (e != null) {
@@ -188,22 +188,22 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                            when (dc.type) {
                                DocumentChange.Type.ADDED -> {
                                    Log.d(ContentValues.TAG, "New User: ${dc.document.data}")
-                                   searching_friends.add(dc.document.toObject(ProvaUser::class.java))
+                                   searchingFriends.add(dc.document.toObject(ProvaUser::class.java))
                                }
 
                                DocumentChange.Type.MODIFIED -> {
                                    val updatedRes = dc.document.toObject(ProvaUser::class.java)
-                                   searching_friends.removeIf {
+                                   searchingFriends.removeIf {
                                        it.nickname == updatedRes.nickname
                                    }
-                                   searching_friends.add(updatedRes)
+                                   searchingFriends.add(updatedRes)
                                    Log.d(ContentValues.TAG, "Modified User: ${dc.document.data}")
                                }
 
                                DocumentChange.Type.REMOVED -> {
                                    Log.d(ContentValues.TAG, "Removed User: ${dc.document.data}")
                                    val userToDelete = dc.document.toObject(ProvaUser::class.java)
-                                   searching_friends.removeIf {
+                                   searchingFriends.removeIf {
                                        it.nickname == userToDelete.nickname
                                    }
                                }

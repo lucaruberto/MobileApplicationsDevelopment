@@ -9,8 +9,8 @@ import androidx.compose.runtime.Composable
 fun Friends(friendsViewModel: FriendsViewModel) {
 
     val editfriends = friendsViewModel.editFriends.value
-    val acceptedFriends = friendsViewModel.friends_id
-    val pendingRequests = friendsViewModel.pending_id
+    val acceptedFriends = friendsViewModel.friendsId
+    val pendingRequests = friendsViewModel.pendingId
 
     if(editfriends){
         //Text(text = "Sei nella editfriends!")

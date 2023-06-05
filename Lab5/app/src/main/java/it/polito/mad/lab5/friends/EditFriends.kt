@@ -44,7 +44,7 @@ import it.polito.mad.lab5.R
 @Composable
 fun EditFriends(friendsViewModel: FriendsViewModel){
     var text by remember { mutableStateOf("") }
-    val searchingfriend = friendsViewModel.searching_friends
+    val searchingfriend = friendsViewModel.searchingFriends
 
     Scaffold(
         topBar = { FriendsTopBar(viewModel = friendsViewModel)
