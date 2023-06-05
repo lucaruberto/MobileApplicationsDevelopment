@@ -1,7 +1,7 @@
 package it.polito.mad.lab5.friends
 
 import android.app.Application
-import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +17,7 @@ import com.google.firebase.storage.FirebaseStorage
 import it.polito.mad.lab5.db.Friend
 import it.polito.mad.lab5.db.Pending
 import it.polito.mad.lab5.db.ProvaUser
+import it.polito.mad.lab5.db.Reservation
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.io.File
@@ -29,10 +30,14 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
     val friendsId : SnapshotStateList<Friend> = mutableStateListOf()
     val pendingId : SnapshotStateList<Pending> = mutableStateListOf()
     val searchingFriends : SnapshotStateList<ProvaUser> = mutableStateListOf()
+
+    val invitations: SnapshotStateList<Reservation> = mutableStateListOf()
+
     val text = mutableStateOf("")
     fun fetchInitialData() {
         loadFriends()
         loadPending()
+        loadInvitations()
     }
 
     suspend fun getUserById(id : String, setUser: (ProvaUser) -> Unit) {
@@ -57,11 +62,11 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
     private fun loadUserProfileImage(id: String, user: ProvaUser, setUser: (ProvaUser) -> Unit){
         val storageReference = FirebaseStorage.getInstance().getReference("profileImages/$id.jpg")
         val localProfileImageFile = File.createTempFile("localProfileImage", ".jpg")
-        Log.d(ContentValues.TAG, "Start downloading Friend Profile Image")
+        Log.d(TAG, "Start downloading Friend Profile Image")
         storageReference
             .getFile(localProfileImageFile)
             .addOnSuccessListener {
-                Log.d(ContentValues.TAG, "Friend Profile Image downloaded successfully")
+                Log.d(TAG, "Friend Profile Image downloaded successfully")
                 val userWithImage = ProvaUser(
                     user.name,
                     user.nickname,
@@ -71,11 +76,11 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                     user.city,
                     localProfileImageFile.toUri().toString()
                 )
-                Log.d(ContentValues.TAG, "Profile Image stored to ${userWithImage.imageUri}")
+                Log.d(TAG, "Profile Image stored to ${userWithImage.imageUri}")
                 setUser(userWithImage)
             }
             .addOnFailureListener { e: Exception ->
-                Log.w(ContentValues.TAG, "Profile image download error: $e")
+                Log.w(TAG, "Profile image download error: $e")
             }
     }
     suspend fun getUserbyNickname(nickname: String) : ProvaUser{
@@ -91,19 +96,83 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
             ProvaUser()
         }
     }
+
+    fun loadInvitations(){
+        viewModelScope.launch(){
+            invitations.clear()
+            db.collection("Users/${Firebase.auth.uid}/Invitations")
+                .addSnapshotListener { snapshots, e ->
+                    if (e != null) {
+                        Log.w(TAG, "listen:error", e)
+                    }
+                    if(snapshots != null) {
+                        for (dc in snapshots.documentChanges) {
+                            when (dc.type) {
+                                DocumentChange.Type.ADDED -> {
+                                    Log.d(TAG, "New invitation: ${dc.document.data}")
+                                    invitations.add(dc.document.toObject(Reservation::class.java))
+                                }
+
+                                DocumentChange.Type.MODIFIED -> {
+                                    val updatedRes = dc.document.toObject(Reservation::class.java)
+                                    invitations.removeIf {
+                                        it.reservationId == updatedRes.reservationId
+                                    }
+                                    invitations.add(updatedRes)
+                                    Log.d(TAG, "Modified Invitation: ${dc.document.data}")
+                                }
+
+                                DocumentChange.Type.REMOVED -> {
+                                    Log.d(TAG, "Removed Invitation: ${dc.document.data}")
+                                    val invitationToDelete = dc.document.toObject(Reservation::class.java)
+                                    invitations.removeIf {
+                                        it.reservationId == invitationToDelete.reservationId
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+    fun addInvitationToReservations(invitation: Reservation){
+        deleteInvitation(invitation)
+        db.collection("Users/${Firebase.auth.uid}/Reservations").add(invitation)
+    }
+
+    fun deleteInvitation(invitation: Reservation){
+        invitations.removeIf { it.reservationId == invitation.reservationId }
+
+        db.collection("Users/${Firebase.auth.uid}/Invitation")
+            .whereEqualTo("reservationId", invitation.reservationId)
+            .get()
+            .addOnSuccessListener {
+                db.collection("Users/${Firebase.auth.uid}/Invitation")
+                    .document(it.documents[0].id)
+                    .delete()
+                    .addOnSuccessListener {
+                        Log.d(TAG, "Invitation removed successfully")
+                    }
+                    .addOnFailureListener {
+                        Log.w(TAG, "Error removing invitation")
+                    }
+            }
+    }
+
     private fun loadFriends(){
-            viewModelScope.launch(){
+            viewModelScope.launch {
                     friendsId.clear()
                     db.collection("Users/${Firebase.auth.uid}/Friends")
                        .addSnapshotListener { snapshots, e ->
                            if (e != null) {
-                               Log.w(ContentValues.TAG, "listen:error", e)
+                               Log.w(TAG, "listen:error", e)
                            }
                            if(snapshots != null) {
                                for (dc in snapshots.documentChanges) {
                                    when (dc.type) {
                                        DocumentChange.Type.ADDED -> {
-                                           Log.d(ContentValues.TAG, "New Friend: ${dc.document.data}")
+                                           Log.d(TAG, "New Friend: ${dc.document.data}")
                                            friendsId.add(dc.document.toObject(Friend::class.java))
                                        }
 
@@ -113,11 +182,11 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                                                it.id == updatedRes.id
                                            }
                                            friendsId.add(updatedRes)
-                                           Log.d(ContentValues.TAG, "Modified Friend: ${dc.document.data}")
+                                           Log.d(TAG, "Modified Friend: ${dc.document.data}")
                                        }
 
                                        DocumentChange.Type.REMOVED -> {
-                                           Log.d(ContentValues.TAG, "Removed Friend: ${dc.document.data}")
+                                           Log.d(TAG, "Removed Friend: ${dc.document.data}")
                                            val friendToDelete = dc.document.toObject(Friend::class.java)
                                            friendsId.removeIf {
                                                        it.id == friendToDelete.id
@@ -138,13 +207,13 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
             db.collection("Users/${Firebase.auth.uid}/Pending")
                 .addSnapshotListener { snapshots, e ->
                     if (e != null) {
-                        Log.w(ContentValues.TAG, "listen:error", e)
+                        Log.w(TAG, "listen:error", e)
                     }
                     if(snapshots != null) {
                         for (dc in snapshots.documentChanges) {
                             when (dc.type) {
                                 DocumentChange.Type.ADDED -> {
-                                    Log.d(ContentValues.TAG, "New Pending: ${dc.document.data}")
+                                    Log.d(TAG, "New Pending: ${dc.document.data}")
                                     pendingId.add(dc.document.toObject(Pending::class.java))
                                 }
 
@@ -154,11 +223,11 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                                         it.id == updatedRes.id
                                     }
                                     pendingId.add(updatedRes)
-                                    Log.d(ContentValues.TAG, "Modified Pending: ${dc.document.data}")
+                                    Log.d(TAG, "Modified Pending: ${dc.document.data}")
                                 }
 
                                 DocumentChange.Type.REMOVED -> {
-                                    Log.d(ContentValues.TAG, "Removed Pending: ${dc.document.data}")
+                                    Log.d(TAG, "Removed Pending: ${dc.document.data}")
                                     val pendingToDelete = dc.document.toObject(Pending::class.java)
                                     pendingId.removeIf {
                                         it.id == pendingToDelete.id
@@ -179,7 +248,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
            db.collection("Users").whereEqualTo("nickname",ref)
                .addSnapshotListener { snapshots, e ->
                    if (e != null) {
-                       Log.w(ContentValues.TAG, "listen:error", e)
+                       Log.w(TAG, "listen:error", e)
                    }
                    if(snapshots != null) {
                        println("Lo snapshot non e' nullo!")
@@ -187,7 +256,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                        for (dc in snapshots.documentChanges) {
                            when (dc.type) {
                                DocumentChange.Type.ADDED -> {
-                                   Log.d(ContentValues.TAG, "New User: ${dc.document.data}")
+                                   Log.d(TAG, "New User: ${dc.document.data}")
                                    searchingFriends.add(dc.document.toObject(ProvaUser::class.java))
                                }
 
@@ -197,11 +266,11 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                                        it.nickname == updatedRes.nickname
                                    }
                                    searchingFriends.add(updatedRes)
-                                   Log.d(ContentValues.TAG, "Modified User: ${dc.document.data}")
+                                   Log.d(TAG, "Modified User: ${dc.document.data}")
                                }
 
                                DocumentChange.Type.REMOVED -> {
-                                   Log.d(ContentValues.TAG, "Removed User: ${dc.document.data}")
+                                   Log.d(TAG, "Removed User: ${dc.document.data}")
                                    val userToDelete = dc.document.toObject(ProvaUser::class.java)
                                    searchingFriends.removeIf {
                                        it.nickname == userToDelete.nickname
@@ -230,17 +299,17 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                         db.collection("Users/${Firebase.auth.uid}/Pending")
                             .add(Pending(id = userdocument.documents[0].id, state = "Sent"))
                             .addOnSuccessListener {
-                                Log.d(ContentValues.TAG, "Friend Added for the main user")
+                                Log.d(TAG, "Friend Added for the main user")
 
                                 db.collection("Users/${userdocument.documents[0].id}/Pending")
                                     .add(Pending(id =myid,state="Received"))
                                     .addOnSuccessListener {
-                                        Log.d(ContentValues.TAG, "Friend Added for the other user")
+                                        Log.d(TAG, "Friend Added for the other user")
 
                                     }
                                     .addOnFailureListener {
                                         Log.d(
-                                            ContentValues.TAG,
+                                            TAG,
                                             "Error adding the friend for the other user"
                                         )
 
@@ -248,7 +317,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                             }
                             .addOnFailureListener {
                                 Log.d(
-                                    ContentValues.TAG,
+                                    TAG,
                                     "Error Adding the friend for the main user"
                                 )
                             }
@@ -269,34 +338,34 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                         .delete()
                         .addOnSuccessListener {
 
-                            Log.d(ContentValues.TAG, "Friend Removed for the main user")
+                            Log.d(TAG, "Friend Removed for the main user")
 
                             db.collection("Users/${id}/Friends").whereEqualTo("id",Firebase.auth.uid).get()
                                 .addOnSuccessListener {otherfrienddocument ->
                                     db.collection("Users/${id}/Friends").document(otherfrienddocument.documents[0].id).delete()
                                         .addOnSuccessListener {
-                                            Log.d(ContentValues.TAG, "Friend Removed for the other user")
+                                            Log.d(TAG, "Friend Removed for the other user")
 
                                         }
                                         .addOnFailureListener {
-                                            Log.d(ContentValues.TAG, "Error removing the friend for the other user")
+                                            Log.d(TAG, "Error removing the friend for the other user")
 
                                         }
                                 }
                                 .addOnFailureListener{
-                                    Log.d(ContentValues.TAG, "Error seeking  for the other user document")
+                                    Log.d(TAG, "Error seeking  for the other user document")
                                 }
 
                         }
                         .addOnFailureListener {
 
-                            Log.d(ContentValues.TAG, "Error removing the friend for the main user")
+                            Log.d(TAG, "Error removing the friend for the main user")
 
                         }
 
                 }
                 .addOnFailureListener {
-                    Log.d(ContentValues.TAG, "Error seeking for the friend of the main user")
+                    Log.d(TAG, "Error seeking for the friend of the main user")
                 }
         }
     }
@@ -315,7 +384,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                                     if(it2.documents.size>0)
                                     db.collection("Users/${id}/Pending").document(it2.documents[0].id).delete()
                                         .addOnSuccessListener {
-                                            Log.d(ContentValues.TAG, "Deleted Friend for the main user and the secondary user")
+                                            Log.d(TAG, "Deleted Friend for the main user and the secondary user")
 
                                         }
                                 }
@@ -335,7 +404,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                                if(it.documents.size>0)
                                db.collection("Users/${Firebase.auth.uid}/Pending").document(it.documents[0].id).delete()
                                    .addOnSuccessListener {
-                                       Log.d(ContentValues.TAG, "Added Friend for the main user")
+                                       Log.d(TAG, "Added Friend for the main user")
 
                                    }
                                    .addOnFailureListener {
@@ -351,7 +420,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                               if(it.documents.size>0)
                               db.collection("Users/${id}/Pending").document(it.documents[0].id).delete()
                                   .addOnSuccessListener {
-                                      Log.d(ContentValues.TAG, "Added Friend for the secondary user")
+                                      Log.d(TAG, "Added Friend for the secondary user")
 
                                   }
                           }
