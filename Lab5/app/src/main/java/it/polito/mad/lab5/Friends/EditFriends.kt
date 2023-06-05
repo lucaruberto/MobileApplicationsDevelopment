@@ -10,11 +10,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.PersonSearch
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -46,16 +52,26 @@ fun EditFriends(friendsViewModel: FriendsViewModel){
         topBar = { FriendsTopBar(viewModel = friendsViewModel)
         },
         content = {
-            Column(modifier = Modifier.padding(it)) {
-                Row(modifier = Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
+            Column(
+                modifier = Modifier.padding(it),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(16.dp)
+                ) {
                     OutlinedTextField(
                         shape = RoundedCornerShape(32.dp),
                         singleLine = true,
-                        label = { Text("Search") },
-                        value = text, onValueChange = { value ->
+                        label = { Text("Insert nickname...") },
+                        value = text,
+                        onValueChange = { value ->
                             text = value
-                        }
+                        },
                     )
+                }
+                Row(
+                    modifier = Modifier.wrapContentSize()
+                ) {
                     Button(
                         onClick = {
                             friendsViewModel.searchFriend(text)
@@ -67,6 +83,7 @@ fun EditFriends(friendsViewModel: FriendsViewModel){
                         Text(text = "Search")
                     }
                 }
+
 
                 Spacer(modifier = Modifier.width( 8.dp))
 
