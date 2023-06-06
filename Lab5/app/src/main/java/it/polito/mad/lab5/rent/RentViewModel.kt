@@ -135,6 +135,7 @@ class RentViewModel(application: Application) : AndroidViewModel(application) {
             .addOnSuccessListener { documents ->
                 //val playgroundsList = mutableListOf<String>()
                 playgroundNamesList.clear()
+                playgroundsList.clear()
                 for (document in documents) {
                     Log.d(TAG, "Document fetched for playground: ${document.data}")
                     playgroundNamesList.add(document.getString("playgroundName") ?: "")
