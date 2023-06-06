@@ -112,8 +112,8 @@ class ShowReservationsViewModel(application: Application) : AndroidViewModel(app
                                 .addOnSuccessListener {
                                     Log.d(TAG, "user id added to invitation list")
                                 }
-                                .addOnFailureListener {
-                                    Log.w(TAG, "Error adding uid to invitation list: $it")
+                                .addOnFailureListener { ex ->
+                                    Log.w(TAG, "Error adding uid to invitation list: $ex")
                                 }
                         }
                         .addOnFailureListener {

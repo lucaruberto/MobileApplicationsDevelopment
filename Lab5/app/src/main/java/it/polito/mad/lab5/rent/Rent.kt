@@ -43,7 +43,6 @@ fun Rent(vm: RentViewModel) {
     val sportsList = vm.sportsList1.toList()
     val selectedSport = vm.selectedSport.value
 
-    val playgroundNamesList = vm.playgroundNamesList.toList()
     val playgroundsList = vm.playgroundsList.toList()
     val selectedPlayground = vm.selectedPlayground.value
 

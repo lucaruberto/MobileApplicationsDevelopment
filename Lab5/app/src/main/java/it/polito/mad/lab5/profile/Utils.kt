@@ -6,7 +6,6 @@ import android.net.Uri
 import android.provider.MediaStore
 import java.io.ByteArrayOutputStream
 
-
     fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri {
         val bytes = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)

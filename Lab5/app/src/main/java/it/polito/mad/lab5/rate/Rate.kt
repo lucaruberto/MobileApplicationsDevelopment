@@ -356,7 +356,7 @@ fun ReviewComponent(review: Rating, vm: RateViewModel, modifier: Modifier) {
             if(review.reviewText!! != "") {
                 Text(
                     text = review.reviewText!!,
-                    style = TextStyle(fontSize = 20.sp, textAlign = TextAlign.Center),
+                    style = TextStyle(fontSize = 22.sp, textAlign = TextAlign.Center),
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentWidth(align = CenterHorizontally)
@@ -376,6 +376,7 @@ fun ReviewComponent(review: Rating, vm: RateViewModel, modifier: Modifier) {
                     IconButton(
                         onClick = { vm.removeReview(review.id!!) },
                         modifier = Modifier
+                            .clip(RoundedCornerShape(50))
                             .background(Color(0xFFFF808C))
                             .size(48.dp),
                     ) {

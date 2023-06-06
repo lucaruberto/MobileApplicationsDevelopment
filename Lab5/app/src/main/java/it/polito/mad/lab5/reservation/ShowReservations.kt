@@ -268,7 +268,7 @@ fun Reservation(vm: ShowReservationsViewModel, rentVm: RentViewModel,friendVM : 
                             shape = RoundedCornerShape(16.dp)
                         ) {
                             if (acceptedFriends.isEmpty()) {
-                                Text(text = "No avaliable friend!")
+                                Text(text = "No available friend!")
                             }
                             else{
                                 val uidAlreadySent = vm.uidAlreadySent

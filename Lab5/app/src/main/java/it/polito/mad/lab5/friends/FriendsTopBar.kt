@@ -17,15 +17,15 @@ import androidx.compose.ui.text.style.TextAlign
 @Composable
 fun FriendsTopBar(viewModel: FriendsViewModel) {
 
-    val editfriends = viewModel.editFriends.value
+    val editFriends = viewModel.editFriends.value
 
     TopAppBar(
-        title = {Text(text = if(!editfriends) "Your Friends" else "Search", textAlign = TextAlign.Center) },
+        title = {Text(text = if(!editFriends) "Your Friends" else "Search", textAlign = TextAlign.Center) },
         colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary, titleContentColor = MaterialTheme.colorScheme.onPrimary),
         actions = {
             IconButton(
                 onClick = {
-                    viewModel.editFriends.value = !editfriends
+                    viewModel.editFriends.value = !editFriends
                 },
                 enabled = true
             ) {
