@@ -40,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
@@ -48,6 +49,9 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import it.polito.mad.lab5.db.User
 import it.polito.mad.lab5.R
+import java.text.SimpleDateFormat
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun ShowFriends(friendsViewModel: FriendsViewModel){
@@ -326,8 +330,9 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
                             ) {
                                 Spacer(modifier = Modifier.width(16.dp))
                                 Column(modifier = Modifier.padding(8.dp)) {
+                                    val formattedDate = invite.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString()
                                     Text(text = "${invite.discipline} at ${invite.playgroundName}", fontSize = 20.sp)
-                                    Text(text = "Time: ${invite.oraInizio} - ${invite.oraFine}", fontSize = 16.sp)
+                                    Text(text = "${formattedDate}, at ${invite.oraInizio} - ${invite.oraFine}", fontSize = 16.sp)
                                 }
                                 Row(
                                     horizontalArrangement = Arrangement.End,
