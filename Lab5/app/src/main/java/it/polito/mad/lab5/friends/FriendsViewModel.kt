@@ -263,7 +263,16 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                            when (dc.type) {
                                DocumentChange.Type.ADDED -> {
                                    Log.d(TAG, "New User: ${dc.document.data}")
-                                   searchingFriends.add(dc.document.toObject(User::class.java))
+                                   val newUser = dc.document.toObject(User::class.java)
+                                   val friendId = dc.document.id
+
+                                   if(newUser.imageUri != ""){
+                                       loadSearchFriendImage(friendId, newUser)
+                                       newUser.imageUri = "Loading"
+                                   }
+
+                                   loadSearchFriendImage(friendId, newUser)
+                                   searchingFriends.add(newUser)
                                }
 
                                DocumentChange.Type.MODIFIED -> {
@@ -288,6 +297,33 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                }
        }
    }
+
+    fun loadSearchFriendImage(userId: String, newUser: User){
+        val storageReference = FirebaseStorage.getInstance().getReference("profileImages/$userId.jpg")
+        val localProfileImageFile = File.createTempFile("localProfileImage", ".jpg")
+        Log.d(TAG, "Start downloading Friend Profile Image")
+        storageReference
+            .getFile(localProfileImageFile)
+            .addOnSuccessListener {
+                Log.d(TAG, "Search Friend Profile Image downloaded successfully")
+                val userWithImage = User(
+                    newUser.name,
+                    newUser.nickname,
+                    newUser.email,
+                    newUser.birthdate,
+                    newUser.sex,
+                    newUser.city,
+                    localProfileImageFile.toUri().toString()
+                )
+                Log.d(TAG, "Profile Image stored to ${userWithImage.imageUri}")
+                searchingFriends.removeIf { it.nickname == newUser.nickname }
+                searchingFriends.add(newUser)
+            }
+            .addOnFailureListener { e: Exception ->
+                Log.w(TAG, "Profile image download error: $e")
+            }
+    }
+
     fun addPending(id: User){
         val myid= Firebase.auth.uid
         if(myid!= null) {
