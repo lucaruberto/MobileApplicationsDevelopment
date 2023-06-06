@@ -263,12 +263,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                             when (dc.type) {
                                 DocumentChange.Type.ADDED -> {
                                     Log.d(TAG, "New User: ${dc.document.data}")
-                                    val newUser = dc.document.toObject(User::class.java)
-                                    if(newUser.imageUri != ""){
-                                        newUser.imageUri = "Loading"
-                                    }
-
-                                    searchingFriends.add(newUser)
+                                    searchingFriends.add(dc.document.toObject(User::class.java))
                                 }
 
                                 DocumentChange.Type.MODIFIED -> {
@@ -439,6 +434,10 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                             }
                     }
             }
+
         }
     }
+
+
+
 }
