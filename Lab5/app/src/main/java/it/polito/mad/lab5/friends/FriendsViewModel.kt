@@ -317,7 +317,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                 )
                 Log.d(TAG, "Profile Image stored to ${userWithImage.imageUri}")
                 searchingFriends.removeIf { it.nickname == newUser.nickname }
-                searchingFriends.add(newUser)
+                searchingFriends.add(userWithImage)
             }
             .addOnFailureListener { e: Exception ->
                 Log.w(TAG, "Profile image download error: $e")
