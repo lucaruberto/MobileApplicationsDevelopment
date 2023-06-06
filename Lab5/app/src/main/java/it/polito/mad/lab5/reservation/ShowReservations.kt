@@ -41,7 +41,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -237,13 +236,11 @@ fun Reservation(vm: ShowReservationsViewModel, rentVm: RentViewModel,friendVM : 
             }
             if(reservationToEdit.discipline != ""){
                 Dialog(
-                    //properties = DialogProperties(usePlatformDefaultWidth = false),
                     onDismissRequest = {
                         rentVm.isEdit.value = false
                         setReservationToEdit(Reservation())
                     },
                     content = {
-                        //val rentVm = RentViewModel(vm.getApplication())
                         rentVm.fetchAllSports()
                         rentVm.selectedSport.value = reservationToEdit.discipline
                         rentVm.loadPlaygrounds()
@@ -267,22 +264,17 @@ fun Reservation(vm: ShowReservationsViewModel, rentVm: RentViewModel,friendVM : 
                     onDismissRequest = { setReservationToAddFriend(Reservation()) },
                     content = {
                         Surface(
-                            modifier = Modifier
-                                .padding(16.dp),
-                            shape = RectangleShape
+                            modifier = Modifier.padding(16.dp),
+                            shape = RoundedCornerShape(16.dp)
                         ) {
-
-                            //println(invitationSentList)
                             if (acceptedFriends.isEmpty()) {
-                                Text(text = "Nessun amico disponibile")
+                                Text(text = "No avaliable friend!")
                             }
                             else{
                                 val uidAlreadySent = vm.uidAlreadySent
                                 LazyColumn {
-
-                                    acceptedFriends.forEachIndexed { index, friend ->
+                                    acceptedFriends.forEach { friend ->
                                         item {
-                                            //val invitationSent = invitationSentList[index]
                                             val (user, setUser) = remember(friend.id) {
                                                 mutableStateOf(
                                                     User()
@@ -318,7 +310,7 @@ fun Reservation(vm: ShowReservationsViewModel, rentVm: RentViewModel,friendVM : 
                                             Card(
                                                 modifier = Modifier
                                                     .fillMaxWidth()
-                                                    .padding(8.dp),
+                                                    .padding(16.dp),
                                                 elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
                                                 shape = RoundedCornerShape(32.dp),
                                                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
@@ -329,16 +321,16 @@ fun Reservation(vm: ShowReservationsViewModel, rentVm: RentViewModel,friendVM : 
                                                 ) {
                                                     Image(
                                                         painter = painter,
-                                                        contentDescription = "ProfilePicA",
+                                                        contentDescription = "ProfilePic",
                                                         modifier = Modifier
                                                             .size(64.dp)
                                                             .clip(CircleShape),
                                                         contentScale = ContentScale.Crop
                                                     )
                                                     Column(modifier = Modifier.padding(start = 16.dp)) {
-                                                        Text(text = user.name, fontSize = 20.sp)
+                                                        Text(text = user.nickname, fontSize = 20.sp)
                                                         Spacer(modifier = Modifier.padding(top = 8.dp))
-                                                        Text(text = user.nickname, fontSize = 12.sp)
+                                                        Text(text = user.name, fontSize = 12.sp)
                                                     }
                                                     Row(
                                                         horizontalArrangement = Arrangement.End,
@@ -356,7 +348,6 @@ fun Reservation(vm: ShowReservationsViewModel, rentVm: RentViewModel,friendVM : 
                                                                     reservationToAddFriend,
                                                                     friend.id
                                                                 )
-                                                                //invitationSentList[index] = true
                                                             }) {
                                                                 Text(text = "Invite")
                                                             }
@@ -370,9 +361,9 @@ fun Reservation(vm: ShowReservationsViewModel, rentVm: RentViewModel,friendVM : 
 
                             }
                         }
-                    })
+                    }
+                )
             }
-
         }
     )
 }
