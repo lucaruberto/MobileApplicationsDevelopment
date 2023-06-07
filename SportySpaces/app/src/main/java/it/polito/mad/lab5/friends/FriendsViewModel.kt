@@ -145,7 +145,7 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun deleteInvitation(invitation: Reservation){
-       invitations.removeIf { it.reservationId == invitation.reservationId }
+        invitations.removeIf { it.reservationId == invitation.reservationId }
 
         db.collection("Users/${Firebase.auth.uid}/Invitations")
             .whereEqualTo("reservationId", invitation.reservationId)
@@ -167,44 +167,44 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
     }
 
     private fun loadFriends(){
-            viewModelScope.launch {
-                    friendsId.clear()
-                    db.collection("Users/${Firebase.auth.uid}/Friends")
-                       .addSnapshotListener { snapshots, e ->
-                           if (e != null) {
-                               Log.w(TAG, "listen:error", e)
-                           }
-                           if(snapshots != null) {
-                               for (dc in snapshots.documentChanges) {
-                                   when (dc.type) {
-                                       DocumentChange.Type.ADDED -> {
-                                           Log.d(TAG, "New Friend: ${dc.document.data}")
-                                           friendsId.add(dc.document.toObject(Friend::class.java))
-                                       }
+        viewModelScope.launch {
+            friendsId.clear()
+            db.collection("Users/${Firebase.auth.uid}/Friends")
+                .addSnapshotListener { snapshots, e ->
+                    if (e != null) {
+                        Log.w(TAG, "listen:error", e)
+                    }
+                    if(snapshots != null) {
+                        for (dc in snapshots.documentChanges) {
+                            when (dc.type) {
+                                DocumentChange.Type.ADDED -> {
+                                    Log.d(TAG, "New Friend: ${dc.document.data}")
+                                    friendsId.add(dc.document.toObject(Friend::class.java))
+                                }
 
-                                       DocumentChange.Type.MODIFIED -> {
-                                           val updatedRes = dc.document.toObject(Friend::class.java)
-                                           friendsId.removeIf {
-                                               it.id == updatedRes.id
-                                           }
-                                           friendsId.add(updatedRes)
-                                           Log.d(TAG, "Modified Friend: ${dc.document.data}")
-                                       }
+                                DocumentChange.Type.MODIFIED -> {
+                                    val updatedRes = dc.document.toObject(Friend::class.java)
+                                    friendsId.removeIf {
+                                        it.id == updatedRes.id
+                                    }
+                                    friendsId.add(updatedRes)
+                                    Log.d(TAG, "Modified Friend: ${dc.document.data}")
+                                }
 
-                                       DocumentChange.Type.REMOVED -> {
-                                           Log.d(TAG, "Removed Friend: ${dc.document.data}")
-                                           val friendToDelete = dc.document.toObject(Friend::class.java)
-                                           friendsId.removeIf {
-                                                       it.id == friendToDelete.id
-                                           }
-                                       }
-                                   }
-                               }
-                           }
-                       }
+                                DocumentChange.Type.REMOVED -> {
+                                    Log.d(TAG, "Removed Friend: ${dc.document.data}")
+                                    val friendToDelete = dc.document.toObject(Friend::class.java)
+                                    friendsId.removeIf {
+                                        it.id == friendToDelete.id
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
 
 
-            }
+        }
 
     }
     private fun loadPending(){
@@ -249,45 +249,45 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
 
     }
     fun searchFriend(ref:String){
-       viewModelScope.launch {
-           searchingFriends.clear()
-           db.collection("Users").whereEqualTo("nickname",ref)
-               .addSnapshotListener { snapshots, e ->
-                   if (e != null) {
-                       Log.w(TAG, "listen:error", e)
-                   }
-                   if(snapshots != null) {
-                       println("Lo snapshot non e' nullo!")
-                       println("Il numero di documenti cambiati e' " + snapshots.documentChanges.size)
-                       for (dc in snapshots.documentChanges) {
-                           when (dc.type) {
-                               DocumentChange.Type.ADDED -> {
-                                   Log.d(TAG, "New User: ${dc.document.data}")
-                                   searchingFriends.add(dc.document.toObject(User::class.java))
-                               }
+        viewModelScope.launch {
+            searchingFriends.clear()
+            db.collection("Users").whereEqualTo("nickname",ref)
+                .addSnapshotListener { snapshots, e ->
+                    if (e != null) {
+                        Log.w(TAG, "listen:error", e)
+                    }
+                    if(snapshots != null) {
+                        println("Lo snapshot non e' nullo!")
+                        println("Il numero di documenti cambiati e' " + snapshots.documentChanges.size)
+                        for (dc in snapshots.documentChanges) {
+                            when (dc.type) {
+                                DocumentChange.Type.ADDED -> {
+                                    Log.d(TAG, "New User: ${dc.document.data}")
+                                    searchingFriends.add(dc.document.toObject(User::class.java))
+                                }
 
-                               DocumentChange.Type.MODIFIED -> {
-                                   val updatedRes = dc.document.toObject(User::class.java)
-                                   searchingFriends.removeIf {
-                                       it.nickname == updatedRes.nickname
-                                   }
-                                   searchingFriends.add(updatedRes)
-                                   Log.d(TAG, "Modified User: ${dc.document.data}")
-                               }
+                                DocumentChange.Type.MODIFIED -> {
+                                    val updatedRes = dc.document.toObject(User::class.java)
+                                    searchingFriends.removeIf {
+                                        it.nickname == updatedRes.nickname
+                                    }
+                                    searchingFriends.add(updatedRes)
+                                    Log.d(TAG, "Modified User: ${dc.document.data}")
+                                }
 
-                               DocumentChange.Type.REMOVED -> {
-                                   Log.d(TAG, "Removed User: ${dc.document.data}")
-                                   val userToDelete = dc.document.toObject(User::class.java)
-                                   searchingFriends.removeIf {
-                                       it.nickname == userToDelete.nickname
-                                   }
-                               }
-                           }
-                       }
-                   }
-               }
-       }
-   }
+                                DocumentChange.Type.REMOVED -> {
+                                    Log.d(TAG, "Removed User: ${dc.document.data}")
+                                    val userToDelete = dc.document.toObject(User::class.java)
+                                    searchingFriends.removeIf {
+                                        it.nickname == userToDelete.nickname
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
     fun addPending(id: User){
         val myid= Firebase.auth.uid
         if(myid!= null) {
@@ -385,58 +385,58 @@ class FriendsViewModel(application: Application) : AndroidViewModel(application)
                     .addOnSuccessListener {
                         db.collection("Users/${Firebase.auth.uid}/Pending").document(it.documents[0].id).delete()
                             .addOnSuccessListener {
-                            db.collection("Users/${id}/Pending").whereEqualTo("id",myid).get()
-                                .addOnSuccessListener { it2->
-                                    if(it2.documents.size>0)
-                                        db.collection("Users/${id}/Pending").document(it2.documents[0].id).delete()
-                                        .addOnSuccessListener {
-                                            Log.d(TAG, "Deleted Friend for the main user and the secondary user")
+                                db.collection("Users/${id}/Pending").whereEqualTo("id",myid).get()
+                                    .addOnSuccessListener { it2->
+                                        if(it2.documents.size>0)
+                                            db.collection("Users/${id}/Pending").document(it2.documents[0].id).delete()
+                                                .addOnSuccessListener {
+                                                    Log.d(TAG, "Deleted Friend for the main user and the secondary user")
 
-                                        }
-                                }
+                                                }
+                                    }
                             }
                     }
             }
         }
     }
     fun addFriend(id:String){
-       val myid=Firebase.auth.uid
-       if(myid!=null){
-           viewModelScope.launch{
-               db.collection("Users/${Firebase.auth.uid}/Friends").add(Friend(id=id))
-                   .addOnSuccessListener {
-                       db.collection("Users/${Firebase.auth.uid}/Pending").whereEqualTo("id",id).get()
-                           .addOnSuccessListener {
-                               if(it.documents.size>0)
-                                db.collection("Users/${Firebase.auth.uid}/Pending").document(it.documents[0].id).delete()
-                                   .addOnSuccessListener {
-                                       Log.d(TAG, "Added Friend for the main user")
+        val myid=Firebase.auth.uid
+        if(myid!=null){
+            viewModelScope.launch{
+                db.collection("Users/${Firebase.auth.uid}/Friends").add(Friend(id=id))
+                    .addOnSuccessListener {
+                        db.collection("Users/${Firebase.auth.uid}/Pending").whereEqualTo("id",id).get()
+                            .addOnSuccessListener {
+                                if(it.documents.size>0)
+                                    db.collection("Users/${Firebase.auth.uid}/Pending").document(it.documents[0].id).delete()
+                                        .addOnSuccessListener {
+                                            Log.d(TAG, "Added Friend for the main user")
 
-                                   }
-                                   .addOnFailureListener {
-                                       println("Errore nel cancellare la richiesta pending")
-                                   }
-                           }
+                                        }
+                                        .addOnFailureListener {
+                                            println("Errore nel cancellare la richiesta pending")
+                                        }
+                            }
 
-                   }
-               db.collection("Users/${id}/Friends").add(Friend(id=myid))
-                   .addOnSuccessListener {
-                      db.collection("Users/${id}/Pending").whereEqualTo("id",myid).get()
-                          .addOnSuccessListener {
-                              if(it.documents.size>0) {
-                                  db.collection("Users/${id}/Pending").document(it.documents[0].id)
-                                      .delete()
-                                      .addOnSuccessListener {
-                                          Log.d(TAG, "Added Friend for the secondary user")
+                    }
+                db.collection("Users/${id}/Friends").add(Friend(id=myid))
+                    .addOnSuccessListener {
+                        db.collection("Users/${id}/Pending").whereEqualTo("id",myid).get()
+                            .addOnSuccessListener {
+                                if(it.documents.size>0) {
+                                    db.collection("Users/${id}/Pending").document(it.documents[0].id)
+                                        .delete()
+                                        .addOnSuccessListener {
+                                            Log.d(TAG, "Added Friend for the secondary user")
 
-                                      }
-                              }
-                          }
-                   }
-           }
+                                        }
+                                }
+                            }
+                    }
+            }
 
-       }
-   }
+        }
+    }
 
 
 

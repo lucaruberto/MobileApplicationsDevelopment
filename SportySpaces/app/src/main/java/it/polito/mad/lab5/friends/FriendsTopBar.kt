@@ -26,6 +26,9 @@ fun FriendsTopBar(viewModel: FriendsViewModel) {
             IconButton(
                 onClick = {
                     viewModel.editFriends.value = !editFriends
+                    if(viewModel.editFriends.value){
+                        viewModel.searchingFriends.clear()
+                    }
                 },
                 enabled = true
             ) {

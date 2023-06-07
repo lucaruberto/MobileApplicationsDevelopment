@@ -44,6 +44,7 @@ class MyAuthenticationViewModel() : ViewModel() {
                     auth.createUserWithEmailAndPassword(email.value, password.value).await()
                     Log.d(ContentValues.TAG, "User registered")
                     isRegistered.value = true
+                    error.value.isError = false
                 }
                 catch (e: FirebaseAuthUserCollisionException){
                     error.value = MyError(true, ErrorType.EMAIL,"Email address is already registered")

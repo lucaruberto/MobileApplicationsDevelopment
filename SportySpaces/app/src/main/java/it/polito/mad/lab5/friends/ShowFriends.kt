@@ -312,6 +312,15 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
 
                 invitations.forEach { invite ->
                     item {
+                        val (user, setUser) = remember(invite.userId) {
+                            mutableStateOf(
+                                User()
+                            )
+                        }
+                        LaunchedEffect(invite.userId) {
+                            friendsViewModel.getUserById(invite.userId, setUser)
+                        }
+
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -327,8 +336,10 @@ fun ShowFriends(friendsViewModel: FriendsViewModel){
                             ) {
                                 Spacer(modifier = Modifier.width(16.dp))
                                 Column(modifier = Modifier.padding(8.dp)) {
+
                                     val formattedDate = invite.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString()
                                     Text(text = "${invite.discipline} at ${invite.playgroundName}", fontSize = 20.sp)
+                                    Text(text = "by ${user.nickname}", fontSize = 18.sp)
                                     Text(text = "${formattedDate}, at ${invite.oraInizio} - ${invite.oraFine}", fontSize = 16.sp)
                                 }
                                 Row(
